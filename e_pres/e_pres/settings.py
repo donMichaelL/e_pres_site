@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'crispy_forms',
     # my apps
     'accounts',
+    'buildings',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -126,8 +128,19 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Django All auth
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/ '
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+
+# Crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 SITE_ID = 1
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [ os.path.join(BASE_DIR, "static") ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

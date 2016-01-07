@@ -10,4 +10,4 @@ class HomepageView(View):
         else:
             form = LoginForm()
             context = {'form': form}
-            return render(request, 'accounts/homepage_visitor.html', context)
+            return render(request, 'account/login.html', context)

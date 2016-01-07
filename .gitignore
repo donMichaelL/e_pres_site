@@ -3,6 +3,9 @@
 *.sublime-project
 *.sublime-workspace
 
+e_pres/media/
+e_pres/static/bower_components
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

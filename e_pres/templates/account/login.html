@@ -1,0 +1,22 @@
+{% extends 'account/base_visitor.html' %}
+{% load crispy_forms_tags %}
+
+
+
+{% block title %}Log In {% endblock %}
+{% block paneltitle %}Log In{% endblock %}
+
+
+
+{% block form %}
+
+  <form class="login" method="POST" action="{% url 'account_login' %}"> {% csrf_token %}
+    {{ form | crispy }}
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <a class="btn" href="{% url 'account_reset_password' %}">Forgot Password ?</a>
+    <input type="submit" class="btn btn-lg btn-success btn-block" value="Log In">
+  </form>
+
+{% endblock %}

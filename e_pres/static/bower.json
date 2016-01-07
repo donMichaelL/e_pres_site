@@ -1,0 +1,25 @@
+{
+  "name": "static_e_pres",
+  "homepage": "https://github.com/donMichaelL/e_pres_site",
+  "authors": [
+    "Michael <michael.loukeris@icloud.com>"
+  ],
+  "description": "Static Files for e-pres",
+  "main": "",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "font-awesome": "fontawesome#~4.5.0",
+    "metisMenu": "~2.2.0"
+  }
+}
