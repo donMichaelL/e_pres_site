@@ -17,11 +17,13 @@ from django.conf import settings
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
 from django.conf.urls.static import static
-from accounts.views import HomepageView
+from accounts.views import HomepageView, LoginAfterPasswordChangeView, ProfileFormView
 
 urlpatterns = [
     url(r'^$', HomepageView.as_view(), name="homepage"),
     url(r'^admin/', admin.site.urls),
+    url(r'^profile/$', ProfileFormView.as_view(), name="profile_settings"),
+    url(r'^accounts/password/change/$', LoginAfterPasswordChangeView.as_view(), name='account_change_password'),
     url(r'^accounts/', include('allauth.urls')),
 ]
 

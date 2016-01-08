@@ -1,0 +1,18 @@
+{% extends 'account/base_visitor.html' %}
+
+
+
+{% block title %}Log Out {% endblock %}
+{% block paneltitle %}Are you sure you want to sign out?{% endblock %}
+
+
+{% block form %}
+<form method="post" action="{% url 'account_logout' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+  {% endif %}
+  <button type="submit" class="btn btn-lg btn-primary btn-block">Log Out</button>
+  <a href={% url 'homepage' %} class="btn btn-lg btn-default btn-block">Cancel</a>
+</form>
+{% endblock %}

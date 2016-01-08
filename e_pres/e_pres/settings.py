@@ -130,7 +130,7 @@ USE_TZ = True
 
 # Django All auth
 LOGIN_URL = '/'
-LOGIN_REDIRECT_URL = '/ '
+LOGIN_REDIRECT_URL = '/'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
 # Crispy forms
