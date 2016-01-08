@@ -1,0 +1,37 @@
+{% extends 'dashboard/base_logged.html' %}
+{% load crispy_forms_tags %}
+
+
+
+{% block title %}{{object.name}} {% endblock %}
+{% block main_header %}{{object.name}} {% endblock %}
+
+{% block main_content %}
+<div clas="row">
+  <div class="col-md-4">
+    <img src="{{object.photo.url}}"></img>
+    <form method="POST" action="" enctype="multipart/form-data">  {% csrf_token %}
+      {{form | crispy }}
+      <button type="submit" class="btn btn-success" name="action">Update Profile</button>
+    </form>
+  </div>
+  <div class="col-md-8">
+    <h2 class="text-center">Floors</h2>
+    {% for floor in object.floor_set.all %}
+    <div class="media">
+    <a class="media-left" href="#">
+    <img class="media-object img-responsive" width="60px;" src="{{floor.blueprint.url}}" alt="Generic placeholder image">
+    </a>
+      <div class="media-body">
+        <h4 class="media-heading">{{floor.name}}</h4>
+        <p>Number: {{floor.number}}
+        Max Evacuation Time: {{floor.max_evacuation_time}}
+        Number of Students: {{floor.stud_number}}</p>
+      </div>
+    </div>
+    {% endfor%}
+  </div>
+</div>
+
+
+{% endblock %}

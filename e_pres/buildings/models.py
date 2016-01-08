@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.conf import settings
 
 COUNTRIES_CHOICES = (
@@ -17,6 +18,20 @@ class Building(models.Model):
     max_evacuation_time = models.PositiveIntegerField(help_text="in seconds",null=True, blank=True)
     photo = models.ImageField(upload_to='building_images/', null=True, blank=True)
 
+    def __unicode__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("building_detail", kwargs={"pk": self.pk})
+
+
+class Floor(models.Model):
+    building = models.ForeignKey(Building)
+    name = models.CharField(max_length=60)
+    number = models.PositiveSmallIntegerField()
+    blueprint = models.ImageField(upload_to='blueprints/')
+    max_evacuation_time = models.PositiveIntegerField(help_text="in seconds",null=True, blank=True)
+    stud_number = models.PositiveIntegerField(null=True, blank=True)
 
     def __unicode__(self):
-        return self.user.username
+        return self.name

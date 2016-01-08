@@ -1,5 +1,33 @@
 {% extends 'dashboard/base_logged.html' %}
 
-
-
 {% block title %}Homepage {% endblock %}
+{% block main_header %}Homepage {% endblock %}
+
+{% block main_content %}
+<div class="row">
+  <div class="col-xs-12">
+    <p ><a href="{% url 'new_building' %}" class="btn btn-success">Insert new Building</a></p>
+  </div>
+</div>
+
+
+<div class="row">
+  {%  for building in buildings %}
+  <div class="col-md-4">
+    <div class="thumbnail">
+      {% if building.photo %}<a href="{{building.get_absolute_url}}"><img class="img-responsive" src="{{building.photo.url}}" alt="Building Photo"></a>{% endif %}
+      <div class="caption">
+        <h3 class="text-center">{{building.name}}</h3>
+        <p>Country: {{building.get_country_display}}</p>
+        {% if building.address and building.tk %}<p>Address: {{building.address}} {{building.tk}}</p> {% endif %}
+        {% if building.max_evacuation_time %}<p>Max Evaluation Time: <span class="label label-default">{{building.max_evacuation_time}} sec</span></p>{% endif %}
+        <br>
+        <p><a href="{{building.get_absolute_url}}" class="btn btn-info btn-block" role="button">Details</a>
+      </div>
+    </div>
+  </div>
+  {% cycle "" "" "</div><br/><hr/><div class='row'>" %}
+  {% endfor %}
+</div>
+
+{% endblock %}
