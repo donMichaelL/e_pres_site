@@ -6,7 +6,7 @@
 {% block main_content %}
 <div class="row">
   <div class="col-xs-12">
-    <p ><a href="{% url 'new_building' %}" class="btn btn-success">Insert new Building</a></p>
+    <p ><a href="{% url 'building_new' %}" class="btn btn-success">Insert new Building</a></p>
   </div>
 </div>
 
@@ -15,6 +15,7 @@
   {%  for building in buildings %}
   <div class="col-md-4">
     <div class="thumbnail">
+      <a type="button" href="{% url 'building_delete' pk=building.pk %}" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
       {% if building.photo %}<a href="{{building.get_absolute_url}}"><img class="img-responsive" src="{{building.photo.url}}" alt="Building Photo"></a>{% endif %}
       <div class="caption">
         <h3 class="text-center">{{building.name}}</h3>
@@ -22,7 +23,14 @@
         {% if building.address and building.tk %}<p>Address: {{building.address}} {{building.tk}}</p> {% endif %}
         {% if building.max_evacuation_time %}<p>Max Evaluation Time: <span class="label label-default">{{building.max_evacuation_time}} sec</span></p>{% endif %}
         <br>
-        <p><a href="{{building.get_absolute_url}}" class="btn btn-info btn-block" role="button">Details</a>
+        <div class="row">
+          <div class="col-sm-6">
+            <p><a href="{{building.get_absolute_url}}" class="btn btn-info btn-block" role="button">Details</a>
+          </div>
+          <div class="col-sm-6">
+            <a type="button"  href="{% url 'building_delete' pk=building.pk %}" class="btn btn-outline btn-danger btn-block">Delete</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -18,14 +18,15 @@ from django.conf.urls import patterns, url, include
 from django.contrib import admin
 from django.conf.urls.static import static
 from accounts.views import HomepageView, LoginAfterPasswordChangeView, ProfileFormView
-from buildings.views import NewBuildingView, BuildingDetailView
+from buildings.views import BuildingNewView, BuildingDetailView, BuildingDeleteView
 
 urlpatterns = [
     url(r'^$', HomepageView.as_view(), name="homepage"),
     url(r'^admin/', admin.site.urls),
     url(r'^profile/$', ProfileFormView.as_view(), name="profile_settings"),
     url(r'^building/(?P<pk>\d+)$', BuildingDetailView.as_view(), name="building_detail"),
-    url(r'^building/new/$', NewBuildingView.as_view(), name="new_building"),
+    url(r'^building/delete/(?P<pk>\d+)$', BuildingDeleteView.as_view(), name="building_delete"),
+    url(r'^building/new/$', BuildingNewView.as_view(), name="building_new"),
     url(r'^accounts/password/change/$', LoginAfterPasswordChangeView.as_view(), name='account_change_password'),
     url(r'^accounts/', include('allauth.urls')),
 ]
