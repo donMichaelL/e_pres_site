@@ -4,7 +4,7 @@
 
 
 {% block title %}New Building {% endblock %}
-{% block main_header %}Insert New Building {% endblock %}
+{% block main_header %}Insert New Building{% endblock %}
 
 {% block main_content %}
 <div class="row">
@@ -19,6 +19,7 @@
             <form method="POST" action="{% url 'building_new' %}" class="password_change" enctype="multipart/form-data">  {% csrf_token %}
               {{form  | crispy }}
               <button type="submit" class="btn btn-success" name="action">Insert Building</button>
+              <a class="btn btn-default" href="{% url 'building_list' %}">Cancel</a>
             </form>
           </div>
     </div>

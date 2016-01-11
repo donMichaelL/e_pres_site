@@ -1,0 +1,41 @@
+{% extends 'dashboard/base_logged.html' %}
+
+{% block title %}Buildings {% endblock %}
+{% block main_header %}Buildings {% endblock %}
+
+{% block main_content %}
+<div class="row">
+  <div class="col-xs-12">
+    <p ><a href="{% url 'building_new' %}" class="btn btn-success">Insert new Building</a></p>
+  </div>
+</div>
+
+
+<div class="row">
+  {%  for building in object_list %}
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a type="button" href="{% url 'building_delete' pk=building.pk %}" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
+      {% if building.photo %}<a href="{{building.get_absolute_url}}"><img class="img-responsive" src="{{building.photo.url}}" alt="Building Photo"></a>{% endif %}
+      <div class="caption">
+        <h3 class="text-center">{{building.name}}</h3>
+        <p>Country: {{building.get_country_display}}</p>
+        {% if building.address and building.tk %}<p>Address: {{building.address}} {{building.tk}}</p> {% endif %}
+        {% if building.max_evacuation_time %}<p>Max Evaluation Time: <span class="label label-default">{{building.max_evacuation_time}} sec</span></p>{% endif %}
+        <br>
+        <div class="row">
+          <div class="col-sm-6">
+            <p><a href="{{building.get_absolute_url}}" class="btn btn-info btn-block" role="button">Details</a>
+          </div>
+          <div class="col-sm-6">
+            <a type="button"  href="{% url 'building_delete' pk=building.pk %}" class="btn btn-outline btn-danger btn-block">Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% cycle "" "" "</div><br/><hr/><div class='row'>" %}
+  {% endfor %}
+</div>
+
+{% endblock %}

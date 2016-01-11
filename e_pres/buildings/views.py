@@ -1,13 +1,19 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import FormView
+from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from .forms import BuildingForm, FloorForm
 from .models import Building, Floor
 
 
-# Create your views here.
+class BuildingListView(ListView):
+    model = Building
+    template_name = 'dashboard/list_building.html'
+
+
+
 class BuildingNewView(FormView):
     form_class = BuildingForm
     template_name = 'dashboard/new_building.html'
