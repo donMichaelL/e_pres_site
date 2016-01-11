@@ -3,8 +3,8 @@
 
 
 
-{% block title %}New Building {% endblock %}
-{% block main_header %}Insert New Building {% endblock %}
+{% block title %}New Floor {% endblock %}
+{% block main_header %}Insert New Floor{% endblock %}
 
 {% block main_content %}
 <div class="row">
@@ -16,9 +16,10 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-lg-12">
-            <form method="POST" action="{% url 'building_new' %}" class="password_change" enctype="multipart/form-data">  {% csrf_token %}
+            <form method="POST" action="{% url 'floor_new' pk=building %}" class="password_change" enctype="multipart/form-data">  {% csrf_token %}
               {{form  | crispy }}
-              <button type="submit" class="btn btn-success" name="action">Insert Building</button>
+              <button type="submit" class="btn btn-success" name="action">Insert Floor</button>
+              <a class="btn btn-default" href="{% url 'building_detail' pk=building %}">Cancel</a>
             </form>
           </div>
     </div>

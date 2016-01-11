@@ -18,7 +18,7 @@ from django.conf.urls import patterns, url, include
 from django.contrib import admin
 from django.conf.urls.static import static
 from accounts.views import HomepageView, LoginAfterPasswordChangeView, ProfileFormView
-from buildings.views import BuildingNewView, BuildingDetailView, BuildingDeleteView
+from buildings.views import BuildingNewView, BuildingDetailView, BuildingDeleteView, FloorNewView, FloorDetailView, FloorDeleteView
 
 urlpatterns = [
     url(r'^$', HomepageView.as_view(), name="homepage"),
@@ -27,6 +27,9 @@ urlpatterns = [
     url(r'^building/(?P<pk>\d+)$', BuildingDetailView.as_view(), name="building_detail"),
     url(r'^building/delete/(?P<pk>\d+)$', BuildingDeleteView.as_view(), name="building_delete"),
     url(r'^building/new/$', BuildingNewView.as_view(), name="building_new"),
+    url(r'^building/(?P<pk>\d+)/floor/new/$', FloorNewView.as_view(), name="floor_new"),
+    url(r'^building/(?P<pk_building>\d+)/floor/(?P<pk>\d+)/$', FloorDetailView.as_view(), name="floor_detail"),
+    url(r'^building/(?P<pk_building>\d+)/floor/(?P<pk>\d+)/delete/$', FloorDeleteView.as_view(), name="floor_delete"),
     url(r'^accounts/password/change/$', LoginAfterPasswordChangeView.as_view(), name='account_change_password'),
     url(r'^accounts/', include('allauth.urls')),
 ]

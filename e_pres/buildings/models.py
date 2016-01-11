@@ -33,5 +33,14 @@ class Floor(models.Model):
     max_evacuation_time = models.PositiveIntegerField(help_text="in seconds",null=True, blank=True)
     stud_number = models.PositiveIntegerField(null=True, blank=True)
 
+    class Meta:
+        ordering = ['number']
+
     def __unicode__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("floor_detail", kwargs={"pk": self.pk, "pk_building": self.building.pk})
+
+    def get_building_url(self):
+        return reverse("building_detail", kwargs={"pk": self.building.pk})

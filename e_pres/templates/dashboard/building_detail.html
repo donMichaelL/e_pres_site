@@ -19,11 +19,14 @@
     <h2 class="text-center">Floors</h2>
     {% for floor in object.floor_set.all %}
     <div class="media">
-    <a class="media-left" href="#">
-    <img class="media-object img-responsive" width="60px;" src="{{floor.blueprint.url}}" alt="Generic placeholder image">
+    <a class="media-left" href="{% url 'floor_detail' pk=floor.pk pk_building=object.pk %}">
+      <img class="media-object img-responsive" width="60px;" src="{{floor.blueprint.url}}" alt="Generic placeholder image">
     </a>
       <div class="media-body">
-        <h4 class="media-heading">{{floor.name}}</h4>
+        <h4 class="media-heading">
+          <a href="{% url 'floor_detail' pk=floor.pk pk_building=object.pk %}">{{floor.name}}</a>
+          <a href="{% url 'floor_delete' pk=floor.pk pk_building=object.pk %}" type="button" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
+        </h4>
         <p>Number: {{floor.number}}
         Max Evacuation Time: {{floor.max_evacuation_time}}
         Number of Students: {{floor.stud_number}}</p>
@@ -31,6 +34,8 @@
     </div>
     {% endfor%}
   </div>
+  <div class="text-center"><a href="{% url 'floor_new' pk=object.pk %}" class="btn btn-info">Insert New Floor</a></div>
+
 </div>
 
 

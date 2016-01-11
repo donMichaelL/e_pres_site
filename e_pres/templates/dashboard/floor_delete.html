@@ -1,0 +1,30 @@
+{% extends 'dashboard/base_logged.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}Delete Floor {% endblock %}
+
+{% block main_header %}Delete Floor{% endblock %}
+
+
+{% block main_content %}
+<div class="row">
+  <div class="col-xs-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Are you sure you want to delete <strong>{{object.name}}</strong>?
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <form method="POST" action="" class="form"> {% csrf_token %}
+                {{ form | crispy }}
+                <button type="submit" class="btn btn-danger" name="action">Delete</button>
+                <a href="{% url 'homepage' %}"  class="btn btn-default" >Cancel</a>
+            </form>
+          </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
