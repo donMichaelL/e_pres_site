@@ -12,6 +12,9 @@ class BuildingListView(ListView):
     model = Building
     template_name = 'dashboard/list_building.html'
 
+    def get_queryset(self):
+        return Building.objects.filter(user=self.request.user)
+
 
 
 class BuildingNewView(FormView):

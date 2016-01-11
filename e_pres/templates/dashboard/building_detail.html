@@ -11,7 +11,7 @@
 {% block main_content %}
 <div clas="row">
   <div class="col-md-4">
-    <img src="{{object.photo.url}}"></img>
+    <img src="{{object.photo.url}}" class="img-responsive"></img>
     <form method="POST" action="" enctype="multipart/form-data">  {% csrf_token %}
       {{form | crispy }}
       <button type="submit" class="btn btn-success" name="action">Update Profile</button>
