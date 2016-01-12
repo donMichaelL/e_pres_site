@@ -1,0 +1,31 @@
+{% extends 'dashboard/base_logged.html' %}
+{% load crispy_forms_tags %}
+
+
+
+{% block title %}New Experiment {% endblock %}
+{% block main_header %}Insert New Experiment{% endblock %}
+
+{% block main_content %}
+<div class="row">
+  <div class="col-xs-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Please fill the form
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <form method="POST" action="{% url 'test_new' %}" class="password_change" enctype="multipart/form-data">  {% csrf_token %}
+              {{form  | crispy }}
+              <button type="submit" class="btn btn-success" name="action">Insert Experiment</button>
+              <a class="btn btn-default" href="{% url 'test_list' %}">Cancel</a>
+            </form>
+          </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

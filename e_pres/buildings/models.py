@@ -17,6 +17,9 @@ class Building(models.Model):
     tk = models.PositiveIntegerField(null=True, blank=True)
     max_evacuation_time = models.PositiveIntegerField(help_text="in seconds",null=True, blank=True)
     photo = models.ImageField(upload_to='building_images/', null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+    updated = models.DateTimeField(auto_now_add=False, auto_now=True)
+
 
     def __unicode__(self):
         return self.name
@@ -32,6 +35,8 @@ class Floor(models.Model):
     blueprint = models.ImageField(upload_to='blueprints/')
     max_evacuation_time = models.PositiveIntegerField(help_text="in seconds",null=True, blank=True)
     stud_number = models.PositiveIntegerField(null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+    updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 
     class Meta:
         ordering = ['number']

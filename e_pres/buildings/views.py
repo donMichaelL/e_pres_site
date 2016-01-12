@@ -10,16 +10,15 @@ from .models import Building, Floor
 
 class BuildingListView(ListView):
     model = Building
-    template_name = 'dashboard/list_building.html'
+    template_name = 'dashboard/buildings/list_building.html'
 
     def get_queryset(self):
         return Building.objects.filter(user=self.request.user)
 
 
-
 class BuildingNewView(FormView):
     form_class = BuildingForm
-    template_name = 'dashboard/new_building.html'
+    template_name = 'dashboard/buildings/new_building.html'
     success_url = reverse_lazy('homepage')
 
     def form_valid(self, form):
@@ -30,20 +29,20 @@ class BuildingNewView(FormView):
 
 
 class BuildingDetailView(UpdateView, DetailView):
-    template_name = 'dashboard/building_detail.html'
+    template_name = 'dashboard/buildings/building_detail.html'
     form_class = BuildingForm
     model = Building
 
 
 class BuildingDeleteView(DeleteView):
     model = Building
-    template_name = 'dashboard/building_delete.html'
-    success_url = reverse_lazy('homepage')
+    template_name = 'dashboard/buildings/building_delete.html'
+    success_url = reverse_lazy('building_list')
 
 
 class FloorNewView(CreateView):
     model = Floor
-    template_name = 'dashboard/new_floor.html'
+    template_name = 'dashboard/floors/new_floor.html'
     fields = ['name', 'number', 'blueprint', 'max_evacuation_time', 'stud_number']
 
     def get_success_url(self):
@@ -63,7 +62,7 @@ class FloorNewView(CreateView):
 
 
 class FloorDetailView(UpdateView, DetailView):
-    template_name = 'dashboard/floor_detail.html'
+    template_name = 'dashboard/floors/floor_detail.html'
     form_class = FloorForm
     model = Floor
 
@@ -73,7 +72,7 @@ class FloorDetailView(UpdateView, DetailView):
 
 class FloorDeleteView(DeleteView):
     model = Floor
-    template_name = 'dashboard/floor_delete.html'
+    template_name = 'dashboard/floors/floor_delete.html'
 
     def get_success_url(self):
         return self.object.get_building_url()
