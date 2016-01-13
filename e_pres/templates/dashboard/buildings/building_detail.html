@@ -50,7 +50,7 @@
       </a>
         <div class="media-body">
           <h4 class="media-heading">
-            <a href="">{{test.name}}</a>
+            <a href="{{test.get_absolute_url}}?next={{object.get_absolute_url}}">{{test.name}}</a>
             <a href="{% url 'test_delete' pk=test.pk %}?next={{object.get_absolute_url}}" type="button" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
           </h4>
           <p>Disaster: {{test.get_disaster_display}}

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
+from django.views.generic.detail import DetailView
 from django.views.generic import FormView
 from .models import Experiment
 from .forms import ExperimentForm
@@ -17,7 +18,6 @@ class ExperimentListView(ListView):
 class ExperimentNewView(FormView):
     form_class = ExperimentForm
     template_name = 'dashboard/experiments/new_test.html'
-    #success_url = reverse_lazy('test_list')
 
     def get_success_url(self):
         if self.request.GET.get('next', ''):
@@ -39,3 +39,9 @@ class ExperimentDeleteView(DeleteView):
         if self.request.GET.get('next', ''):
             return (self.request.GET.get('next', ''))
         return  reverse_lazy('test_list')
+
+
+class ExperimentDetailView(UpdateView, DetailView):
+    template_name = 'dashboard/experiments/experiment_detail.html'
+    form_class = ExperimentForm
+    model = Experiment

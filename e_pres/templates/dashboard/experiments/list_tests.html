@@ -22,7 +22,7 @@
         {% if test.execuation_date %}<p><i class="fa fa-clock-o"></i> {{test.execuation_date}}</p>{% endif %}
         <div class="row">
           <div class="col-xs-12">
-            <p><a href="" class="btn btn-info " role="button">Details</a>
+            <p><a href="{{test.get_absolute_url}}" class="btn btn-info " role="button">Details</a>
             <a type="button"  href="{% url 'test_delete' pk=test.pk  %}" class="btn btn-outline btn-danger ">Delete</a>
             </p>
           </div>
