@@ -6,6 +6,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from .forms import BuildingForm, FloorForm
 from .models import Building, Floor
+from experiments.models import return_choices
 
 
 class BuildingListView(ListView):
@@ -32,6 +33,11 @@ class BuildingDetailView(UpdateView, DetailView):
     template_name = 'dashboard/buildings/building_detail.html'
     form_class = BuildingForm
     model = Building
+
+    def get_context_data(self, **kwargs):
+        context = super(BuildingDetailView, self).get_context_data(**kwargs)
+        context['disaster_choices'] = return_choices()
+        return context
 
 
 class BuildingDeleteView(DeleteView):

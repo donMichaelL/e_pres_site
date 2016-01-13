@@ -9,7 +9,7 @@ DISASTER_CHOICHES = (
     ('fl', 'Flood'),
 )
 
-class Test(models.Model):
+class Experiment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     building = models.ForeignKey(Building)
     name = models.CharField(max_length=60)
@@ -22,5 +22,5 @@ class Test(models.Model):
     def __unicode__(self):
         return self.name
 
-    def return_choices():
-        return DISASTER_CHOICHES
+def return_choices():
+    return DISASTER_CHOICHES

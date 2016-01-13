@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^profile/$', ProfileFormView.as_view(), name="profile_settings"),
     url(r'^building/', include('buildings.urls')),
-    url(r'^test/', include('tests.urls')),
+    url(r'^experiments/', include('experiments.urls')),
     url(r'^accounts/password/change/$', LoginAfterPasswordChangeView.as_view(), name='account_change_password'),
     url(r'^accounts/', include('allauth.urls')),
 ]

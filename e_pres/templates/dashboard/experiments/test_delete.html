@@ -20,7 +20,11 @@
             <form method="POST" action="" class="form"> {% csrf_token %}
                 {{ form | crispy }}
                 <button type="submit" class="btn btn-danger" name="action">Delete</button>
-                <a href="{% url 'test_list' %}"  class="btn btn-default" >Cancel</a>
+                {% if request.GET.next %}
+                  <a href="{{request.GET.next}}"  class="btn btn-default" >Cancel</a>
+                {% else %}
+                  <a href="{% url 'test_list' %}"  class="btn btn-default" >Cancel</a>
+                {% endif %}
             </form>
           </div>
     </div>
