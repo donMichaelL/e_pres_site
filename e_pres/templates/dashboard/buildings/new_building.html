@@ -16,7 +16,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-lg-12">
-            <form method="POST" action="{% url 'test_new' %}" class="form" enctype="multipart/form-data">  {% csrf_token %}
+            <form method="POST" action="{% url 'building_new' %}" class="form" enctype="multipart/form-data">  {% csrf_token %}
               {{form  | crispy }}
               <button type="submit" class="btn btn-success" name="action">Insert Building</button>
               <a class="btn btn-default" href="{% url 'building_list' %}">Cancel</a>
@@ -25,7 +25,5 @@
     </div>
   </div>
 </div>
-
-
 
 {% endblock %}

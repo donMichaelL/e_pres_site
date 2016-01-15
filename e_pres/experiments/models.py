@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from buildings.models import Building
+from buildings.models import Building, Floor
 
 DISASTER_CHOICHES = (
     ('eq', 'Earthquake'),
@@ -29,3 +29,16 @@ class Experiment(models.Model):
 
 def return_choices():
     return DISASTER_CHOICHES
+
+
+class Checkpoint(models.Model):
+    floor = models.ForeignKey(Floor)
+    experiment = models.ForeignKey(Experiment)
+    name = models.CharField(max_length=60, null=True, blank=True)
+    flux = models.PositiveSmallIntegerField(null=True, blank=True)
+    coord_x = models.DecimalField(max_digits=8, decimal_places=3)
+    coord_y = models.DecimalField(max_digits=8, decimal_places=3)
+    exit = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.floor.name

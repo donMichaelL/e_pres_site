@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Experiment
+from .models import Experiment, Checkpoint
 
 
 class ExperimentAdmin(admin.ModelAdmin):
@@ -13,3 +13,4 @@ class ExperimentAdmin(admin.ModelAdmin):
         return obj.building.user
 
 admin.site.register(Experiment, ExperimentAdmin)
+admin.site.register(Checkpoint)
