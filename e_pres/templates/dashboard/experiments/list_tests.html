@@ -19,11 +19,13 @@
       <div class="panel-body">
         <p><i class="fa fa-building-o"></i> {{test.building.name}}</p>
         <p><i class="fa fa-exclamation-triangle"></i> {{test.get_disaster_display}}</p>
-        {% if test.execuation_date %}<p><i class="fa fa-clock-o"></i> {{test.execuation_date}}</p>{% endif %}
         <div class="row">
           <div class="col-xs-12">
-            <p><a href="{{test.get_absolute_url}}" class="btn btn-info " role="button">Details</a>
-            <a type="button"  href="{% url 'test_delete' pk=test.pk  %}" class="btn btn-outline btn-danger ">Delete</a>
+             <p>{% for plan in test.plan_set.all %}<a href="{% url 'plan_detail' pk_experiment=test.pk pk=plan.pk %}">{{plan.name}}</a> {% endfor %}</p>
+             <p>
+               <a href="{% url 'new_plan' pk=test.pk %}" class="btn btn-success " role="button">New Plan</a>
+               <a href="{{test.get_absolute_url}}" class="btn btn-info " role="button">Details</a>
+               <a type="button"  href="{% url 'test_delete' pk=test.pk  %}" class="btn btn-outline btn-danger ">Delete</a>
             </p>
           </div>
         </div>

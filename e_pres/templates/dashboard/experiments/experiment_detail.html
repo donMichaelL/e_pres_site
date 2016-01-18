@@ -37,7 +37,7 @@
   margin-right: auto
   }
   input[type=number]{
-    width: 100px;
+    width: 60px;
   }
 </style>
 {% endblock %}
@@ -84,6 +84,7 @@
                 {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
                 <div class="panel-body">
                   <form action="{% url 'checkpoint_new' %}" method="POST" class="form-inline"> {% csrf_token %}
+                    {{checkpoint.pk}}
                     <input type="hidden" name="coord_x" value="{{checkpoint.coord_x}}">
                     <input type="hidden" name="coord_y" value="{{checkpoint.coord_y}}">
                     <input type="hidden" name="pk" value={{checkpoint.pk}}>
@@ -120,7 +121,17 @@
   setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
   {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
     var x = {{checkpoint.coord_x}}, y = {{checkpoint.coord_y}};
-    marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: 'ena' }),draggable:'true'});  //.addTo(map{{floor.pk}});
+    var name = {{checkpoint.pk}};
+    marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name }),draggable:'true'}).addTo(map{{floor.pk}});
+    marker.on('dragend',function(event){
+      var marker = event.target;
+      var position = marker.getLatLng();
+      console.log(position);
+      var marker_id = map{{floor.pk}}.markers.indexOf(marker);
+      marker_id = marker_id + 1;
+      $('#panel-'+{{floor.pk}} +' .panel-body:nth-child('+ marker_id +') input[name="coord_x"]').val(position.lat);
+      $('#panel-'+ {{floor.pk}} +' .panel-body:nth-child('+ marker_id +') input[name="coord_y"]').val(position.lng);
+    });
     map{{floor.pk}}.markers.push(marker);
   {% endfor %}
 {% endfor %}
@@ -130,7 +141,7 @@
 var id = 1;
 function onMapClick(e) {
   var panel_id = (e.target._container.id).match(/\d+/)[0];
-  var marker = new L.marker(e.latlng, {icon: new L.NumberedDivIcon({number: 'id:'+id}),draggable:'true'});
+  var marker = new L.marker(e.latlng, {icon: new L.NumberedDivIcon({number: 'new'}),draggable:'true'});
   e.target.markers.push(marker);
   var newRow = jQuery("<div class='panel-body'>  <form action='{% url "checkpoint_new" %}' method='POST'> {% csrf_token %} \
     <input type='hidden' name='coord_x' value='" +e.latlng.lat+ "'> \
@@ -149,17 +160,14 @@ function onMapClick(e) {
   marker.on('dragend',function(event){
     var marker = event.target;
     var position = marker.getLatLng();
-    marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
-    e.target.panTo(new L.LatLng(position.lat, position.lng));
+    // marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
+    // e.target.panTo(new L.LatLng(position.lat, position.lng));
     var marker_id = e.target.markers.indexOf(marker);
     marker_id = marker_id + 1;
-    // $('#panel'+ panel_id +' panel-body:nth-child('+marker_id+')  input[name=coord_x]').val(position.lat);
-    // $('#panel'+ panel_id +' panel-body:nth-child('+marker_id+')  input[name=coord_y]').val(position.lat);
-    console.log(
-      $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +')  input[name="coord_x"]')
-      .html());
-        $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_x"]').val(position.lat);
-        $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_y"]').val(position.lng);
+
+
+    $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_x"]').val(position.lat);
+    $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_y"]').val(position.lng);
 
   });
     e.target.addLayer(marker);
