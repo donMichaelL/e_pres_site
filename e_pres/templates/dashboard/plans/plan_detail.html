@@ -1,7 +1,43 @@
 {% extends 'dashboard/base_logged.html' %}
+{% load staticfiles %}
 {% load crispy_forms_tags %}
+{% load poll_extras %}
 
 
+{% block css_styles %}
+<link href="{% static "css/leaflet.css" %}" rel="stylesheet" type="text/css">
+<style>
+  .extra-margin{
+    margin-bottom: 20px;
+  }
+
+  .maps-blueprint {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+
+  .leaflet-div-icon {
+  background: transparent;
+  border: none;
+  }
+  .leaflet-marker-icon .number{
+  position: relative;
+  top: -55px;
+  left:-10px;
+  font-size: 14px;
+  width: 40px;
+  text-align: center;
+  }
+  .leaflet-container img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto
+  }
+
+</style>
+{% endblock %}
 
 {% block title %}{{object.name}} {% endblock %}
 {% block main_header %}{{object.name}} <a type="button"  href="{% url 'test_list' %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i>
@@ -21,4 +57,76 @@
      <a type="button"  href="{% url 'plan_delete' pk=object.pk pk_experiment=object.experiment.pk  %}" class="btn btn-outline btn-danger btn-lg pull-right">Delete</a>
    </div>
  </div>
+
+<div class="row">
+  <div class="col-md-8">
+    <h1 class="lead">{{object.experiment.building}}</h1>
+    {% for floor in object.experiment.building.floor_set.all %}
+      <!-- <img src="{{floor.blueprint.url}}" class="img-responsive"/> -->
+      <h4 class="lead text-center">{{floor}}</h4>
+      <div id="image-map-{{floor.pk}}" class="maps-blueprint"></div>
+    {% endfor %}
+  </div>
+  <div class="col-md-4" id="plan">
+    <h3>Plan</h3>
+    <form method="POST" action="{% url 'plan_add_connection' pk_experiment=object.experiment.pk pk=object.pk %}" id="form-plan"> {% csrf_token %}
+      {{formset.as_p}}
+      <button id="submit" type="submit" class="btn btn-primary" name="action">Save</button>
+    </form>
+    <br>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}
+
+
+
+{% block js %}
+<script src="{% static 'js/leaflet.js' %}"></script>
+<script src="{% static 'js/leaf_custom.js' %}"></script>
+<script>
+var plan = [];
+{% for floor in object.experiment.building.floor_set.all %}
+  var map{{floor.pk}} = defineMap('image-map-{{floor.pk}}');
+  map{{floor.pk}}.markers = [];
+  setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
+  {% for checkpoint in floor.checkpoint_set.all|in_category:object.experiment  %}
+    var x = {{checkpoint.coord_x}}, y = {{checkpoint.coord_y}};
+    var name = {{checkpoint.pk}};
+    marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
+    map{{floor.pk}}.markers.push(marker);
+    marker.on('click',function(event){
+        var marker = event.target;
+        var marker_id = marker.options.icon.options.number;
+        plan.push(marker);
+        var iteration = plan.length
+        var newRow = jQuery("<div class='panel panel-default'> \
+        <div class='panel-body'><p> Step "+ iteration +"</p><p> Node -->" + marker_id+" \
+        </p></div> \
+        </div> \
+        ");
+        jQuery('#plan').append(newRow);
+
+        var form = jQuery("\
+          <input id='id_form-"+(iteration-1)+"-seq' min='0' name='form-"+ (iteration-1) +"-seq' type='number' value="+ iteration +"> \
+          <input name='form-"+ (iteration-1) +"-checkpoint' type='number' value="+ marker_id +"> \
+        ");
+        //jQuery('#form-plan').prepend(form);
+        jQuery('#submit').before(form);
+        jQuery('#id_form-TOTAL_FORMS').val(iteration);
+    });
+  {% endfor %}
+{% endfor %}
+
+
+function onMapClick(e) {};
+</script>
+{% endblock %}
+
+
+<input name='form-"+ (iteration-1) +"-seq' type='number' value="+iteration+"> \
+<input name='form-"+ (iteration-1) +"-checkpoint' type='text' value="+ marker_id +"> \
+<input name='form-"+ (iteration-1) +"-checkpoint' type='text' value="+ marker_id +">\
+<input name='form-"+ (iteration-1) +"-plan' type='text' value="+ {{object.pk}} +"> \

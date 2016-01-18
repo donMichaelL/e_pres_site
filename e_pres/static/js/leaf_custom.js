@@ -1,7 +1,7 @@
 
 L.NumberedDivIcon = L.Icon.extend({
     options: {
-      iconUrl: '../static/img/raspi.png',
+      iconUrl: '/static/img/raspi.png',
       number: '',
       shadowUrl: null,
       iconSize: new L.Point(25, 41),

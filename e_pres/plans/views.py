@@ -1,10 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse_lazy
+from django.forms import formset_factory
+from django.views.generic import View
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.views.generic.detail import DetailView
-from experiments.models import Experiment
-from .models import Plan
-from .forms import PlanForm
+from experiments.models import Experiment, Checkpoint
+from .models import Plan, Connection
+from .forms import PlanForm, ConnectionForm
 
 
 class PlanNewView(CreateView):
@@ -36,6 +38,12 @@ class PlanDetailView(UpdateView, DetailView):
     def get_success_url(self):
         return self.object.get_absolute_url()
 
+    def get_context_data(self, **kwargs):
+        context = super(PlanDetailView, self).get_context_data(**kwargs)
+        ConnectionFormSet = formset_factory(ConnectionForm, extra=0)
+        context['formset'] = ConnectionFormSet()
+        return context
+
 
 class PlanDeleteView(DeleteView):
     model = Plan
@@ -43,3 +51,21 @@ class PlanDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('test_list')
+
+
+class PlanAddConnectionlView(View):
+    def post(self, request, *args, **kwargs):
+        ConnectionFormSet = formset_factory(ConnectionForm)
+        formset = ConnectionFormSet(request.POST)
+        plan = get_object_or_404(Plan, pk=kwargs['pk'])
+        if formset.is_valid():
+            for form in formset:
+                connection = form.save(commit=False)
+                connection.plan = plan
+                checkpoint = get_object_or_404(Checkpoint, pk=form.cleaned_data['checkpoint'])
+                connection.checkpoint = checkpoint
+                connection.save()
+
+                print form.cleaned_data['checkpoint']
+
+        return redirect(reverse_lazy('plan_detail', kwargs={'pk': kwargs['pk'], 'pk_experiment': kwargs['pk_experiment']}))

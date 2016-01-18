@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Plan
+from .models import Plan, Connection
 
 
 class PlanAdmin(admin.ModelAdmin):
@@ -16,4 +16,12 @@ class PlanAdmin(admin.ModelAdmin):
         return obj.experiment.user
 
 
+class ConnectionAdmin(admin.ModelAdmin):
+    list_display = ['experiment', '__unicode__', 'checkpoint', 'seq']
+    model = Connection
+
+    def experiment(self, obj):
+        return obj.plan.experiment.name
+
 admin.site.register(Plan, PlanAdmin)
+admin.site.register(Connection, ConnectionAdmin)
