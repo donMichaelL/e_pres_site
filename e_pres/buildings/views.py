@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
+from django.contrib import messages
 from django.views.generic import FormView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -26,6 +27,7 @@ class BuildingNewView(FormView):
         building = form.save(commit=False)
         building.user = self.request.user
         building.save()
+        messages.success(self.request, ' %s was created.'% building.name )
         return super(BuildingNewView, self).form_valid(form)
 
 
@@ -33,6 +35,10 @@ class BuildingDetailView(UpdateView, DetailView):
     template_name = 'dashboard/buildings/building_detail.html'
     form_class = BuildingForm
     model = Building
+
+    def form_valid(self, form):
+        messages.success(self.request, ' %s was updated.'% form.cleaned_data['name'] )
+        return super(BuildingDetailView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(BuildingDetailView, self).get_context_data(**kwargs)
@@ -44,6 +50,10 @@ class BuildingDeleteView(DeleteView):
     model = Building
     template_name = 'dashboard/buildings/building_delete.html'
     success_url = reverse_lazy('building_list')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, ' %s was deleted.'% self.get_object().name )
+        return super(BuildingDeleteView, self).delete(request, *args, **kwargs)
 
 
 class FloorNewView(CreateView):
@@ -64,6 +74,7 @@ class FloorNewView(CreateView):
         building = get_object_or_404(Building, pk= self.kwargs.get(self.pk_url_kwarg))
         floor.building = building
         floor.save()
+        messages.success(self.request, ' %s was created.'% floor.name )
         return super(FloorNewView, self).form_valid(form)
 
 
@@ -75,6 +86,10 @@ class FloorDetailView(UpdateView, DetailView):
     def get_success_url(self):
         return self.object.get_building_url()
 
+    def form_valid(self, form):
+        messages.success(self.request, ' %s was updated.'% form.cleaned_data['name'] )
+        return super(FloorDetailView, self).form_valid(form)
+
 
 class FloorDeleteView(DeleteView):
     model = Floor
@@ -82,3 +97,7 @@ class FloorDeleteView(DeleteView):
 
     def get_success_url(self):
         return self.object.get_building_url()
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, ' %s was deleted.'% self.get_object().name )
+        return super(FloorDeleteView, self).delete(request, *args, **kwargs)

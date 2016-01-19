@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse_lazy
+from django.contrib import messages
 from django.forms import formset_factory
 from django.views.generic import View
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
@@ -27,6 +28,7 @@ class PlanNewView(CreateView):
         experiment = get_object_or_404(Experiment, pk= self.kwargs.get(self.pk_url_kwarg))
         plan.experiment = experiment
         plan.save()
+        messages.success(self.request, ' %s was created.'% plan.name )
         return super(PlanNewView, self).form_valid(form)
 
 
@@ -50,6 +52,10 @@ class PlanDeleteView(DeleteView):
     model = Plan
     template_name = 'dashboard/plans/plan_delete.html'
 
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, ' %s was deleted.'% self.get_object().name )
+        return super(PlanDeleteView, self).delete(request, *args, **kwargs)
+
     def get_success_url(self):
         return reverse_lazy('test_list')
 
@@ -66,12 +72,14 @@ class PlanAddConnectionlView(View):
                 checkpoint = get_object_or_404(Checkpoint, pk=form.cleaned_data['checkpoint'])
                 connection.checkpoint = checkpoint
                 connection.save()
+            messages.success(self.request, ' %s was saved.'% plan.name )
         return redirect(reverse_lazy('plan_detail', kwargs={'pk': kwargs['pk'], 'pk_experiment': kwargs['pk_experiment']}))
 
 class PlanDeleteConnectionlView(View):
     def post(self, request, *args, **kwargs):
         plan = get_object_or_404(Plan , pk=kwargs['pk'])
         plan.connection_set.all().delete()
+        messages.success(self.request, ' %s was deleted.'% plan.name )
         return redirect(reverse_lazy('plan_detail', kwargs={'pk': kwargs['pk'], 'pk_experiment': kwargs['pk_experiment']}))
 
     def get(self, request, *args, **kwargs):
