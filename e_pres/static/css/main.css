@@ -1,0 +1,9 @@
+.container-alert-flash {
+  top:10px;
+  position: absolute;
+  z-index: 50000;
+  width: 300px;
+  right: 20px;
+  margin: 0px;
+  padding: 30px;
+}

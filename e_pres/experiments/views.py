@@ -6,6 +6,7 @@ from django.views.generic import View
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic import FormView
+from buildings.models import Building
 from .models import Experiment, Checkpoint
 from .forms import ExperimentForm, CheckpointForm
 
@@ -20,6 +21,11 @@ class ExperimentListView(ListView):
 class ExperimentNewView(FormView):
     form_class = ExperimentForm
     template_name = 'dashboard/experiments/new_test.html'
+
+    def get_form(self, *args, **kwargs):
+        form = super(ExperimentNewView, self).get_form(*args, **kwargs)
+        form.fields['building'].queryset = Building.objects.filter(user=self.request.user)
+        return form
 
     def get_success_url(self):
         if self.request.GET.get('next', ''):
@@ -74,10 +80,10 @@ class CheckpointInsertView(View):
                 checkpoint = get_object_or_404(Checkpoint, pk=pk)
                 new_form = CheckpointForm(request.POST, instance=checkpoint)
                 new_form.save()
-                messages.success(self.request, ' %s was updated.'% checkpoint.pk )
+                messages.success(self.request, 'Checkpoint: %s was updated.'% checkpoint.pk )
             else:
                 checkpoint = form.save()
-                messages.success(self.request, ' %s was created.'% checkpoint.pk )
+                messages.success(self.request, 'Checkpoint: %s was created.'% checkpoint.pk )
         else:
             print form.errors
         return redirect(reverse_lazy('test_detail', kwargs={'pk': kwargs['pk']}))
