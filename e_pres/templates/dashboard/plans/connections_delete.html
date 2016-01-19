@@ -2,9 +2,9 @@
 {% load crispy_forms_tags %}
 
 
-{% block title %}Delete Plan {% endblock %}
+{% block title %}Delete PlanRoute {% endblock %}
 
-{% block main_header %}Delete Plan{% endblock %}
+{% block main_header %}Delete PlanRoute{% endblock %}
 
 
 {% block main_content %}
@@ -12,15 +12,14 @@
   <div class="col-xs-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-        Are you sure you want to delete <strong>{{object.name}}</strong>?
+        Are you sure you want to delete ?
       </div>
       <div class="panel-body">
         <div class="row">
           <div class="col-lg-12">
             <form method="POST" action="" class="form"> {% csrf_token %}
-                {{ form | crispy }}
                 <button type="submit" class="btn btn-danger" name="action">Delete</button>
-                <a href="{{object.get_plan_url}}"  class="btn btn-default" >Cancel</a>
+                <a href="{{plan.get_absolute_url}}"  class="btn btn-default" >Cancel</a>
             </form>
           </div>
     </div>

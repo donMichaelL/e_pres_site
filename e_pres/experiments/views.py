@@ -57,8 +57,8 @@ class ExperimentDetailView(UpdateView, DetailView):
 class CheckpointInsertView(View):
     def post(self, request, *args, **kwargs):
         form = CheckpointForm(request.POST)
+        experiment = kwargs['pk']
         if form.is_valid():
-            print form.cleaned_data['exit']
             pk = form.cleaned_data['pk']
             if pk:
                 checkpoint = get_object_or_404(Checkpoint, pk=pk)
@@ -68,7 +68,8 @@ class CheckpointInsertView(View):
                 form.save()
         else:
             print form.errors
-        return redirect('/experiments/1')
+        return redirect(reverse_lazy('test_detail', kwargs={'pk': kwargs['pk']}))
+
 
 
 class CheckpointDeleteView(DeleteView):

@@ -42,6 +42,7 @@ class PlanDetailView(UpdateView, DetailView):
         context = super(PlanDetailView, self).get_context_data(**kwargs)
         ConnectionFormSet = formset_factory(ConnectionForm, extra=0)
         context['formset'] = ConnectionFormSet()
+        context['empty_plan'] = False if self.object.connection_set.all().count() else True
         return context
 
 
@@ -65,7 +66,14 @@ class PlanAddConnectionlView(View):
                 checkpoint = get_object_or_404(Checkpoint, pk=form.cleaned_data['checkpoint'])
                 connection.checkpoint = checkpoint
                 connection.save()
-
-                print form.cleaned_data['checkpoint']
-
         return redirect(reverse_lazy('plan_detail', kwargs={'pk': kwargs['pk'], 'pk_experiment': kwargs['pk_experiment']}))
+
+class PlanDeleteConnectionlView(View):
+    def post(self, request, *args, **kwargs):
+        plan = get_object_or_404(Plan , pk=kwargs['pk'])
+        plan.connection_set.all().delete()
+        return redirect(reverse_lazy('plan_detail', kwargs={'pk': kwargs['pk'], 'pk_experiment': kwargs['pk_experiment']}))
+
+    def get(self, request, *args, **kwargs):
+        plan = get_object_or_404(Plan, pk=kwargs['pk'])
+        return render(request, 'dashboard/plans/connections_delete.html', {'plan':plan})
