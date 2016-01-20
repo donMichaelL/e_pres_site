@@ -1,7 +1,8 @@
 from django.shortcuts import render
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic import View
 from allauth.account.forms import LoginForm
-from allauth.account.views import PasswordChangeView
+from allauth.account.views import PasswordChangeView, LoginView
 from buildings.models import Building
 from .forms import UserForm, UserProfileForm
 # Create your views here.
@@ -10,8 +11,8 @@ class HomepageView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             buildings = request.user.building_set.all()
-            context = {'buildings': buildings}
-            return render(request,'dashboard/buildings.html', context)
+            context = {'object_list': buildings}
+            return render(request,'dashboard/buildings/list_building.html', context)
         else:
             form = LoginForm()
             context = {'form': form}

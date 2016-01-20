@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic import View
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
@@ -9,8 +11,9 @@ from django.views.generic import FormView
 from buildings.models import Building
 from .models import Experiment, Checkpoint
 from .forms import ExperimentForm, CheckpointForm
+from buildings.mixins import ContentUserOnlyMixin, CheckpointContentUserOnlyMixin
 
-class ExperimentListView(ListView):
+class ExperimentListView(LoginRequiredMixin, ListView):
     model = Experiment
     template_name = 'dashboard/experiments/list_tests.html'
 
@@ -18,7 +21,7 @@ class ExperimentListView(ListView):
         return Experiment.objects.filter(user=self.request.user)
 
 
-class ExperimentNewView(FormView):
+class ExperimentNewView(LoginRequiredMixin, FormView):
     form_class = ExperimentForm
     template_name = 'dashboard/experiments/new_test.html'
 
@@ -27,11 +30,6 @@ class ExperimentNewView(FormView):
         form.fields['building'].queryset = Building.objects.filter(user=self.request.user)
         return form
 
-    def get_success_url(self):
-        if self.request.GET.get('next', ''):
-            return (self.request.GET.get('next', ''))
-        return  reverse_lazy('test_list')
-
     def form_valid(self, form):
         test = form.save(commit=False)
         test.user = self.request.user
@@ -39,8 +37,13 @@ class ExperimentNewView(FormView):
         messages.success(self.request, ' %s was created.'% test.name )
         return super(ExperimentNewView, self).form_valid(form)
 
+    def get_success_url(self):
+        if self.request.GET.get('next', ''):
+            return (self.request.GET.get('next', ''))
+        return  reverse_lazy('test_list')
 
-class ExperimentDeleteView(DeleteView):
+
+class ExperimentDeleteView(LoginRequiredMixin, ContentUserOnlyMixin, DeleteView):
     model = Experiment
     template_name = 'dashboard/experiments/test_delete.html'
 
@@ -54,7 +57,7 @@ class ExperimentDeleteView(DeleteView):
         return super(ExperimentDeleteView, self).delete(request, *args, **kwargs)
 
 
-class ExperimentDetailView(UpdateView, DetailView):
+class ExperimentDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, DetailView):
     template_name = 'dashboard/experiments/experiment_detail.html'
     form_class = ExperimentForm
     model = Experiment
@@ -70,10 +73,14 @@ class ExperimentDetailView(UpdateView, DetailView):
         return context
 
 
-class CheckpointInsertView(View):
+class CheckpointInsertView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         form = CheckpointForm(request.POST)
-        experiment = kwargs['pk']
+        experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
+        if experiment.user != request.user:
+            return PermissionDenied()
+        if experiment.user != request.user:
+            raise PermissionDenied()
         if form.is_valid():
             pk = form.cleaned_data['pk']
             if pk:
@@ -90,15 +97,14 @@ class CheckpointInsertView(View):
 
 
 
-class CheckpointDeleteView(DeleteView):
+class CheckpointDeleteView(LoginRequiredMixin, CheckpointContentUserOnlyMixin, DeleteView):
     model = Checkpoint
     template_name = 'dashboard/experiments/checkpoint_delete.html'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, ' %s was deleted.'% self.get_object().pk)
+        messages.success(self.request, 'Checkpoint %s was deleted.'% self.get_object().pk)
         return super(CheckpointDeleteView, self).delete(request, *args, **kwargs)
 
     def get_success_url(self):
-        if self.request.GET.get('next', ''):
-            return (self.request.GET.get('next', ''))
-        return  reverse_lazy('test_list')
+        experiment = get_object_or_404(Experiment, pk = self.kwargs['pk_experiment'])
+        return experiment.get_absolute_url()

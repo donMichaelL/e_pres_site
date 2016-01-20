@@ -8,9 +8,11 @@ from django.views.generic.detail import DetailView
 from experiments.models import Experiment, Checkpoint
 from .models import Plan, Connection
 from .forms import PlanForm, ConnectionForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .mixins import ContentUserOnlyMixin
 
 
-class PlanNewView(CreateView):
+class PlanNewView(LoginRequiredMixin, CreateView):
     model = Plan
     template_name = 'dashboard/plans/new_plan.html'
     fields = ['name']
@@ -20,19 +22,19 @@ class PlanNewView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(PlanNewView, self).get_context_data(**kwargs)
-        context['test'] = self.kwargs.get(self.pk_url_kwarg)
+        context['test'] = self.kwargs['pk_experiment']
         return context
 
     def form_valid(self, form):
         plan = form.save(commit=False)
-        experiment = get_object_or_404(Experiment, pk= self.kwargs.get(self.pk_url_kwarg))
+        experiment = get_object_or_404(Experiment, pk=self.kwargs['pk_experiment'])
         plan.experiment = experiment
         plan.save()
         messages.success(self.request, ' %s was created.'% plan.name )
         return super(PlanNewView, self).form_valid(form)
 
 
-class PlanDetailView(UpdateView, DetailView):
+class PlanDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, DetailView):
     template_name = 'dashboard/plans/plan_detail.html'
     form_class = PlanForm
     model = Plan
@@ -48,7 +50,7 @@ class PlanDetailView(UpdateView, DetailView):
         return context
 
 
-class PlanDeleteView(DeleteView):
+class PlanDeleteView(LoginRequiredMixin, ContentUserOnlyMixin, DeleteView):
     model = Plan
     template_name = 'dashboard/plans/plan_delete.html'
 
@@ -60,7 +62,7 @@ class PlanDeleteView(DeleteView):
         return reverse_lazy('test_list')
 
 
-class PlanAddConnectionlView(View):
+class PlanAddConnectionlView(LoginRequiredMixin, ContentUserOnlyMixin, View):
     def post(self, request, *args, **kwargs):
         ConnectionFormSet = formset_factory(ConnectionForm)
         formset = ConnectionFormSet(request.POST)
@@ -75,7 +77,7 @@ class PlanAddConnectionlView(View):
             messages.success(self.request, ' %s was saved.'% plan.name )
         return redirect(reverse_lazy('plan_detail', kwargs={'pk': kwargs['pk'], 'pk_experiment': kwargs['pk_experiment']}))
 
-class PlanDeleteConnectionlView(View):
+class PlanDeleteConnectionlView(LoginRequiredMixin, ContentUserOnlyMixin, View):
     def post(self, request, *args, **kwargs):
         plan = get_object_or_404(Plan , pk=kwargs['pk'])
         plan.connection_set.all().delete()

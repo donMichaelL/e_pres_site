@@ -3,14 +3,18 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.views.generic import FormView
 from django.views.generic.list import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from .forms import BuildingForm, FloorForm
 from .models import Building, Floor
 from experiments.models import return_choices
+from .mixins import ContentUserOnlyMixin, FloorContentUserOnlyMixin
+
+from django.core.exceptions import PermissionDenied
 
 
-class BuildingListView(ListView):
+class BuildingListView(LoginRequiredMixin, ListView):
     model = Building
     template_name = 'dashboard/buildings/list_building.html'
 
@@ -18,7 +22,7 @@ class BuildingListView(ListView):
         return Building.objects.filter(user=self.request.user)
 
 
-class BuildingNewView(FormView):
+class BuildingNewView(LoginRequiredMixin, FormView):
     form_class = BuildingForm
     template_name = 'dashboard/buildings/new_building.html'
     success_url = reverse_lazy('homepage')
@@ -31,7 +35,7 @@ class BuildingNewView(FormView):
         return super(BuildingNewView, self).form_valid(form)
 
 
-class BuildingDetailView(UpdateView, DetailView):
+class BuildingDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, DetailView):
     template_name = 'dashboard/buildings/building_detail.html'
     form_class = BuildingForm
     model = Building
@@ -46,7 +50,7 @@ class BuildingDetailView(UpdateView, DetailView):
         return context
 
 
-class BuildingDeleteView(DeleteView):
+class BuildingDeleteView(LoginRequiredMixin, ContentUserOnlyMixin, DeleteView):
     model = Building
     template_name = 'dashboard/buildings/building_delete.html'
     success_url = reverse_lazy('building_list')
@@ -56,7 +60,7 @@ class BuildingDeleteView(DeleteView):
         return super(BuildingDeleteView, self).delete(request, *args, **kwargs)
 
 
-class FloorNewView(CreateView):
+class FloorNewView(LoginRequiredMixin, CreateView):
     model = Floor
     template_name = 'dashboard/floors/new_floor.html'
     fields = ['name', 'number', 'blueprint', 'max_evacuation_time', 'stud_number']
@@ -77,8 +81,16 @@ class FloorNewView(CreateView):
         messages.success(self.request, ' %s was created.'% floor.name )
         return super(FloorNewView, self).form_valid(form)
 
+    def dispatch(self, request, *args, **kwargs):
+        building = get_object_or_404(Building, pk= kwargs['pk'])
+        if building.user == request.user:
+            return super(FloorNewView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied()
 
-class FloorDetailView(UpdateView, DetailView):
+
+
+class FloorDetailView(LoginRequiredMixin, FloorContentUserOnlyMixin, UpdateView, DetailView):
     template_name = 'dashboard/floors/floor_detail.html'
     form_class = FloorForm
     model = Floor
@@ -91,7 +103,7 @@ class FloorDetailView(UpdateView, DetailView):
         return super(FloorDetailView, self).form_valid(form)
 
 
-class FloorDeleteView(DeleteView):
+class FloorDeleteView(LoginRequiredMixin, FloorContentUserOnlyMixin, DeleteView):
     model = Floor
     template_name = 'dashboard/floors/floor_delete.html'
 

@@ -94,7 +94,7 @@
                 <input type="text" name="name" value="{{checkpoint.name}}">
                 <input name="exit" type="checkbox" {% if checkpoint.exit %}checked {% endif %}>
                 <button type="submit" class="btn btn-success" name="action">Update</button>
-                <a href="{% url 'checkpoint_delete' pk=checkpoint.pk %}?next={{object.get_absolute_url}}" type="button" class="btn btn-danger">X</a>
+                <a href="{% url 'checkpoint_delete' pk_experiment=object.pk  pk=checkpoint.pk %}" type="button" class="btn btn-danger">X</a>
             </form>
           </div>
           {% endfor %}
