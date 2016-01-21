@@ -1,4 +1,5 @@
 {% extends 'dashboard/base_logged.html' %}
+{% load staticfiles %}
 
 {% block title %}Buildings {% endblock %}
 {% block main_header %}Buildings {% endblock %}
@@ -16,7 +17,9 @@
   <div class="grid-item" >
     <div class="thumbnail ">
       <a type="button" href="{% url 'building_delete' pk=building.pk %}" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
-      {% if building.photo %}<a href="{{building.get_absolute_url}}"><img class="img-responsive" src="{{building.photo.url}}" alt="Building Photo"></a>{% endif %}
+      {% if building.photo %}<a href="{{building.get_absolute_url}}"><img class="img-responsive" src="{{building.photo.url}}" alt="Building Photo"></a>
+      {% else %}  <a href="{{building.get_absolute_url}}"><img class="img-responsive" src="{% static 'img/building.jpg' %}" alt="Building Photo"></a>
+      {% endif %}
       <div class="caption">
         <h3 class="text-center">{{building.name}}</h3>
         <p>Country: {{building.get_country_display}}</p>

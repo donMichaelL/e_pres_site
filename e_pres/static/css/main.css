@@ -8,16 +8,36 @@
   padding: 30px;
 }
 
-
-
-/*.grid-item {
-  width: 33.333%  ;
-  float: left;
-}*/
-
-
 .grid-item {
   width: 25%;
-  /*float: left;*/
+}
 
+.extra-margin{
+  margin-bottom: 20px;
+}
+
+.maps-blueprint {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}
+
+.leaflet-marker-icon .number{
+  position: relative;
+  top: -55px;
+  left:-10px;
+  font-size: 14px;
+  width: 40px;
+  text-align: center;
+}
+.leaflet-container img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto
 }

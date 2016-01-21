@@ -8,34 +8,6 @@
 <link href="{% static "css/leaflet.css" %}" rel="stylesheet" type="text/css">
 
 <style>
-  .extra-margin{
-    margin-bottom: 20px;
-  }
-
-  .maps-blueprint {
-    width: 100%;
-    height: 500px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-  }
-
-  .leaflet-div-icon {
-  background: transparent;
-  border: none;
-  }
-  .leaflet-marker-icon .number{
-  position: relative;
-  top: -55px;
-  left:-10px;
-  font-size: 14px;
-  width: 40px;
-  text-align: center;
-  }
-  .leaflet-container img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto
-  }
   input[type=number]{
     width: 60px;
   }
@@ -90,9 +62,9 @@
                 <input type="hidden" name="pk" value={{checkpoint.pk}}>
                 <input type="hidden" name="floor" value="{{floor.pk}}">
                 <input type="hidden" name="experiment" value="{{object.pk}}">
-                <input type="number" width="100px" name="flux" value={{checkpoint.flux}}>
-                <input type="text" name="name" value="{{checkpoint.name}}">
-                <input name="exit" type="checkbox" {% if checkpoint.exit %}checked {% endif %}>
+                <input type="number" width="100px" name="flux" value={{checkpoint.flux}} placeholder="Flux">
+                <input type="text" name="name" value="{{checkpoint.name}}" placeholder="Name">
+                IsExit?<input name="exit" type="checkbox" {% if checkpoint.exit %}checked {% endif %}>
                 <button type="submit" class="btn btn-success" name="action">Update</button>
                 <a href="{% url 'checkpoint_delete' pk_experiment=object.pk  pk=checkpoint.pk %}" type="button" class="btn btn-danger">X</a>
             </form>
@@ -147,9 +119,9 @@ function onMapClick(e) {
     <input type='hidden' name='coord_y' value='" +e.latlng.lng+ "'> \
     <input type='hidden' name='floor' value='"+ panel_id +"'> \
     <input type='hidden' name='experiment' value='"+{{object.pk}} +"'> \
-    <input type='number' name='flux' value=''> \
-    <input type='text' name='name' value=''> \
-    <input name='exit' type='checkbox'> \
+    <input type='number' placeholder='flux' name='flux' value=''> \
+    <input type='text' placeholder='name' name='name' value=''> \
+    isExit? <input name='exit' type='checkbox'> \
     <button type='submit' class='btn btn-default' name=action>Save</button> \
     </form></div> \
   ");
