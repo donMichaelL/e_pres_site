@@ -4,6 +4,10 @@
 *.sublime-workspace
 
 e_pres/media/
+e_pres/tests
+e_pres/e_pres/settings.py
+e_pres/e_pres/config/secrets.json
+
 e_pres/static/bower_components
 
 # Byte-compiled / optimized / DLL files
