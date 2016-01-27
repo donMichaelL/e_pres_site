@@ -1,14 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
-from django.contrib import messages
 from django.views.generic import FormView
 from django.views.generic.list import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from experiments.models import return_choices
 from .forms import BuildingForm, FloorForm
 from .models import Building, Floor
-from experiments.models import return_choices
 from .mixins import ContentUserOnlyMixin, FloorContentUserOnlyMixin
 
 from django.core.exceptions import PermissionDenied

@@ -1,11 +1,13 @@
-from django.shortcuts import render
-from django.core.urlresolvers import reverse_lazy
+from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.views.generic import View
+from django.contrib import messages
 from allauth.account.forms import LoginForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from allauth.account.views import PasswordChangeView, LoginView
 from buildings.models import Building
 from .forms import UserForm, UserProfileForm
-# Create your views here.
+
 
 class HomepageView(View):
     def get(self, request, *args, **kwargs):
@@ -19,11 +21,11 @@ class HomepageView(View):
             return render(request, 'account/login.html', context)
 
 
-class LoginAfterPasswordChangeView(PasswordChangeView):
+class LoginAfterPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     success_url = "/"
 
 
-class ProfileFormView(View):
+class ProfileFormView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user_form = UserForm(instance=request.user)
         user_profile_form = UserProfileForm(instance=request.user.userprofile)
@@ -39,6 +41,8 @@ class ProfileFormView(View):
         if user_form.is_valid() and user_profile_form.is_valid():
             user_form.save()
             user_profile_form.save()
+            messages.success(request, ' %s profile was updated.'% self.request.user)
+            return redirect(reverse('profile_settings'))
         context = {
                 'user_form': user_form,
                 'user_profile_form': user_profile_form

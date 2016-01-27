@@ -20,7 +20,6 @@ class UserProfile(models.Model):
 
 
 
-
 def create_profile(sender, **kwargs):
     user = kwargs["instance"]
     if kwargs["created"]:
