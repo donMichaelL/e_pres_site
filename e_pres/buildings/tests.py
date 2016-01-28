@@ -41,6 +41,11 @@ class BuildingmodelTest(TestCase):
         self.assertEqual(Building.objects.first().country, 'gr')
         self.assertEqual(Building.objects.first().user.username, 'me')
 
+    def test_building_get_absolute_url(self):
+        user = User.objects.create_user(username='me', password='pass')
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        self.assertEqual(b1.get_absolute_url(), '/buildings/1')
+
     def test_building_model_each_user_different(self):
         user1 = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user1, name='b1', country='gr')
