@@ -71,7 +71,7 @@ class PasswordchangeTest(TestCase):
 
 # models
 class ProfilemodelTest(TestCase):
-    def test_create_user_(self):
+    def test_create_user(self):
         user = User.objects.create_user(username='me', password='pass')
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual('me', User.objects.first().username)
