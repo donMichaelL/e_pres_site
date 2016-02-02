@@ -24,7 +24,7 @@ class BuildingListView(LoginRequiredMixin, ListView):
 class BuildingNewView(LoginRequiredMixin, FormView):
     form_class = BuildingForm
     template_name = 'dashboard/buildings/new_building.html'
-    success_url = reverse_lazy('homepage')
+    success_url = reverse_lazy('building_list')
 
     def form_valid(self, form):
         building = form.save(commit=False)

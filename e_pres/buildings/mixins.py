@@ -5,7 +5,6 @@ from django.core.exceptions import PermissionDenied
 class ContentUserOnlyMixin(AccessMixin):
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
-        print 'EDWWW'
         if obj.user == request.user:
             return super(ContentUserOnlyMixin, self).dispatch( request, *args, **kwargs)
         else:
