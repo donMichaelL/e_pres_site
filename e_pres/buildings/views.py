@@ -10,7 +10,6 @@ from experiments.models import return_choices
 from .forms import BuildingForm, FloorForm
 from .models import Building, Floor
 from .mixins import ContentUserOnlyMixin, FloorContentUserOnlyMixin
-
 from django.core.exceptions import PermissionDenied
 
 
@@ -87,7 +86,6 @@ class FloorNewView(LoginRequiredMixin, CreateView):
             return super(FloorNewView, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied()
-
 
 
 class FloorDetailView(LoginRequiredMixin, FloorContentUserOnlyMixin, UpdateView, DetailView):

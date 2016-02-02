@@ -21,6 +21,7 @@
     "bootstrap": "~3.3.6",
     "font-awesome": "fontawesome#~4.5.0",
     "metisMenu": "~2.2.0",
-    "masonry": "~4.0.0"
+    "masonry": "~4.0.0",
+    "startbootstrap-sb-admin-2": "~1.0.8"
   }
 }

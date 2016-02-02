@@ -32,6 +32,7 @@ class BuildingpageView(TestCase):
 
 
 
+
 # models
 class BuildingmodelTest(TestCase):
     def test_building_model(self):
@@ -40,11 +41,12 @@ class BuildingmodelTest(TestCase):
         self.assertEqual(Building.objects.count(), 1)
         self.assertEqual(Building.objects.first().country, 'gr')
         self.assertEqual(Building.objects.first().user.username, 'me')
+        self.assertEqual(Building.objects.first().__unicode__(), 'b1')
 
     def test_building_get_absolute_url(self):
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
-        self.assertEqual(b1.get_absolute_url(), '/buildings/1')
+        self.assertEqual(b1.get_absolute_url(), '/building/1/')
 
     def test_building_model_each_user_different(self):
         user1 = User.objects.create_user(username='me', password='pass')
@@ -66,5 +68,20 @@ class FloormodelTest(TestCase):
         self.assertEqual(Floor.objects.count(), 2)
         self.assertEqual(Floor.objects.first().name, 'fl1')
         self.assertEqual(floor1.building, b1)
+        self.assertEqual(floor1.__unicode__(), 'fl1')
         self.assertEqual(Floor.objects.last().name, 'fl2')
         self.assertEqual(floor2.building, b1)
+        self.assertEqual(floor2.__unicode__(), 'fl2')
+
+
+    def test_floor_get_absolute_url(self):
+        user = User.objects.create_user(username='me', password='pass')
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        floor1 = Floor.objects.create(building=b1, name='fl1', number='1')
+        self.assertEqual(floor1.get_absolute_url(), '/building/1/floor/1/')
+
+    def test_floor_get_building_url(self):
+        user = User.objects.create_user(username='me', password='pass')
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        floor1 = Floor.objects.create(building=b1, name='fl1', number='1')
+        self.assertEqual(floor1.get_building_url(), '/building/1/')

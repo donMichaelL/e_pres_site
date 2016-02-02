@@ -55,7 +55,7 @@ class PlanDeleteView(LoginRequiredMixin, ContentUserOnlyMixin, DeleteView):
     template_name = 'dashboard/plans/plan_delete.html'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, ' %s was deleted.'% self.get_object().name )
+        messages.success(self.request, ' %s was deleted.'% self.get_object().name)
         return super(PlanDeleteView, self).delete(request, *args, **kwargs)
 
     def get_success_url(self):
