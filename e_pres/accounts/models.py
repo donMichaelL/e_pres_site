@@ -6,6 +6,11 @@ from django.db.models.signals import post_save
 
 ORGANIZATION_CHOICES = (
     ('uoa', 'University of Athens'),
+    ('eppo', 'EPPO'),
+    ('uoc', 'UoC-NHMC'),
+    ('vez', 'Vesuvius Observatory'),
+    ('cei', 'CEI'),
+    ('incd', 'INCD "URBAN-INCERC"'),
 )
 
 

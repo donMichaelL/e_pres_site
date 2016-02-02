@@ -5,12 +5,14 @@ from .models import Building, Floor
 from .forms import BuildingForm
 
 
-class BuildingpageView(TestCase):
+class TestUtil(TestCase):
     def log_user(self):
         user = User.objects.create_user(username='me', password='pass')
         self.client.login(username=user.username, password='pass')
         return user
 
+
+class BuildingpageView(TestUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         response = self.client.get(reverse('building_list'))
         self.assertRedirects(response, reverse('homepage')+ '?next=/building/')
@@ -32,12 +34,7 @@ class BuildingpageView(TestCase):
         self.assertEqual(response.context['object_list'].count(), user.building_set.count())
 
 
-class BuildingInsertView(TestCase):
-    def log_user(self):
-        user = User.objects.create_user(username='me', password='pass')
-        self.client.login(username=user.username, password='pass')
-        return user
-
+class BuildingInsertView(TestUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         response = self.client.get(reverse('building_new'))
         self.assertRedirects(response, reverse('homepage')+ '?next=/building/new/')
@@ -65,12 +62,7 @@ class BuildingInsertView(TestCase):
         self.assertEqual(Building.objects.first().name, 'Building')
 
 
-class BuildingDeleteView(TestCase):
-    def log_user(self):
-        user = User.objects.create_user(username='me', password='pass')
-        self.client.login(username=user.username, password='pass')
-        return user
-
+class BuildingDeleteView(TestUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         b1 = Building.objects.create(user=self.log_user(), name='b1', country='gr')
         self.client.logout()
@@ -100,12 +92,7 @@ class BuildingDeleteView(TestCase):
         self.assertEqual(Building.objects.count(), 0)
 
 
-class BuildingUpdateView(TestCase):
-    def log_user(self):
-        user = User.objects.create_user(username='me', password='pass')
-        self.client.login(username=user.username, password='pass')
-        return user
-
+class BuildingUpdateView(TestUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         b1 = Building.objects.create(user=self.log_user(), name='b1', country='gr')
         self.client.logout()

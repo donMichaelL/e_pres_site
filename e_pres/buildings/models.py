@@ -6,6 +6,8 @@ from django.conf import settings
 COUNTRIES_CHOICES = (
     ('gr', 'Greece'),
     ('rm', 'Romania'),
+    ('bg', 'Bulgaria'),
+    ('it', 'Italy'),
 )
 
 
@@ -15,7 +17,7 @@ class Building(models.Model):
     country = models.CharField(max_length=2, choices=COUNTRIES_CHOICES)
     address = models.CharField(max_length=30, null=True, blank=True)
     tk = models.PositiveIntegerField(null=True, blank=True)
-    max_evacuation_time = models.PositiveIntegerField(help_text="in seconds",null=True, blank=True)
+    max_evacuation_time = models.PositiveIntegerField(verbose_name="Maximum Evacuation Time", help_text="in seconds",null=True, blank=True)
     photo = models.ImageField(upload_to='building_images/', null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
@@ -32,8 +34,8 @@ class Floor(models.Model):
     name = models.CharField(max_length=60)
     number = models.PositiveSmallIntegerField()
     blueprint = models.ImageField(upload_to='blueprints/')
-    max_evacuation_time = models.PositiveIntegerField(help_text="in seconds",null=True, blank=True)
-    stud_number = models.PositiveIntegerField(null=True, blank=True)
+    max_evacuation_time = models.PositiveIntegerField(verbose_name="Maximum Evacuation Time", help_text="in seconds",null=True, blank=True)
+    stud_number = models.PositiveIntegerField(verbose_name="Number of students", null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 

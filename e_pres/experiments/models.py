@@ -15,7 +15,8 @@ class Experiment(models.Model):
     building = models.ForeignKey(Building)
     name = models.CharField(max_length=60)
     disaster = models.CharField(max_length=2, choices=DISASTER_CHOICHES)
-    execuation_date = models.DateTimeField(null=True, blank=True)
+    execution_date = models.DateField(null=True, blank=True)
+    execution_time = models.TimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 
@@ -24,7 +25,7 @@ class Experiment(models.Model):
         return self.name
 
     def get_absolute_url(self):
-            return reverse("test_detail", kwargs={"pk": self.pk})
+        return reverse("test_detail", kwargs={"pk": self.pk})
 
 
 def return_choices():

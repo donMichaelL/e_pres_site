@@ -1,7 +1,10 @@
 {% extends 'dashboard/base_logged.html' %}
+{% load staticfiles %}
 {% load crispy_forms_tags %}
 
-
+{% block css_styles %}
+<link href="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% block title %}New Experiment {% endblock %}
 {% block main_header %}Insert New Experiment{% endblock %}
@@ -28,4 +31,21 @@
 
 
 
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+
+<script type="text/javascript">
+     $(function() {
+        $('#datepicker').datetimepicker({
+              format: 'DD-MM-YYYY'
+        });
+        $('#timepicker').datetimepicker({
+               format: 'HH:mm'
+        });
+     });
+ </script>
 {% endblock %}

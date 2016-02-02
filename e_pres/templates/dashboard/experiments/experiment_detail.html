@@ -6,12 +6,14 @@
 
 {% block css_styles %}
 <link href="{% static "css/leaflet.css" %}" rel="stylesheet" type="text/css">
+<link href="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" type="text/css">
 
 <style>
   input[type=number]{
     width: 60px;
   }
 </style>
+
 {% endblock %}
 
 
@@ -35,7 +37,7 @@
    </div>
    <div class="col-xs-12">
      <form method="POST" action="" class="form-inline">  {% csrf_token %}
-       {{form | crispy }}
+       {{form| crispy}}
        <br>
        <br>
        <button type="submit" class="btn btn-success" name="action">Update Experiment</button>
@@ -85,6 +87,19 @@
 {% block js %}
 <script src="{% static 'js/leaflet.js' %}"></script>
 <script src="{% static 'js/leaf_custom.js' %}"></script>
+<script src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+
+<script type="text/javascript">
+     $(function() {
+        $('#datepicker').datetimepicker({
+              format: 'DD-MM-YYYY'
+        });
+        $('#timepicker').datetimepicker({
+               format: 'HH:mm'
+        });
+     });
+ </script>
 <script>
 {% for floor in object.building.floor_set.all %}
   var map{{floor.pk}} = defineMap('image-map-{{floor.pk}}');

@@ -22,6 +22,7 @@
     "font-awesome": "fontawesome#~4.5.0",
     "metisMenu": "~2.2.0",
     "masonry": "~4.0.0",
-    "startbootstrap-sb-admin-2": "~1.0.8"
+    "startbootstrap-sb-admin-2": "~1.0.8",
+    "eonasdan-bootstrap-datetimepicker": "~4.17.37"
   }
 }
