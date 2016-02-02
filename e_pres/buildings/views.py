@@ -69,7 +69,11 @@ class FloorNewView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(FloorNewView, self).get_context_data(**kwargs)
-        context['building'] = self.kwargs.get(self.pk_url_kwarg)
+        building_id = self.kwargs.get(self.pk_url_kwarg)
+        context['building'] = building_id
+        building = get_object_or_404(Building, pk=building_id)
+        if building.user != self.request.user:
+            raise PermissionDenied()
         return context
 
     def form_valid(self, form):
@@ -79,13 +83,6 @@ class FloorNewView(LoginRequiredMixin, CreateView):
         floor.save()
         messages.success(self.request, ' %s was created.'% floor.name )
         return super(FloorNewView, self).form_valid(form)
-
-    def dispatch(self, request, *args, **kwargs):
-        building = get_object_or_404(Building, pk= kwargs['pk'])
-        if building.user == request.user:
-            return super(FloorNewView, self).dispatch(request, *args, **kwargs)
-        else:
-            raise PermissionDenied()
 
 
 class FloorDetailView(LoginRequiredMixin, FloorContentUserOnlyMixin, UpdateView, DetailView):
