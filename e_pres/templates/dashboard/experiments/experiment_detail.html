@@ -22,7 +22,7 @@
 {% if request.GET.next %}
 <a type="button"  href="{{request.GET.next}}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i> Back</a>
 {% else %}
-<a type="button"  href="{% url 'test_list' %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i> Back</a>
+<a type="button"  href="{% url 'experiment_list' %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i> Back</a>
 {% endif %}
 {% endblock %}
 

@@ -50,7 +50,7 @@ class ExperimentDeleteView(LoginRequiredMixin, ContentUserOnlyMixin, DeleteView)
     def get_success_url(self):
         if self.request.GET.get('next', ''):
             return (self.request.GET.get('next', ''))
-        return  reverse_lazy('test_list')
+        return  reverse_lazy('experiment_list')
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, ' %s was deleted.'% self.get_object().name)
