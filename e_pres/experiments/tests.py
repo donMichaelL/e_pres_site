@@ -61,6 +61,17 @@ class ExperimentDeleteViewTest(TestUtil):
     def test_GET_redirect_to_login(self):
         self.GET_check_for_login_and_redirect('experiment_delete', True, '?next=/experiment/1/delete/' )
 
+    def test_GET_template_user_not_show_other_user_experiment_delete(self):
+        user = self.log_user()
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        # another user
+        user_b = User.objects.create_user(username='user_b', password='pass')
+        b2 = Building.objects.create(user=user_b, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user_b, building=b1, name='Second',disaster='eq')
+        response = self.client.get(reverse('experiment_delete', kwargs={"pk": experiment.pk}))
+        self.assertEqual(response.status_code, 403)
+
     def test_GET_template_new_experiment(self):
         self.GET_template_the_right_one('experiment_delete', True, 'dashboard/experiments/experiment_delete.html')
 
@@ -82,6 +93,17 @@ class ExperimentDeleteViewTest(TestUtil):
 class ExperimentDetailViewTest(TestUtil):
     def test_GET_redirect_to_login(self):
         self.GET_check_for_login_and_redirect('experiment_detail', True, '?next=/experiment/1/' )
+
+    def test_GET_template_user_not_show_other_user_experiment_detail(self):
+        user = self.log_user()
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        # another user
+        user_b = User.objects.create_user(username='user_b', password='pass')
+        b2 = Building.objects.create(user=user_b, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user_b, building=b1, name='Second',disaster='eq')
+        response = self.client.get(reverse('experiment_detail', kwargs={"pk": experiment.pk}))
+        self.assertEqual(response.status_code, 403)
 
     def test_GET_template_detail_experiment(self):
         self.GET_template_the_right_one('experiment_detail', True, 'dashboard/experiments/experiment_detail.html')

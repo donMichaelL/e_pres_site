@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins import ContentUserOnlyMixin
 
 
-class PlanNewView(LoginRequiredMixin, CreateView):
+class PlanNewView(LoginRequiredMixin, ContentUserOnlyMixin, CreateView):
     model = Plan
     template_name = 'dashboard/plans/new_plan.html'
     fields = ['name']
@@ -59,7 +59,7 @@ class PlanDeleteView(LoginRequiredMixin, ContentUserOnlyMixin, DeleteView):
         return super(PlanDeleteView, self).delete(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy('test_list')
+        return reverse_lazy('experiment_list')
 
 
 class PlanAddConnectionlView(LoginRequiredMixin, ContentUserOnlyMixin, View):
