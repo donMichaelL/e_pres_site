@@ -7,8 +7,7 @@ from .forms import BuildingForm
 from .test_utils import TestUtil, FloorUtil
 
 
-
-class BuildingpageView(TestUtil):
+class BuildingpageViewTest(TestUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         response = self.client.get(reverse('building_list'))
         self.assertRedirects(response, reverse('homepage')+ '?next=/building/')
@@ -30,7 +29,7 @@ class BuildingpageView(TestUtil):
         self.assertEqual(response.context['object_list'].count(), user.building_set.count())
 
 
-class BuildingInsertView(TestUtil):
+class BuildingInsertViewTest(TestUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         response = self.client.get(reverse('building_new'))
         self.assertRedirects(response, reverse('homepage')+ '?next=/building/new/')
@@ -58,7 +57,7 @@ class BuildingInsertView(TestUtil):
         self.assertEqual(Building.objects.first().name, 'Building')
 
 
-class BuildingDeleteView(TestUtil):
+class BuildingDeleteViewTest(TestUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         b1 = Building.objects.create(user=self.log_user(), name='b1', country='gr')
         self.client.logout()
@@ -88,7 +87,7 @@ class BuildingDeleteView(TestUtil):
         self.assertEqual(Building.objects.count(), 0)
 
 
-class BuildingUpdateView(TestUtil):
+class BuildingUpdateViewTest(TestUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         b1 = Building.objects.create(user=self.log_user(), name='b1', country='gr')
         self.client.logout()
@@ -126,7 +125,7 @@ class BuildingUpdateView(TestUtil):
 
 
 
-class FloorNewView(FloorUtil):
+class FloorNewViewTest(FloorUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         self.GET_template_visitor_redirect_to_login('floor_new', False ,'?next=/building/1/floor/new/')
 
@@ -143,7 +142,7 @@ class FloorNewView(FloorUtil):
         self.POST_save_user('floor_new', False, False)
 
 
-class FloorUpdateView(FloorUtil):
+class FloorUpdateViewTest(FloorUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         self.GET_template_visitor_redirect_to_login('floor_detail', True ,'?next=/building/1/floor/1/')
 
@@ -160,7 +159,7 @@ class FloorUpdateView(FloorUtil):
         self.POST_save_user('floor_detail', True, False)
 
 
-class FloorDeleteView(FloorUtil):
+class FloorDeleteViewTest(FloorUtil):
     def test_GET_template_visitor_redirect_to_login(self):
         self.GET_template_visitor_redirect_to_login('floor_delete', True ,'?next=/building/1/floor/1/delete/')
 

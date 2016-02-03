@@ -25,7 +25,7 @@ class Experiment(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("test_detail", kwargs={"pk": self.pk})
+        return reverse("experiment_detail", kwargs={"pk": self.pk})
 
 
 def return_choices():

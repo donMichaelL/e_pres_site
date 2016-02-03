@@ -3,10 +3,10 @@ from .views import ExperimentListView, ExperimentNewView, ExperimentDeleteView, 
 from plans.views import PlanNewView, PlanDetailView, PlanDeleteView, PlanAddConnectionlView, PlanDeleteConnectionlView
 
 urlpatterns = [
-    url(r'^$', ExperimentListView.as_view(), name="test_list"),
-    url(r'^(?P<pk>\d+)/$', ExperimentDetailView.as_view(), name="test_detail"),
-    url(r'^new/$', ExperimentNewView.as_view(), name="test_new"),
-    url(r'^(?P<pk>\d+)/delete/$', ExperimentDeleteView.as_view(), name="test_delete"),
+    url(r'^$', ExperimentListView.as_view(), name="experiment_list"),
+    url(r'^(?P<pk>\d+)/$', ExperimentDetailView.as_view(), name="experiment_detail"),
+    url(r'^new/$', ExperimentNewView.as_view(), name="experiment_new"),
+    url(r'^(?P<pk>\d+)/delete/$', ExperimentDeleteView.as_view(), name="experiment_delete"),
     url(r'^(?P<pk>\d+)/add_checkpoint/$', CheckpointInsertView.as_view(), name="checkpoint_new"),
     url(r'^(?P<pk_experiment>\d+)/checkpoint/(?P<pk>\d+)/delete/$', CheckpointDeleteView.as_view(), name="checkpoint_delete"),
     url(r'^(?P<pk_experiment>\d+)/plan/new/$', PlanNewView.as_view(), name="new_plan"),

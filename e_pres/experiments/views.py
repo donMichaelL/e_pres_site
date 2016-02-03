@@ -15,7 +15,7 @@ from buildings.mixins import ContentUserOnlyMixin, CheckpointContentUserOnlyMixi
 
 class ExperimentListView(LoginRequiredMixin, ListView):
     model = Experiment
-    template_name = 'dashboard/experiments/list_tests.html'
+    template_name = 'dashboard/experiments/list_experiment.html'
 
     def get_queryset(self):
         return Experiment.objects.filter(user=self.request.user)
@@ -23,7 +23,7 @@ class ExperimentListView(LoginRequiredMixin, ListView):
 
 class ExperimentNewView(LoginRequiredMixin, FormView):
     form_class = ExperimentForm
-    template_name = 'dashboard/experiments/new_test.html'
+    template_name = 'dashboard/experiments/new_experiment.html'
 
     def get_form(self, *args, **kwargs):
         form = super(ExperimentNewView, self).get_form(*args, **kwargs)
@@ -40,12 +40,12 @@ class ExperimentNewView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         if self.request.GET.get('next', ''):
             return (self.request.GET.get('next', ''))
-        return  reverse_lazy('test_list')
+        return  reverse_lazy('experiment_list')
 
 
 class ExperimentDeleteView(LoginRequiredMixin, ContentUserOnlyMixin, DeleteView):
     model = Experiment
-    template_name = 'dashboard/experiments/test_delete.html'
+    template_name = 'dashboard/experiments/experiment_delete.html'
 
     def get_success_url(self):
         if self.request.GET.get('next', ''):
