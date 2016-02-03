@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.staticfiles import finders
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from buildings.models import Building, Floor
@@ -166,8 +167,102 @@ class PlanDeleteViewTest(TestCase):
         self.assertEqual(Plan.objects.count(), 0)
 
 
+class ConnectionDeleteViewTest(TestCase):
+    def log_user(self):
+        user = User.objects.create_user(username='me', password='pass')
+        self.client.login(username=user.username, password='pass')
+        return user
+
+    def test_GET_redirect_to_login(self):
+        user = self.log_user()
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        plan = Plan.objects.create(experiment=experiment, name="plan")
+        self.client.logout()
+        response = self.client.get(reverse('plan_delete_connections', kwargs={'pk_experiment': experiment.pk, 'pk':plan.pk}))
+        self.assertRedirects(response, reverse('homepage')+ '?next=/experiment/1/plan/1/delete/connections/')
+
+    def test_GET_user_cannot_delete_plan_to_other_experiment(self):
+        user = self.log_user()
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        plan1 = Plan.objects.create(experiment=experiment, name="plan")
+        user_b = User.objects.create_user(username='user_b', password='pass')
+        b2 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment2 = Experiment.objects.create(user=user_b, building=b2, name='Experiment',disaster='eq')
+        plan2 = Plan.objects.create(experiment=experiment2, name="plan")
+        response = self.client.get(reverse('plan_delete_connections', kwargs={'pk_experiment': experiment2.pk, 'pk':plan2.pk}))
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_template_delete_plan(self):
+        user = self.log_user()
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        plan = Plan.objects.create(experiment=experiment, name="plan")
+        response = self.client.get(reverse('plan_delete_connections', kwargs={'pk_experiment': experiment.pk, 'pk':plan.pk}))
+        self.assertTemplateUsed(response,  'dashboard/plans/connections_delete.html')
+
+    def test_POST_redirect_user_delete_plan(self):
+        user = self.log_user()
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        plan = Plan.objects.create(experiment=experiment, name="plan")
+        response = self.client.post(reverse('plan_delete_connections', kwargs={'pk_experiment': experiment.pk, 'pk': plan.pk}))
+        self.assertRedirects(response, reverse('plan_detail', kwargs={'pk_experiment': experiment.pk, 'pk':plan.pk}))
+
+    def test_POST_save_user_delete_plan(self):
+        user = self.log_user()
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        plan = Plan.objects.create(experiment=experiment, name="plan")
+        floor1 = Floor.objects.create(building=b1, name='fl1', number='1')
+        checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
+        con = Connection.objects.create(plan=plan, checkpoint=checkpoint, seq=1)
+        response = self.client.post(reverse('plan_delete_connections', kwargs={'pk_experiment': experiment.pk, 'pk': plan.pk}))
+        self.assertEqual(Connection.objects.count(), 0)
 
 
+class ConnectionInsertViewTest(TestCase):
+    def log_user(self):
+        user = User.objects.create_user(username='me', password='pass')
+        self.client.login(username=user.username, password='pass')
+        return user
+
+    def test_POST_redirect_user_insert_connection_plan(self):
+        user = self.log_user()
+        abs_path = finders.find('img/blueprint.jpg')
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        plan = Plan.objects.create(experiment=experiment, name="plan")
+        floor1 = Floor.objects.create(building=b1, name='fl1', number='1', blueprint=abs_path)
+        checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
+        response = self.client.post(reverse('plan_add_connection', kwargs={'pk_experiment': experiment.pk, 'pk': plan.pk}), data={
+            'form-TOTAL_FORMS': '1',
+            'form-INITIAL_FORMS': '0',
+            'form-MAX_NUM_FORMS': '1',
+            'form-0-checkpoint': checkpoint.pk,
+            'form-0-seq': 1
+        })
+        print response.status_code
+        self.assertRedirects(response, reverse('plan_detail', kwargs={'pk_experiment': experiment.pk, 'pk':plan.pk}))
+
+    def test_POST_save_user_connection_plan(self):
+        user = self.log_user()
+        abs_path = finders.find('img/blueprint.jpg')
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        plan = Plan.objects.create(experiment=experiment, name="plan")
+        floor1 = Floor.objects.create(building=b1, name='fl1', number='1', blueprint=abs_path)
+        checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
+        response = self.client.post(reverse('plan_add_connection', kwargs={'pk_experiment': experiment.pk, 'pk': plan.pk}), data={
+            'form-TOTAL_FORMS': '1',
+            'form-INITIAL_FORMS': '0',
+            'form-MAX_NUM_FORMS': '1',
+            'form-0-checkpoint': checkpoint.pk,
+            'form-0-seq': 1
+        })
+        self.assertEqual(Connection.objects.count(), 1)
+        self.assertEqual(Connection.objects.first().seq, 1)
 
 
 

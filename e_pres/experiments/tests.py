@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.staticfiles import finders
 from django.contrib.auth.models import User
 from buildings.models import Building, Floor
@@ -117,7 +117,7 @@ class ExperimentDetailViewTest(TestUtil):
             'name': 'Experiment',
             'disaster': 'fl'
         })
-        self.assertRedirects(response, reverse('experiment_detail', kwargs={'pk': experiment.pk}))
+        self.assertRedirects(response, reverse_lazy('experiment_detail', kwargs={'pk': experiment.pk}))
 
     def test_POST_redirect_user_update_experiment(self):
         user = self.log_user()
@@ -132,28 +132,28 @@ class ExperimentDetailViewTest(TestUtil):
         self.assertEqual(Experiment.objects.first().disaster, 'fl')
 
 
-# class CheckpointDeleteTest(TestUtil):
-#     def test_POST_redirect_user_delete_checkpoint(self):
-#         abs_path = finders.find('img/blueprint.jpg')
-#         user = self.log_user()
-#         b1 = Building.objects.create(user=user, name='b1', country='gr')
-#         floor1 = Floor.objects.create(building=b1, name='fl1', number='1', blueprint = abs_path)
-#         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
-#         checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
-#         response = self.client.post(reverse('checkpoint_delete', kwargs={'pk_experiment': experiment.pk, 'pk': checkpoint.pk}))
-#         print experiment.pk
-#         #self.assertRedirects(response, reverse('experiment_detail', kwargs={'pk': experiment.pk}))
-#
-#     def test_POST_user_delete_checkpoint(self):
-#         abs_path = finders.find('img/blueprint.jpg')
-#         user = self.log_user()
-#         b1 = Building.objects.create(user=user, name='b1', country='gr')
-#         floor1 = Floor.objects.create(building=b1, name='fl1', number='1', blueprint = abs_path)
-#         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
-#         checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
-#         response = self.client.post(reverse('checkpoint_delete', kwargs={'pk_experiment': experiment.pk, 'pk': checkpoint.pk}))
-#         print experiment.pk
-#         #self.assertRedirects(response, reverse('experiment_detail', kwargs={'pk': experiment.pk}))
+class CheckpointDeleteTest(TestUtil):
+    def test_POST_redirect_user_delete_checkpoint(self):
+        abs_path = finders.find('img/blueprint.jpg')
+        user = self.log_user()
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        floor1 = Floor.objects.create(building=b1, name='fl1', number='1', blueprint = abs_path)
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
+        response = self.client.post(reverse('checkpoint_delete', kwargs={'pk_experiment': experiment.pk, 'pk': checkpoint.pk}))
+        print experiment.pk
+        #self.assertRedirects(response, reverse('experiment_detail', kwargs={'pk': experiment.pk}))
+
+    def test_POST_user_delete_checkpoint(self):
+        abs_path = finders.find('img/blueprint.jpg')
+        user = self.log_user()
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        floor1 = Floor.objects.create(building=b1, name='fl1', number='1', blueprint = abs_path)
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
+        response = self.client.post(reverse('checkpoint_delete', kwargs={'pk_experiment': experiment.pk, 'pk': checkpoint.pk}))
+        print experiment.pk
+        #self.assertRedirects(response, reverse('experiment_detail', kwargs={'pk': experiment.pk}))
 
 
 
