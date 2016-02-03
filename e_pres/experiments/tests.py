@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.contrib.staticfiles import finders
 from django.contrib.auth.models import User
 from buildings.models import Building, Floor
 from .models import Experiment, Checkpoint
@@ -109,6 +110,29 @@ class ExperimentDetailViewTest(TestUtil):
         self.assertEqual(Experiment.objects.first().disaster, 'fl')
 
 
+# class CheckpointDeleteTest(TestUtil):
+#     def test_POST_redirect_user_delete_checkpoint(self):
+#         abs_path = finders.find('img/blueprint.jpg')
+#         user = self.log_user()
+#         b1 = Building.objects.create(user=user, name='b1', country='gr')
+#         floor1 = Floor.objects.create(building=b1, name='fl1', number='1', blueprint = abs_path)
+#         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+#         checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
+#         response = self.client.post(reverse('checkpoint_delete', kwargs={'pk_experiment': experiment.pk, 'pk': checkpoint.pk}))
+#         print experiment.pk
+#         #self.assertRedirects(response, reverse('experiment_detail', kwargs={'pk': experiment.pk}))
+#
+#     def test_POST_user_delete_checkpoint(self):
+#         abs_path = finders.find('img/blueprint.jpg')
+#         user = self.log_user()
+#         b1 = Building.objects.create(user=user, name='b1', country='gr')
+#         floor1 = Floor.objects.create(building=b1, name='fl1', number='1', blueprint = abs_path)
+#         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+#         checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
+#         response = self.client.post(reverse('checkpoint_delete', kwargs={'pk_experiment': experiment.pk, 'pk': checkpoint.pk}))
+#         print experiment.pk
+#         #self.assertRedirects(response, reverse('experiment_detail', kwargs={'pk': experiment.pk}))
+
 
 
 
@@ -137,3 +161,11 @@ class CheckpointModelTest(TestCase):
         checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
         self.assertEqual(Checkpoint.objects.count(), 1)
         self.assertEqual(Checkpoint.objects.first().__unicode__(), 'fl1')
+
+    def test_checkpoint_get_experiment_absolute_url(self):
+        user = User.objects.create_user(username='me', password='pass')
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        floor1 = Floor.objects.create(building=b1, name='fl1', number='1')
+        checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
+        self.assertEqual(checkpoint.get_experiment_absolute_url(), '/experiment/1/')

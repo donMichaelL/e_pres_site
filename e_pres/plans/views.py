@@ -18,7 +18,7 @@ class PlanNewView(LoginRequiredMixin, CreateView):
     fields = ['name']
 
     def get_success_url(self):
-        return reverse_lazy('test_list')
+        return reverse_lazy('experiment_list')
 
     def get_context_data(self, **kwargs):
         context = super(PlanNewView, self).get_context_data(**kwargs)

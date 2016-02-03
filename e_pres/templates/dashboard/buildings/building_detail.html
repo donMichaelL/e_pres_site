@@ -54,7 +54,7 @@
         <div class="media-body">
           <h4 class="media-heading">
             <a href="{{test.get_absolute_url}}?next={{object.get_absolute_url}}">{{test.name}}</a>
-            <a href="{% url 'test_delete' pk=test.pk %}?next={{object.get_absolute_url}}" type="button" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
+            <a href="{% url 'experiment_delete' pk=test.pk %}?next={{object.get_absolute_url}}" type="button" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
           </h4>
           <p>Disaster: {{test.get_disaster_display}}
           Execuation Date:  {{test.execuation_date}}</p>
@@ -63,7 +63,7 @@
       {% endfor%}
       <div class="text-center">
 
-        <form method="POST" action="{% url 'test_new' %}?next={{object.get_absolute_url}}"  class="form-inline" role="form">{% csrf_token %}
+        <form method="POST" action="{% url 'experiment_new' %}?next={{object.get_absolute_url}}"  class="form-inline" role="form">{% csrf_token %}
           <div class="form-group">
             <input type="text" class="form-control" name="name" placeholder="Enter Experiment Name">
           </div>

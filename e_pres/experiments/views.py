@@ -93,7 +93,7 @@ class CheckpointInsertView(LoginRequiredMixin, View):
                 messages.success(self.request, 'Checkpoint: %s was created.'% checkpoint.pk )
         else:
             print form.errors
-        return redirect(reverse_lazy('test_detail', kwargs={'pk': kwargs['pk']}))
+        return redirect(reverse_lazy('experiment_detail', kwargs={'pk': kwargs['pk']}))
 
 
 
@@ -106,5 +106,4 @@ class CheckpointDeleteView(LoginRequiredMixin, CheckpointContentUserOnlyMixin, D
         return super(CheckpointDeleteView, self).delete(request, *args, **kwargs)
 
     def get_success_url(self):
-        experiment = get_object_or_404(Experiment, pk = self.kwargs['pk_experiment'])
-        return experiment.get_absolute_url()
+        return self.object.get_experiment_absolute_url()

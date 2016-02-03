@@ -43,3 +43,6 @@ class Checkpoint(models.Model):
 
     def __unicode__(self):
         return self.floor.name
+
+    def get_experiment_absolute_url(self):
+        return reverse("experiment_detail", kwargs={"pk": self.experiment.pk})
