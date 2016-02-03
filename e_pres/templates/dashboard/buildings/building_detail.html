@@ -32,7 +32,7 @@
         </a>
           <div class="media-body">
             <h4 class="media-heading">
-              <a href="{% url 'floor_detail' pk=floor.pk pk_building=object.pk %}">{{floor.name}}</a>
+              <a href="{{floor.get_absolute_url}}">{{floor.name}}</a>
               <a href="{% url 'floor_delete' pk=floor.pk pk_building=object.pk %}" type="button" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
             </h4>
             <p>Number: {{floor.number}}

@@ -4,13 +4,8 @@ from django.contrib.staticfiles import finders
 from django.contrib.auth.models import User
 from .models import Building, Floor
 from .forms import BuildingForm
+from .test_utils import TestUtil, FloorUtil
 
-
-class TestUtil(TestCase):
-    def log_user(self):
-        user = User.objects.create_user(username='me', password='pass')
-        self.client.login(username=user.username, password='pass')
-        return user
 
 
 class BuildingpageView(TestUtil):
@@ -131,53 +126,55 @@ class BuildingUpdateView(TestUtil):
 
 
 
-class FloorNewView(TestUtil):
+class FloorNewView(FloorUtil):
     def test_GET_template_visitor_redirect_to_login(self):
-        b1 = Building.objects.create(user=self.log_user(), name='b1', country='gr')
-        floor1 = Floor.objects.create(building=b1, name="First Floor", number=1)
-        self.client.logout()
-        response = self.client.get(reverse('floor_new', kwargs={"pk": b1.pk}))
-        self.assertRedirects(response, reverse('homepage')+ '?next=/building/1/floor/new/')
+        self.GET_template_visitor_redirect_to_login('floor_new', False ,'?next=/building/1/floor/new/')
 
     def test_GET_template_user_not_insert_in_other_user_building(self):
-        b1 = Building.objects.create(user=self.log_user(), name='b1', country='gr')
-        floor1 = Floor.objects.create(building=b1, name="First Floor", number=1)
-        user2 = User.objects.create_user(username='me2', password='pass')
-        b2 = Building.objects.create(user=user2, name='b2', country='gr')
-        floor2 = Floor.objects.create(building=b2, name="First Floor", number=1)
-        response = self.client.get(reverse('floor_new', kwargs={"pk": b2.pk}))
-        self.assertEqual(response.status_code, 403)
+        self.GET_template_user_not_actions_in_other_user_building('floor_new', False)
 
     def test_GET_template_user_show_insert_floor(self):
-        b1 = Building.objects.create(user=self.log_user(), name='b1', country='gr')
-        floor1 = Floor.objects.create(building=b1, name="First Floor", number=1)
-        response = self.client.get(reverse('floor_new', kwargs={"pk": b1.pk}))
-        self.assertTemplateUsed(response, 'dashboard/floors/new_floor.html')
+        self.GET_template_user_show_template('floor_new', False, 'dashboard/floors/new_floor.html' )
 
     def test_POST_redirect_user_insert_building(self):
-        b1 = Building.objects.create(user=self.log_user(), name='b1', country='gr')
-        abs_path = finders.find('img/blueprint.jpg')
-        with open(abs_path) as fp:
-            response = self.client.post(reverse('floor_new', kwargs={"pk": b1.pk}), data={
-                'name': 'Floor',
-                'number': 1,
-                'blueprint': fp
-            })
-        self.assertRedirects(response, reverse('building_detail', kwargs={"pk": b1.pk}))
+        self.POST_redirect_user('floor_new', False)
 
-    def test_POST_save_user_floor_building(self):
-        b1 = Building.objects.create(user=self.log_user(), name='b1', country='gr')
-        abs_path = finders.find('img/blueprint.jpg')
-        with open(abs_path) as fp:
-            response = self.client.post(reverse('floor_new', kwargs={"pk": b1.pk}), data={
-                'name': 'Floor',
-                'number': 1,
-                'blueprint': fp
-            })
-        self.assertEqual(b1.floor_set.count(), 1)
-        self.assertEqual(b1.floor_set.first().name, 'Floor')
+    def test_POST_save_user_floor_building_ennn(self):
+        self.POST_save_user('floor_new', False, False)
 
 
+class FloorUpdateView(FloorUtil):
+    def test_GET_template_visitor_redirect_to_login(self):
+        self.GET_template_visitor_redirect_to_login('floor_detail', True ,'?next=/building/1/floor/1/')
+
+    def test_GET_template_user_not_see_detail_in_other_user_building_floor(self):
+        self.GET_template_user_not_actions_in_other_user_building('floor_detail', True)
+
+    def test_GET_template_user_show_detail_floor(self):
+        self.GET_template_user_show_template('floor_detail', True, 'dashboard/floors/floor_detail.html')
+
+    def test_POST_save_user_update_floor(self):
+        self.POST_redirect_user('floor_detail', True)
+
+    def test_POST_redirect_user_update_building_floor(self):
+        self.POST_save_user('floor_detail', True, False)
+
+
+class FloorDeleteView(FloorUtil):
+    def test_GET_template_visitor_redirect_to_login(self):
+        self.GET_template_visitor_redirect_to_login('floor_delete', True ,'?next=/building/1/floor/1/delete/')
+
+    def test_GET_template_user_not_delete_in_other_user_building_floor(self):
+        self.GET_template_user_not_actions_in_other_user_building('floor_delete', True)
+
+    def test_GET_template_user_show_delete_floor(self):
+        self.GET_template_user_show_template('floor_delete', True, 'dashboard/floors/floor_delete.html')
+
+    def test_POST_save_user_delete_floor(self):
+        self.POST_redirect_user('floor_delete', True)
+
+    def test_POST_redirect_user_delete_floor(self):
+        self.POST_save_user('floor_delete', True, True)
 
 
 
