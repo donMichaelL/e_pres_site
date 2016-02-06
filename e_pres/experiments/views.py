@@ -96,7 +96,6 @@ class CheckpointInsertView(LoginRequiredMixin, View):
         return redirect(reverse_lazy('experiment_detail', kwargs={'pk': kwargs['pk']}))
 
 
-
 class CheckpointDeleteView(LoginRequiredMixin, CheckpointContentUserOnlyMixin, DeleteView):
     model = Checkpoint
     template_name = 'dashboard/experiments/checkpoint_delete.html'

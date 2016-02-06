@@ -14,7 +14,7 @@ class PlanNewViewTest(TestCase):
         b1 = Building.objects.create(user=user, name='b1', country='gr')
         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
         user_b = User.objects.create_user(username='me2', password='pass')
-        b2 = Building.objects.create(user=user, name='b1', country='gr')
+        b2 = Building.objects.create(user=user_b, name='b1', country='gr')
         experiment2 = Experiment.objects.create(user=user_b, building=b2, name='Experiment',disaster='eq')
 
     def log_user(self):
