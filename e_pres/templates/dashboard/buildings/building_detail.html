@@ -41,7 +41,7 @@
           </div>
         </div>
         {% endfor%}
-        <div class="text-center" data-step="2" data-intro="Insert a Floor"><a href="{% url 'floor_new' pk=object.pk %}" class="btn btn-info">Insert New Floor</a></div>
+        <div class="text-center" data-step="2" data-intro="Insert a Floor"><a href="{% url 'floor_new' pk=object.pk %}" class="btn btn-info">New Floor</a></div>
     </div>
     <div class="col-xs-12">
       <h2 class="text-center">Experiments</h2>
@@ -59,9 +59,9 @@
             <ul {% if test.plan_set.count > 0%} data-step="6" data-intro="Click for details"{% endif %}>
               {% for plan in test.plan_set.all %}<li><h5><a href="{% url 'plan_detail' pk_experiment=test.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
             </ul>
-            <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=test.pk %}?next={{object.get_absolute_url}}" data-step="5" data-intro="Insert new Plant">{% csrf_token %}
-              <input type="text" class="form-control input-sm" name="name" placeholder="Enter new plan name*">
-              <button type="submit" class="btn btn-info btn-sm ">Insert New Plan</button>
+            <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=test.pk %}?next={{object.get_absolute_url}}" data-step="5" data-intro="Insert new Evacuation Path">{% csrf_token %}
+              <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
+              <button type="submit" class="btn btn-info btn-sm ">New Evacuation Path</button>
             </form>
           </h4>
         </div>
@@ -71,7 +71,7 @@
 
         <form method="POST" action="{% url 'experiment_new' %}?next={{object.get_absolute_url}}"  class="form-inline" role="form" data-step="3" data-intro="Insert new Experiment">{% csrf_token %}
           <div class="form-group">
-            <input type="text" class="form-control" name="name" placeholder="Enter Experiment Name*">
+            <input type="text" class="form-control" name="name" placeholder="Experiment Name*">
           </div>
           <div class="form-group">
             <select class="form-control" name="disaster">
@@ -81,7 +81,7 @@
             </select>
           </div>
           <input type="hidden" class="form-control" name="building" value="{{object.pk}}">
-          <button type="submit" class="btn btn-info">Insert New Experiment</button>
+          <button type="submit" class="btn btn-info">New Experiment</button>
         </form>
 
       </div>

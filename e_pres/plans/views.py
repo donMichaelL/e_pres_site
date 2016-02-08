@@ -15,7 +15,7 @@ from .mixins import ContentUserOnlyMixin
 class PlanNewView(LoginRequiredMixin, ContentUserOnlyMixin, CreateView):
     model = Plan
     template_name = 'dashboard/plans/new_plan.html'
-    fields = ['name']
+    fields = ['name', 'before']
 
     def get_success_url(self):
         if self.request.GET.get('next', ''):
@@ -26,6 +26,12 @@ class PlanNewView(LoginRequiredMixin, ContentUserOnlyMixin, CreateView):
         context = super(PlanNewView, self).get_context_data(**kwargs)
         context['test'] = self.kwargs['pk_experiment']
         return context
+
+    def get_form(self, form_class):
+        form = super(PlanNewView, self).get_form(form_class)
+        experiment = get_object_or_404(Experiment, pk=self.kwargs['pk_experiment'])
+        form.fields['before'].choices = [(plan.pk, plan.name) for plan in experiment.plan_set.all()]
+        return form
 
     def form_valid(self, form):
         plan = form.save(commit=False)
@@ -50,6 +56,16 @@ class PlanDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, Detai
         context['formset'] = ConnectionFormSet()
         context['empty_plan'] = False if self.object.connection_set.all().count() else True
         return context
+
+    def get_form(self, form_class):
+        form = super(PlanDetailView, self).get_form(form_class)
+        experiment = get_object_or_404(Experiment, pk=self.kwargs['pk_experiment'])
+        form.fields['before'].choices = [(plan.pk, plan.name) for plan in experiment.plan_set.exclude(pk=self.get_object().pk)]
+        return form
+
+    def form_valid(self, form):
+        messages.success(self.request, ' %s was updated.'% form.cleaned_data['name'] )
+        return super(PlanDetailView, self).form_valid(form)
 
 
 class PlanDeleteView(LoginRequiredMixin, ContentUserOnlyMixin, DeleteView):

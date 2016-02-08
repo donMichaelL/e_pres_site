@@ -32,7 +32,7 @@ class Building(models.Model):
 class Floor(models.Model):
     building = models.ForeignKey(Building)
     name = models.CharField(max_length=60)
-    number = models.PositiveSmallIntegerField()
+    number = models.SmallIntegerField(verbose_name="Floor Level")
     blueprint = models.ImageField(upload_to='blueprints/')
     max_evacuation_time = models.PositiveIntegerField(verbose_name="Maximum Evacuation Time", help_text="in seconds",null=True, blank=True)
     stud_number = models.PositiveIntegerField(verbose_name="Number of students", null=True, blank=True)

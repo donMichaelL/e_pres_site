@@ -26,9 +26,11 @@
  {% block main_content %}
  <div clas="row">
    <div class="col-md-4">
-     <form method="POST" action="" data-step="1" data-intro="Update your plan">  {% csrf_token %}
+     <form method="POST" action="" class="form-inline" data-step="1" data-intro="Update your plan">  {% csrf_token %}
        {{form | crispy }}
-       <button type="submit" class="btn btn-success" name="action">Update Plan</button>
+       <br>
+       <br>
+       <button type="submit" class="btn btn-success" name="action">Update Evacuation Path</button>
      </form>
    </div>
    <div class="col-md-8 ">
@@ -46,7 +48,7 @@
     {% endfor %}
   </div>
     <div class="col-md-4" id="plan" data-step="3" data-intro="Save your plan">
-      <h3>Plan</h3>
+      <h3>Evacuation Path</h3>
       {% for connection in object.connection_set.all  %}
       <div class='panel panel-default'>
         <div class='panel-body'>
