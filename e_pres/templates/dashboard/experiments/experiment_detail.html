@@ -36,7 +36,7 @@
        <i class="fa fa-flask fa-5x"></i>
    </div>
    <div class="col-xs-12">
-     <form method="POST" action="" class="form-inline">  {% csrf_token %}
+     <form method="POST" action="" class="form-inline" data-step="1" data-intro="Update your experiment">  {% csrf_token %}
        {{form| crispy}}
        <br>
        <br>
@@ -48,11 +48,11 @@
      <h1 class="lead">{{object.building}}</h1>
      {% for floor in object.building.floor_set.all %}
      <div class="row">
-       <div class="col-md-8">
+       <div class="col-md-8" {% if forloop.counter == 1 %} data-step="2" data-intro="Click the image and insert a checkpoint" {% endif %}>
          <!-- <img src="{{floor.blueprint.url}}" class="img-responsive"/> -->
          <div id="image-map-{{floor.pk}}" class="maps-blueprint"></div>
        </div>
-       <div class="col-md-4">
+       <div class="col-md-4" {% if forloop.counter == 1 %} data-step="3" data-intro="Save or Update a checkpoint" {% endif %}>
          <h4 class="text-center">{{floor}}</h4>
          <div class="panel panel-default" id="panel-{{floor.pk}}">
             {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
@@ -137,7 +137,7 @@ function onMapClick(e) {
     <input type='number' placeholder='flux' name='flux' value=''> \
     <input type='text' placeholder='name' name='name' value=''> \
     isExit? <input name='exit' type='checkbox'> \
-    <button type='submit' class='btn btn-default' name=action>Save</button> \
+    <button type='submit' class='btn btn-default' name=action >Save</button> \
     </form></div> \
   ");
 

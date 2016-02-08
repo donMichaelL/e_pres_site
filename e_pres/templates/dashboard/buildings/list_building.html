@@ -1,20 +1,20 @@
 {% extends 'dashboard/base_logged.html' %}
 {% load staticfiles %}
 
+
 {% block title %}Buildings {% endblock %}
 {% block main_header %}Buildings {% endblock %}
 
 {% block main_content %}
 <div class="row">
-  <div class="col-xs-12">
+  <div class="col-xs-12" data-step="1" data-intro="Insert New Building">
     <p ><a href="{% url 'building_new' %}" class="btn btn-success">Insert new Building</a></p>
   </div>
 </div>
 
-
-<div class="grid">
+<div class="grid" {% if object_list.count > 0%} data-step="2" data-intro="Press any building to continue" {% endif %}>
   {%  for building in object_list %}
-  <div class="grid-item" >
+  <div class="grid-item">
     <div class="thumbnail ">
       <a type="button" href="{% url 'building_delete' pk=building.pk %}" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
       {% if building.photo %}<a href="{{building.get_absolute_url}}"><img class="img-responsive" src="{{building.photo.url}}" alt="Building Photo"></a>
@@ -41,9 +41,3 @@
 </div>
 
 {% endblock %}
-
-
-{% block js %}
-
-{% endblock %}
-{% cycle "" "" "</div><br/><hr/><div class='row'>" %}

@@ -16,9 +16,9 @@ class Building(models.Model):
     name = models.CharField(max_length=80)
     country = models.CharField(max_length=2, choices=COUNTRIES_CHOICES)
     address = models.CharField(max_length=30, null=True, blank=True)
-    tk = models.PositiveIntegerField(null=True, blank=True)
+    tk = models.PositiveIntegerField(verbose_name="Postcode", null=True, blank=True)
     max_evacuation_time = models.PositiveIntegerField(verbose_name="Maximum Evacuation Time", help_text="in seconds",null=True, blank=True)
-    photo = models.ImageField(upload_to='building_images/', null=True, blank=True)
+    photo = models.ImageField(upload_to='building_images/', null=True, blank=True, help_text="Supported Formats: png, jpg, jpeg, bmp")
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 
