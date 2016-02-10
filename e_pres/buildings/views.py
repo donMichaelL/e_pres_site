@@ -18,6 +18,8 @@ class BuildingListView(LoginRequiredMixin, ListView):
     template_name = 'dashboard/buildings/list_building.html'
 
     def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Building.objects.all()
         return Building.objects.filter(user=self.request.user)
 
 
@@ -72,7 +74,7 @@ class FloorNewView(LoginRequiredMixin, CreateView):
         building_id = self.kwargs.get(self.pk_url_kwarg)
         context['building'] = building_id
         building = get_object_or_404(Building, pk=building_id)
-        if building.user != self.request.user:
+        if building.user != self.request.user and (not self.request.user.is_superuser):
             raise PermissionDenied()
         return context
 

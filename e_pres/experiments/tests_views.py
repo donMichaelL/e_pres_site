@@ -8,6 +8,7 @@ from .models import Experiment, Checkpoint
 
 class ExperimentlistViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
@@ -35,6 +36,13 @@ class ExperimentlistViewTest(TestCase):
         self.assertContains(response, 'Experiment')
         self.assertNotContains(response, 'Second')
         self.assertEqual(response.context['object_list'].count(), user.experiment_set.count())
+
+    def test_GET_items_admin_see_all_experiments(self):
+        self.client.login(username='myuser', password='password')
+        response = self.client.get(reverse('experiment_list'))
+        self.assertContains(response, 'Experiment')
+        self.assertContains(response, 'Second')
+        self.assertEqual(response.context['object_list'].count(), Experiment.objects.count())
 
 
 class ExperimentNewViewTest(TestCase):
@@ -119,6 +127,7 @@ class ExperimentDeleteViewTest(TestCase):
 
 class ExperimentDetailViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
@@ -141,6 +150,13 @@ class ExperimentDetailViewTest(TestCase):
         experiment = user2.experiment_set.first()
         response = self.client.get(reverse('experiment_detail', kwargs={"pk": experiment.pk}))
         self.assertEqual(response.status_code, 403)
+
+    def test_GET_template_admin_user_see_all_experiment_detail(self):
+        self.client.login(username='myuser', password='password')
+        user2 = User.objects.get(username='me2')
+        experiment = user2.experiment_set.first()
+        response = self.client.get(reverse('experiment_detail', kwargs={"pk": experiment.pk}))
+        self.assertEqual(response.status_code, 200)
 
     def test_GET_template_detail_experiment(self):
         self.log_user()

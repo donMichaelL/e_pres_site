@@ -7,6 +7,7 @@ from .models import Building, Floor
 
 class BuildingpageViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
         user_b = User.objects.create_user(username='user_b', password='pass')
@@ -32,6 +33,13 @@ class BuildingpageViewTest(TestCase):
         self.assertContains(response, 'b1')
         self.assertNotContains(response, 'b2')
         self.assertEqual(response.context['object_list'].count(), user.building_set.count())
+
+    def test_GET_items_admin_see_all_building(self):
+        self.client.login(username='myuser', password='password')
+        response = self.client.get(reverse('building_list'))
+        self.assertContains(response, 'b1')
+        self.assertContains(response, 'b2')
+        self.assertEqual(response.context['object_list'].count(), Building.objects.count())
 
 
 class BuildingInsertViewTest(TestCase):
@@ -111,6 +119,7 @@ class BuildingDeleteViewTest(TestCase):
 
 class BuildingUpdateViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         user = User.objects.create_user(username='me', password='pass')
         Building.objects.create(user=user, name='b1', country='gr')
         user2 = User.objects.create_user(username='me2', password='pass')
@@ -131,6 +140,14 @@ class BuildingUpdateViewTest(TestCase):
         b2 = user2.building_set.first()
         response = self.client.get(reverse('building_detail', kwargs={"pk": b2.pk}))
         self.assertEqual(response.status_code, 403)
+
+    def test_GET_template_admin_show_every_user_building(self):
+        self.client.login(username='myuser', password='password')
+        user2 = User.objects.get(username='me2')
+        b2 = user2.building_set.first()
+        response = self.client.get(reverse('building_detail', kwargs={"pk": b2.pk}))
+        self.assertEqual(response.status_code, 200)
+
 
     def test_GET_template_user_show_detail(self):
         b1 = self.log_user().building_set.first()
@@ -157,6 +174,7 @@ class BuildingUpdateViewTest(TestCase):
 
 class FloorNewViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         abs_path = finders.find('img/blueprint.jpg')
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
@@ -178,6 +196,13 @@ class FloorNewViewTest(TestCase):
         b2 = user2.building_set.first()
         response = self.client.get(reverse('floor_new', kwargs={"pk": b2.pk}))
         self.assertEqual(response.status_code, 403)
+
+    def test_GET_template_admin_insert_building(self):
+        self.client.login(username=u'myuser', password='password')
+        user2 = User.objects.get(username='me2')
+        b2 = user2.building_set.first()
+        response = self.client.get(reverse('floor_new', kwargs={"pk": b2.pk}))
+        self.assertEqual(response.status_code, 200)
 
     def test_GET_template_user_show_insert_floor(self):
         self.log_user()
@@ -210,6 +235,7 @@ class FloorNewViewTest(TestCase):
 
 class FloorUpdateViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         abs_path = finders.find('img/blueprint.jpg')
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
@@ -233,6 +259,13 @@ class FloorUpdateViewTest(TestCase):
         b2 = user2.building_set.first()
         response = self.client.get(reverse('floor_detail', kwargs={"pk_building":b2.pk ,"pk": b2.floor_set.first().pk}))
         self.assertEqual(response.status_code, 403)
+
+    def test_GET_template_admin_see_every_user_detail(self):
+        self.client.login(username='myuser', password='password')
+        user2 = User.objects.get(username='me2')
+        b2 = user2.building_set.first()
+        response = self.client.get(reverse('floor_detail', kwargs={"pk_building":b2.pk ,"pk": b2.floor_set.first().pk}))
+        self.assertEqual(response.status_code, 200)
 
     def test_GET_template_user_show_detail_floor(self):
         b1 = self.log_user().building_set.first()
@@ -268,6 +301,7 @@ class FloorUpdateViewTest(TestCase):
 
 class FloorDeleteViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         abs_path = finders.find('img/blueprint.jpg')
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
@@ -291,6 +325,13 @@ class FloorDeleteViewTest(TestCase):
         b2 = user2.building_set.first()
         response = self.client.get(reverse('floor_delete', kwargs={"pk_building":b2.pk ,"pk": b2.floor_set.first().pk}))
         self.assertEqual(response.status_code, 403)
+
+    def test_GET_template_admin_can_delete_any_floor(self):
+        self.client.login(username='myuser', password='password')
+        user2 = User.objects.get(username='me2')
+        b2 = user2.building_set.first()
+        response = self.client.get(reverse('floor_delete', kwargs={"pk_building":b2.pk ,"pk": b2.floor_set.first().pk}))
+        self.assertEqual(response.status_code, 200)
 
     def test_GET_template_user_show_delete_floor(self):
         b1 = self.log_user().building_set.first()

@@ -10,12 +10,14 @@ from .models import Plan, Connection
 
 class PlanNewViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
         user_b = User.objects.create_user(username='me2', password='pass')
         b2 = Building.objects.create(user=user_b, name='b1', country='gr')
         experiment2 = Experiment.objects.create(user=user_b, building=b2, name='Experiment',disaster='eq')
+        admin_exp = Experiment.objects.create(user=my_admin, building=b1, name='Admin Experiment',disaster='eq')
 
     def log_user(self):
         user = User.objects.get(username='me')
@@ -33,10 +35,23 @@ class PlanNewViewTest(TestCase):
         response = self.client.get(reverse('new_plan', kwargs={'pk_experiment': experiment2.pk}))
         self.assertEqual(response.status_code, 403)
 
+    def test_GET_admin_can_add_any_path(self):
+        self.client.login(username='myuser', password='password')
+        user_b = User.objects.get(username='me2')
+        experiment2 = user_b.experiment_set.first()
+        response = self.client.get(reverse('new_plan', kwargs={'pk_experiment': experiment2.pk}))
+        self.assertEqual(response.status_code, 200)
+
     def test_GET_template_new_plan(self):
         self.log_user()
         response = self.client.get(reverse('new_plan', kwargs={'pk_experiment': Experiment.objects.first().pk}))
         self.assertTemplateUsed(response, 'dashboard/plans/new_plan.html')
+
+    def test_GET_template_user_add_new_plan_when_experiment_belongs_to_admin(self):
+        self.log_user()
+        admin = User.objects.get(username='myuser')
+        response = self.client.get(reverse('new_plan', kwargs={'pk_experiment': admin.experiment_set.first().pk}))
+        self.assertEqual(response.status_code, 200)
 
     def test_POST_redirect_user_insert_plan(self):
         user = self.log_user()
@@ -58,12 +73,15 @@ class PlanNewViewTest(TestCase):
 
 class PlanDetailViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        admin_experiment = Experiment.objects.create(user=my_admin, building=b1, name='Experiment',disaster='eq')
         plan = Plan.objects.create(experiment=experiment, name="plan")
+        admin_plan = Plan.objects.create(experiment=admin_experiment, name="admin_plan")
         user_b = User.objects.create_user(username='me2', password='pass')
-        b2 = Building.objects.create(user=user, name='b1', country='gr')
+        b2 = Building.objects.create(user=user_b, name='b1', country='gr')
         experiment2 = Experiment.objects.create(user=user_b, building=b2, name='Experiment',disaster='eq')
         plan2 = Plan.objects.create(experiment=experiment2, name="plan")
 
@@ -84,10 +102,24 @@ class PlanDetailViewTest(TestCase):
         response = self.client.get(reverse('plan_detail', kwargs={'pk_experiment': experiment2.pk, 'pk':experiment2.plan_set.first().pk}))
         self.assertEqual(response.status_code, 403)
 
+    def test_GET_admin_can_see_plan_to_other_experiment(self):
+        self.client.login(username='myuser', password='password')
+        user_b = User.objects.get(username='me2')
+        experiment2 = user_b.experiment_set.first()
+        response = self.client.get(reverse('plan_detail', kwargs={'pk_experiment': experiment2.pk, 'pk':experiment2.plan_set.first().pk}))
+        self.assertEqual(response.status_code, 200)
+
     def test_GET_template_detail_plan(self):
         experiment = self.log_user().experiment_set.first()
         response = self.client.get(reverse('plan_detail', kwargs={'pk_experiment': experiment.pk, 'pk':experiment.plan_set.first().pk}))
         self.assertTemplateUsed(response, 'dashboard/plans/plan_detail.html')
+
+    def test_GET_user_can_see_detail_of_admin_path(self):
+        self.log_user()
+        admin = User.objects.get(username='myuser')
+        experiment = admin.experiment_set.first()
+        response = self.client.get(reverse('plan_detail', kwargs={'pk_experiment': experiment.pk, 'pk':experiment.plan_set.first().pk}))
+        self.assertEqual(response.status_code, 200)
 
     def test_POST_redirect_user_update_plan(self):
         experiment = self.log_user().experiment_set.first()
@@ -107,12 +139,15 @@ class PlanDetailViewTest(TestCase):
 
 class PlanDeleteViewTest(TestCase):
     def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
         user = User.objects.create_user(username='me', password='pass')
         b1 = Building.objects.create(user=user, name='b1', country='gr')
         experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+        admin_experiment = Experiment.objects.create(user=my_admin, building=b1, name='Experiment',disaster='eq')
         plan = Plan.objects.create(experiment=experiment, name="plan")
+        admin_plan = Plan.objects.create(experiment=admin_experiment, name="admin_plan")
         user_b = User.objects.create_user(username='me2', password='pass')
-        b2 = Building.objects.create(user=user, name='b1', country='gr')
+        b2 = Building.objects.create(user=user_b, name='b1', country='gr')
         experiment2 = Experiment.objects.create(user=user_b, building=b2, name='Experiment',disaster='eq')
         plan2 = Plan.objects.create(experiment=experiment2, name="plan")
 
@@ -133,6 +168,20 @@ class PlanDeleteViewTest(TestCase):
         response = self.client.get(reverse('plan_delete', kwargs={'pk_experiment': experiment2.pk, 'pk':experiment2.plan_set.first().pk}))
         self.assertEqual(response.status_code, 403)
 
+    def test_GET_admin_can_delete_plan_to_other_experiment(self):
+        self.client.login(username='myuser', password='password')
+        user_b = User.objects.get(username='me2')
+        experiment2 = user_b.experiment_set.first()
+        response = self.client.get(reverse('plan_delete', kwargs={'pk_experiment': experiment2.pk, 'pk':experiment2.plan_set.first().pk}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_GET_user_can_delete_plan_of_admin(self):
+        self.log_user()
+        admin = User.objects.get(username='myuser')
+        experiment = admin.experiment_set.first()
+        response = self.client.get(reverse('plan_delete', kwargs={'pk_experiment': experiment.pk, 'pk':experiment.plan_set.first().pk}))
+        self.assertEqual(response.status_code, 200)
+
     def test_GET_template_delete_plan(self):
         experiment = self.log_user().experiment_set.first()
         response = self.client.get(reverse('plan_delete', kwargs={'pk_experiment': experiment.pk, 'pk':experiment.plan_set.first().pk}))
@@ -142,7 +191,6 @@ class PlanDeleteViewTest(TestCase):
         experiment = self.log_user().experiment_set.first()
         response = self.client.post(reverse('plan_delete', kwargs={'pk_experiment': experiment.pk, 'pk': experiment.plan_set.first().pk}))
         self.assertRedirects(response, reverse('experiment_list'))
-
 
     def test_POST_redirect_user_delete_plan(self):
         experiment = self.log_user().experiment_set.first()
@@ -161,7 +209,7 @@ class ConnectionDeleteViewTest(TestCase):
         checkpoint = Checkpoint.objects.create(experiment=experiment, floor=floor1, coord_x=100, coord_y=200)
         con = Connection.objects.create(plan=plan1, checkpoint=checkpoint, seq=1)
         user_b = User.objects.create_user(username='me2', password='pass')
-        b2 = Building.objects.create(user=user, name='b1', country='gr')
+        b2 = Building.objects.create(user=user_b, name='b1', country='gr')
         experiment2 = Experiment.objects.create(user=user_b, building=b2, name='Experiment',disaster='eq')
         plan2 = Plan.objects.create(experiment=experiment2, name="plan")
 

@@ -11,13 +11,15 @@ from django.views.generic import FormView
 from buildings.models import Building
 from .models import Experiment, Checkpoint
 from .forms import ExperimentForm, CheckpointForm
-from buildings.mixins import ContentUserOnlyMixin, CheckpointContentUserOnlyMixin
+from .mixins import ContentUserOnlyMixin, CheckpointContentUserOnlyMixin
 
 class ExperimentListView(LoginRequiredMixin, ListView):
     model = Experiment
     template_name = 'dashboard/experiments/list_experiment.html'
 
     def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Experiment.objects.all()
         return Experiment.objects.filter(user=self.request.user)
 
 
@@ -27,7 +29,10 @@ class ExperimentNewView(LoginRequiredMixin, FormView):
 
     def get_form(self, *args, **kwargs):
         form = super(ExperimentNewView, self).get_form(*args, **kwargs)
-        form.fields['building'].queryset = Building.objects.filter(user=self.request.user)
+        if self.request.user.is_superuser:
+            form.fields['building'].queryset = Building.objects.all()
+        else:
+            form.fields['building'].queryset = Building.objects.filter(user=self.request.user)
         return form
 
     def form_valid(self, form):
@@ -75,12 +80,12 @@ class ExperimentDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView,
 
 class CheckpointInsertView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
+        print 'hello'
         form = CheckpointForm(request.POST)
         experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
-        if experiment.user != request.user:
-            return PermissionDenied()
-        if experiment.user != request.user:
-            raise PermissionDenied()
+        if experiment.building.user != request.user:
+            if not request.user.is_superuser:
+             return PermissionDenied()
         if form.is_valid():
             pk = form.cleaned_data['pk']
             if pk:
