@@ -15,7 +15,8 @@ from .mixins import ContentUserOnlyMixin
 class PlanNewView(LoginRequiredMixin, ContentUserOnlyMixin, CreateView):
     model = Plan
     template_name = 'dashboard/plans/new_plan.html'
-    fields = ['name', 'before']
+    #fields = ['name', 'before']
+    form_class = PlanForm
 
     def get_success_url(self):
         if self.request.GET.get('next', ''):
@@ -30,7 +31,7 @@ class PlanNewView(LoginRequiredMixin, ContentUserOnlyMixin, CreateView):
     def get_form(self, form_class):
         form = super(PlanNewView, self).get_form(form_class)
         experiment = get_object_or_404(Experiment, pk=self.kwargs['pk_experiment'])
-        form.fields['before'].choices = [(plan.pk, plan.name) for plan in experiment.plan_set.all()]
+        form.fields['before'].choices = [("", "---------"),] + [(plan.pk, plan.name) for plan in experiment.plan_set.all()]
         return form
 
     def form_valid(self, form):
@@ -60,7 +61,7 @@ class PlanDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, Detai
     def get_form(self, form_class):
         form = super(PlanDetailView, self).get_form(form_class)
         experiment = get_object_or_404(Experiment, pk=self.kwargs['pk_experiment'])
-        form.fields['before'].choices = [(plan.pk, plan.name) for plan in experiment.plan_set.exclude(pk=self.get_object().pk)]
+        form.fields['before'].choices = [("", "---------"),] + [(plan.pk, plan.name) for plan in experiment.plan_set.exclude(pk=self.get_object().pk)]
         return form
 
     def form_valid(self, form):
