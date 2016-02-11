@@ -1,0 +1,38 @@
+{% extends 'dashboard/base_logged.html' %}
+{% load staticfiles %}
+
+{% block css_styles %}
+<style>
+#plans, #checkpoints {
+  font-size: 30px;
+}
+</style>
+{% endblock %}
+
+
+{% block title %}{{object.name}} {% endblock %}
+{% block main_header %}<i class="fa fa-flask fa-2x"></i>{{object.name}}{% endblock %}
+{% block main_content %}
+
+<div class="row" style="background-color:lightblue;">
+  <div class="col-xs-5 text-center extra-margin">
+    <h4>Evacuation Paths <span id="plans">0</span> </h4>
+  </div>
+  <div class="col-xs-5 text-center extra-margin">
+    <h4>Checkpoints <span id="checkpoints">0</span></h4>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'bower_components/jquery-animateNumber/jquery.animateNumber.min.js' %}"></script>
+<script>
+  $('#plans').animateNumber({ number: {{plans | length}}});
+  $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
+
+</script>
+{% endblock %}
