@@ -25,7 +25,7 @@
 
  {% block main_content %}
  <div clas="row">
-   <div class="col-md-4">
+   <div class="col-md-8">
      <form method="POST" action="" class="form-inline" data-step="1" data-intro="Update your plan">  {% csrf_token %}
        {{form | crispy }}
        <br>
@@ -33,7 +33,7 @@
        <button type="submit" class="btn btn-success" name="action">Update Evacuation Path</button>
      </form>
    </div>
-   <div class="col-md-8 ">
+   <div class="col-md-4 ">
      <a type="button"  href="{% url 'plan_delete' pk=object.pk pk_experiment=object.experiment.pk  %}" class="btn btn-outline btn-danger btn-lg pull-right">Delete</a>
    </div>
  </div>

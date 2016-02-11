@@ -8,6 +8,8 @@ class Plan(models.Model):
     experiment = models.ForeignKey(Experiment)
     name = models.CharField(max_length=60)
     before = models.ForeignKey('self',verbose_name="Execution before plan", null=True, blank=True)
+    max_evacuation_time = models.PositiveIntegerField(verbose_name="Maximum Evacuation Time in Sec",null=True, blank=True)
+
 
     def __unicode__(self):
         return self.name
