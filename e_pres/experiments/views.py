@@ -78,16 +78,6 @@ class ExperimentDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView,
         return context
 
 
-class PostExperiment(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
-    template_name = 'dashboard/analytics/post_experiment.html'
-    model = Experiment
-
-    def get_context_data(self, **kwargs):
-        context = super(PostExperiment, self).get_context_data(**kwargs)
-        context['plans'] = self.object.plan_set.all()
-        context['checkpoints'] = Checkpoint.objects.filter(experiment=self.object)
-        return context
-
 class CheckpointInsertView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         form = CheckpointForm(request.POST)

@@ -1,4 +1,5 @@
 {% extends 'dashboard/base_logged.html' %}
+{% load poll_extras %}
 {% load staticfiles %}
 {% load poll_extras %}
 
@@ -46,7 +47,7 @@
             <div id="image-map-{{floor.pk}}" class="maps-blueprint" style="height:180px;"></div>
           </div>
           <div class="col-xs-3">
-            <table class="table table-bordered">
+            <table id="table-{{floor.pk}}" class="table table-bordered">
               <thead>
                 <td>id</td>
                 <td>Name</td>
@@ -63,7 +64,7 @@
             </tbody>
             </table>
           </div>
-          <div id="chartContainer{{forloop.counter}}" class="col-xs-5" style="height: 180px;">
+          <div id="chartContainer{{floor.pk}}" class="col-xs-5" style="height: 180px;">
           </div>
         </div>
       </div>
@@ -92,6 +93,34 @@ var plan = [];
     marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
     map{{floor.pk}}.markers.push(marker);
   {% endfor %}
+
+
+  $('#table-{{floor.pk}} tr').click(function() {
+    var number = $(this).closest('table').attr('id').match(/\d+/)[0];
+    row = this.firstElementChild.textContent;
+    $.getJSON("post-execution/"+ row, function( data ) {
+      json_data = jQuery.parseJSON(data);
+      chart{{floor.pk}}.options.data[0].dataPoints =  [{x:0, y:0}];
+      chart{{floor.pk}}.render();
+      var x = 1;
+      $.each(json_data, function(i, v) {
+        // chart20.options.data[0].dataPoints.push({ x: 25,  y: 30})
+        if(v.fields.fail ){
+          chart{{floor.pk}}.options.data[0].dataPoints.push({ x: x,  y: v.fields.current_flux, markerColor: "red" });
+        }
+        else{
+          chart{{floor.pk}}.options.data[0].dataPoints.push({ x: x,  y: v.fields.current_flux});
+        }
+        x = x+ 1;
+        chart{{floor.pk}}.render();
+      });
+
+
+      // chart20.options.data[0].dataPoints = [{x:20, y:20}, {x:10, y:20}];
+      // chart20.render();
+    });
+
+  });
 {% endfor %}
 
 
@@ -109,71 +138,46 @@ function onMapClick(e) {};
   $('#plans').animateNumber({ number: {{plans | length}}});
   $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
 
+
   window.onload = function () {
-    var chart = new CanvasJS.Chart("chartContainer1",
-    {
-      theme: "theme2",
-      animationEnabled: true,
-      axisX: {
-        valueFormatString: "MMM",
-        interval:1,
-        intervalType: "month"
+    {% for floor in object.building.floor_set.all %}
+      {% with checkpoint=floor.checkpoint_set.first %}
 
-      },
-      axisY:{
-        includeZero: false
-      },
-      axisX:{
-        labelAngle: 30
-      },
-      data: [
-      {
-        type: "line",
-        //lineThickness: 3,
-        dataPoints: [
-        { x: 50, y: 20 },
-        { x: 60 , y: 44},
-        { x: 70, y: 50, indexLabel: "highest",markerColor: "red", markerType: "triangle"},
-        { x: 80, y: 40 },
-        ]
-      }
-      ]
-    });
+        chart{{floor.pk}} = new CanvasJS.Chart("chartContainer{{floor.pk}}",
+        {
+          theme: "theme2",
+          animationEnabled: true,
+          axisX: {
+            valueFormatString: "MMM",
+            interval:1,
+            intervalType: "month"
 
-chart.render();
+          },
+          axisY:{
+            includeZero: false
+          },
+          axisX:{
+            labelAngle: 30
+          },
+          data: [
+          {
+            type: "line",
+            //lineThickness: 3,
+            dataPoints: [
+              {x:0 , y:0 },
+            {% for report in checkpoint.checkpointreport_set.all|in_category:object %}
+              { x: {{forloop.counter}}, y: {{report.current_flux}} {% if report.fail %}, markerColor: "red" {% endif %}  },
+            {% endfor %}
+            // { x: 70, y: 50, indexLabel: "highest",markerColor: "red", markerType: "triangle"},
+            ]
+          }
+          ]
+        });
+{% endwith %}
 
-var chart = new CanvasJS.Chart("chartContainer2",
-{
-  theme: "theme2",
-  animationEnabled: true,
-  axisX: {
-    valueFormatString: "MMM",
-    interval:1,
-    intervalType: "month"
+chart{{floor.pk}}.render();
 
-  },
-  axisY:{
-    includeZero: false
-  },
-  axisX:{
-    labelAngle: 30
-  },
-  data: [
-  {
-    type: "line",
-    //lineThickness: 3,
-    dataPoints: [
-    { x: 50, y: 20 },
-    { x: 60 , y: 44},
-    { x: 70, y: 50, indexLabel: "highest",markerColor: "red", markerType: "triangle"},
-    { x: 80, y: 40 },
-    ]
-  }
-  ]
-});
-
-chart.render();
-
+{% endfor %}
 
 
 }
