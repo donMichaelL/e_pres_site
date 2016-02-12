@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'buildings',
     'experiments',
     'plans',
+    'analytics',
 ]
 
 MIDDLEWARE_CLASSES = [

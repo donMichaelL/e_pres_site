@@ -347,4 +347,4 @@ class PostExperimentViewTest(TestCase):
     def test_GET_template_detail_experiment(self):
         self.log_user()
         response = self.client.get(reverse('post_experiment', kwargs={'pk':Experiment.objects.first().pk}))
-        self.assertTemplateUsed(response, 'dashboard/experiments/post_experiment.html')
+        self.assertTemplateUsed(response, 'dashboard/analytics/post_experiment.html')

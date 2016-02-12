@@ -79,7 +79,7 @@ class ExperimentDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView,
 
 
 class PostExperiment(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
-    template_name = 'dashboard/experiments/post_experiment.html'
+    template_name = 'dashboard/analytics/post_experiment.html'
     model = Experiment
 
     def get_context_data(self, **kwargs):

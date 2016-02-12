@@ -1,0 +1,184 @@
+{% extends 'dashboard/base_logged.html' %}
+{% load staticfiles %}
+{% load poll_extras %}
+
+
+{% block css_styles %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<link href="{% static "css/leaflet.css" %}" rel="stylesheet" type="text/css">
+<style>
+  .leaflet-div-icon {
+  background: transparent;
+  border: none;
+  }
+
+</style>
+<style>
+#plans, #checkpoints {
+  font-size: 30px;
+}
+</style>
+{% endblock %}
+
+
+{% block title %}{{object.name}} {% endblock %}
+{% block main_header %}<i class="fa fa-flask fa-2x"></i>{{object.name}}{% endblock %}
+{% block main_content %}
+
+<div class="row" style="background-color:lightblue;">
+  <div class="col-xs-5 text-center extra-margin">
+    <h4>Evacuation Paths <span id="plans">0</span> </h4>
+  </div>
+  <div class="col-xs-5 text-center extra-margin">
+    <h4>Checkpoints <span id="checkpoints">0</span></h4>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="row">
+      {% for floor in object.building.floor_set.all %}
+      <div class="col-xs-12">
+        <h4 class="text-center lead">{{floor.name}}</h4>
+        <div class="row">
+          <div class="col-xs-4">
+            <!-- <img src="{{floor.blueprint.url}}" class="img-responsive"/> -->
+            <div id="image-map-{{floor.pk}}" class="maps-blueprint" style="height:180px;"></div>
+          </div>
+          <div class="col-xs-3">
+            <table class="table table-bordered">
+              <thead>
+                <td>id</td>
+                <td>Name</td>
+                <td>Max Flux</td>
+              </thead>
+              <tbody>
+                {% for checkpoint in floor.checkpoint_set.all %}
+                <tr>
+                  <td>{{checkpoint.pk}}</td>
+                  <td>{% if checkpoint.name %}{{checkpoint.name}}{% else %}-{% endif %}</td>
+                  <td>{% if checkpoint.flux %}{{checkpoint.flux}}{% else %}-{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+          </div>
+          <div id="chartContainer{{forloop.counter}}" class="col-xs-5" style="height: 180px;">
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+  <div class="col-md-4">
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/leaflet.js' %}"></script>
+<script src="{% static 'js/leaf_custom.js' %}"></script>
+<script>
+var plan = [];
+{% for floor in object.building.floor_set.all %}
+  var map{{floor.pk}} = defineMap('image-map-{{floor.pk}}');
+  map{{floor.pk}}.markers = [];
+  setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
+  {% for checkpoint in floor.checkpoint_set.all  %}
+    var x = {{checkpoint.coord_x}}, y = {{checkpoint.coord_y}};
+    var name = {{checkpoint.pk}};
+    marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
+    map{{floor.pk}}.markers.push(marker);
+  {% endfor %}
+{% endfor %}
+
+
+function onMapClick(e) {};
+</script>
+
+
+
+
+
+
+<script src="{% static 'bower_components/jquery-animateNumber/jquery.animateNumber.min.js' %}"></script>
+<script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+  $('#plans').animateNumber({ number: {{plans | length}}});
+  $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
+
+  window.onload = function () {
+    var chart = new CanvasJS.Chart("chartContainer1",
+    {
+      theme: "theme2",
+      animationEnabled: true,
+      axisX: {
+        valueFormatString: "MMM",
+        interval:1,
+        intervalType: "month"
+
+      },
+      axisY:{
+        includeZero: false
+      },
+      axisX:{
+        labelAngle: 30
+      },
+      data: [
+      {
+        type: "line",
+        //lineThickness: 3,
+        dataPoints: [
+        { x: 50, y: 20 },
+        { x: 60 , y: 44},
+        { x: 70, y: 50, indexLabel: "highest",markerColor: "red", markerType: "triangle"},
+        { x: 80, y: 40 },
+        ]
+      }
+      ]
+    });
+
+chart.render();
+
+var chart = new CanvasJS.Chart("chartContainer2",
+{
+  theme: "theme2",
+  animationEnabled: true,
+  axisX: {
+    valueFormatString: "MMM",
+    interval:1,
+    intervalType: "month"
+
+  },
+  axisY:{
+    includeZero: false
+  },
+  axisX:{
+    labelAngle: 30
+  },
+  data: [
+  {
+    type: "line",
+    //lineThickness: 3,
+    dataPoints: [
+    { x: 50, y: 20 },
+    { x: 60 , y: 44},
+    { x: 70, y: 50, indexLabel: "highest",markerColor: "red", markerType: "triangle"},
+    { x: 80, y: 40 },
+    ]
+  }
+  ]
+});
+
+chart.render();
+
+
+
+}
+
+
+
+</script>
+{% endblock %}
