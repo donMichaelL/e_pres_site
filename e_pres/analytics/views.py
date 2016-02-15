@@ -7,6 +7,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic import View
 from experiments.models import Experiment, Checkpoint
 from .models import CheckpointReport
+from .utils import total_building_students
 
 
 class PostExperiment(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
@@ -17,6 +18,8 @@ class PostExperiment(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
         context = super(PostExperiment, self).get_context_data(**kwargs)
         context['plans'] = self.object.plan_set.all()
         context['checkpoints'] = Checkpoint.objects.filter(experiment=self.object)
+        context['total_student'] = total_building_students(self.object)
+        print context['total_student']
         return context
 
 class ReportFluxPostExperiment(View):

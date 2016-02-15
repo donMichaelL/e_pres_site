@@ -5,6 +5,7 @@
 
 
 {% block css_styles %}
+<link href="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 <link href="{% static "css/leaflet.css" %}" rel="stylesheet" type="text/css">
 <style>
@@ -15,7 +16,7 @@
 
 </style>
 <style>
-#plans, #checkpoints {
+#plans, #checkpoints, #totaltime, #totalstudents {
   font-size: 30px;
 }
 </style>
@@ -27,11 +28,17 @@
 {% block main_content %}
 
 <div class="row" style="background-color:lightblue;">
-  <div class="col-xs-5 text-center extra-margin">
+  <div class="col-xs-3 text-center extra-margin">
     <h4>Evacuation Paths <span id="plans">0</span> </h4>
   </div>
-  <div class="col-xs-5 text-center extra-margin">
+  <div class="col-xs-3 text-center extra-margin">
     <h4>Checkpoints <span id="checkpoints">0</span></h4>
+  </div>
+  <div class="col-xs-3 text-center extra-margin">
+    <h4>Total Time (sec) <span id="totaltime">0</span></h4>
+  </div>
+  <div class="col-xs-3 text-center extra-margin">
+    <h4>Total Students<span id="totalstudents">0</span></h4>
   </div>
 </div>
 
@@ -72,8 +79,60 @@
 
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-4" style="margin-top:10px;">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">Total Students</div>
+          <div class="panel-body align-center">
+            <h2 class="text-center">{% if total_student %}{{total_student}}{% else %} No Students {% endif %}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="panel panel-{% if object.building.max_evacuation_time  and object.building.max_evacuation_time > 100 %}danger{% else %}success {% endif %}">
+          <div class="panel-heading">Total Evacuation Time</div>
+          <div class="panel-body align-center">
+            <h2 class="text-center">600 <small>sec</small></h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <h1 class="text-center">{{object.execution_date|date:"d F Y"}}</h1>
+        <h2 class="text-center">{{object.execution_time|date:"H:i"}}</h2>
+      </div>
+    </div>
   </div>
+</div>
+
+
+<div class="row" style="margin-top:100px;">
+  <table class="table table-striped">
+   <thead>
+     <tr>
+       <th>Path</th>
+       <th>Details</th>
+       <th>Evacuation Time/ Expected Time</th>
+       <th>Path Before Path</th>
+       <th>Correct Execution</th>
+       <th>Teacher</th>
+     </tr>
+   </thead>
+   <tbody>
+     {% for plan in object.plan_set.all %}
+     <tr>
+       <td><a href="{% url 'plan_detail' pk_experiment=object.pk pk=plan.pk %}">{{plan.name}}</a></td>
+       <td>{% for connection in plan.connection_set.all %} {{connection.checkpoint.pk}}--> {% endfor%}X</td>
+       <td>{% if 100 >= plan.max_evacuation_time %} <i class="fa fa-check"></i> {% else %} <i class="fa fa-times"></i>{% endif %}100sec <small> /{{plan.max_evacuation_time}}sec</small></td>
+       <td><i class="fa fa-times"></i>42</td>
+       <td> <i class="fa fa-check"></i></td>
+       <td> <i class="fa fa-check"></i></td>
+     </tr>
+     {% endfor %}
+   </tbody>
+ </table>
 </div>
 
 {% endblock %}
@@ -130,13 +189,15 @@ function onMapClick(e) {};
 
 
 
-
-
 <script src="{% static 'bower_components/jquery-animateNumber/jquery.animateNumber.min.js' %}"></script>
+<script src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
 <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script>
   $('#plans').animateNumber({ number: {{plans | length}}});
   $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
+  $('#totaltime').animateNumber({ number: 600 });
+  $('#totalstudents').animateNumber({ number: {{total_student}} });
 
 
   window.onload = function () {
@@ -185,4 +246,5 @@ chart{{floor.pk}}.render();
 
 
 </script>
+
 {% endblock %}
