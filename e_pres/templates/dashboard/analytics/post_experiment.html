@@ -146,7 +146,7 @@ var plan = [];
   var map{{floor.pk}} = defineMap('image-map-{{floor.pk}}');
   map{{floor.pk}}.markers = [];
   setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
-  {% for checkpoint in floor.checkpoint_set.all  %}
+  {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
     var x = {{checkpoint.coord_x}}, y = {{checkpoint.coord_y}};
     var name = {{checkpoint.pk}};
     marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
