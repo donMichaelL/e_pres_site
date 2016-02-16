@@ -115,10 +115,12 @@ var plan = [];
 
 function onMapClick(e) {};
 </script>
+<script>
+$(function() {
+  $("#id_before").change(function() {
+    console.log("Handler for .change() called.");
+  });
+  
+});
+</script>
 {% endblock %}
-
-
-<input name='form-"+ (iteration-1) +"-seq' type='number' value="+iteration+"> \
-<input name='form-"+ (iteration-1) +"-checkpoint' type='text' value="+ marker_id +"> \
-<input name='form-"+ (iteration-1) +"-checkpoint' type='text' value="+ marker_id +">\
-<input name='form-"+ (iteration-1) +"-plan' type='text' value="+ {{object.pk}} +"> \

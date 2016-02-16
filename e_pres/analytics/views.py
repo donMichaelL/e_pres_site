@@ -8,6 +8,7 @@ from django.views.generic import View
 from experiments.models import Experiment, Checkpoint
 from .models import CheckpointReport
 from .utils import total_building_students
+from django.core.exceptions import PermissionDenied
 
 
 class PostExperiment(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
@@ -19,12 +20,15 @@ class PostExperiment(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
         context['plans'] = self.object.plan_set.all()
         context['checkpoints'] = Checkpoint.objects.filter(experiment=self.object)
         context['total_student'] = total_building_students(self.object)
-        print context['total_student']
         return context
 
+
+# JSON
 class ReportFluxPostExperiment(View):
     def get(self, request, *args, **kwargs):
         experiment = Experiment.objects.get(pk=kwargs['pk_experiment'])
         checkpoint = Checkpoint.objects.get(pk=kwargs['pk'])
         report = CheckpointReport.objects.filter(experiment=experiment).filter(checkpoint=checkpoint)
-        return JsonResponse(serializers.serialize('json', report), safe=False)
+        if request.user == experiment.building.user or request.user.is_superuser:
+            return JsonResponse(serializers.serialize('json', report), safe=False)
+        return JsonResponse('PermissionDenied',status=403, safe=False)

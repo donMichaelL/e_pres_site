@@ -96,6 +96,7 @@ class PlanAddConnectionlView(LoginRequiredMixin, ContentUserOnlyMixin, View):
             messages.success(self.request, ' %s was saved.'% plan.name )
         return redirect(reverse_lazy('plan_detail', kwargs={'pk': kwargs['pk'], 'pk_experiment': kwargs['pk_experiment']}))
 
+
 class PlanDeleteConnectionlView(LoginRequiredMixin, ContentUserOnlyMixin, View):
     def post(self, request, *args, **kwargs):
         plan = get_object_or_404(Plan , pk=kwargs['pk'])
@@ -106,3 +107,11 @@ class PlanDeleteConnectionlView(LoginRequiredMixin, ContentUserOnlyMixin, View):
     def get(self, request, *args, **kwargs):
         plan = get_object_or_404(Plan, pk=kwargs['pk'])
         return render(request, 'dashboard/plans/connections_delete.html', {'plan':plan})
+
+#JSON
+# class GetCheckpointsOfSpecificPlan(View):
+#     def get(self, request, *args, **kwargs):
+#         experiment = Experiment.objects.get(pk=kwargs['pk_experiment'])
+#         checkpoint = Checkpoint.objects.get(pk=kwargs['pk'])
+#         report = CheckpointReport.objects.filter(experiment=experiment).filter(checkpoint=checkpoint)
+#         return JsonResponse(serializers.serialize('json', report), safe=False)
