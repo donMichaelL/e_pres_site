@@ -50,7 +50,6 @@
         <h4 class="text-center lead">{{floor.name}}</h4>
         <div class="row">
           <div class="col-xs-4">
-            <!-- <img src="{{floor.blueprint.url}}" class="img-responsive"/> -->
             <div id="image-map-{{floor.pk}}" class="maps-blueprint" style="height:180px;"></div>
           </div>
           <div class="col-xs-3">
@@ -61,7 +60,7 @@
                 <td>Max Flux</td>
               </thead>
               <tbody>
-                {% for checkpoint in floor.checkpoint_set.all %}
+                {% for checkpoint in floor.checkpoint_set.all|in_category:object %}
                 <tr>
                   <td>{{checkpoint.pk}}</td>
                   <td>{% if checkpoint.name %}{{checkpoint.name}}{% else %}-{% endif %}</td>
@@ -100,8 +99,8 @@
     </div>
     <div class="row">
       <div class="col-xs-12">
-        <h1 class="text-center">{{object.execution_date|date:"d F Y"}}</h1>
-        <h2 class="text-center">{{object.execution_time|date:"H:i"}}</h2>
+        <h1 class="text-center"><small><i class="fa fa-calendar"></i></small> {{object.execution_date|date:"d F Y"}}</h1>
+        <h2 class="text-center"><small><i class="fa fa-clock-o"></i></small> {{object.execution_time|date:"H:i"}}</h2>
       </div>
     </div>
   </div>
@@ -175,8 +174,6 @@ var plan = [];
       });
 
 
-      // chart20.options.data[0].dataPoints = [{x:20, y:20}, {x:10, y:20}];
-      // chart20.render();
     });
 
   });
@@ -229,7 +226,6 @@ function onMapClick(e) {};
             {% for report in checkpoint.checkpointreport_set.all|in_category:object %}
               { x: {{forloop.counter}}, y: {{report.current_flux}} {% if report.fail %}, markerColor: "red" {% endif %}  },
             {% endfor %}
-            // { x: 70, y: 50, indexLabel: "highest",markerColor: "red", markerType: "triangle"},
             ]
           }
           ]
