@@ -29,7 +29,7 @@ L.NumberedDivIcon = L.Icon.extend({
 
   function defineMap(id){
     return L.map(id, {
-      minZoom: 1,
+      minZoom: 0,
       maxZoom: 4,
       center: [-75, 102],
       zoom: 1,

@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from .views import ExperimentListView, ExperimentNewView, ExperimentDeleteView, ExperimentDetailView, CheckpointInsertView, CheckpointDeleteView
-from plans.views import PlanNewView, PlanDetailView, PlanDeleteView, PlanAddConnectionlView, PlanDeleteConnectionlView
+from plans.views import PlanNewView, PlanDetailView, PlanDeleteView, PlanAddConnectionlView, PlanDeleteConnectionlView, GetCheckpointsOfSpecificPlan
 from analytics.views import PostExperiment, ReportFluxPostExperiment
 
 urlpatterns = [
@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^(?P<pk_experiment>\d+)/post-execution/(?P<pk>\d+)$', ReportFluxPostExperiment.as_view(), name="report_flux_post_experiment"),
     url(r'^(?P<pk_experiment>\d+)/checkpoint/(?P<pk>\d+)/delete/$', CheckpointDeleteView.as_view(), name="checkpoint_delete"),
     url(r'^(?P<pk_experiment>\d+)/plan/new/$', PlanNewView.as_view(), name="new_plan"),
+    url(r'^(?P<pk_experiment>\d+)/plan/(?P<pk>\d+)/api/$', GetCheckpointsOfSpecificPlan.as_view(), name="get_checkpoints_of_plan"),
     url(r'^(?P<pk_experiment>\d+)/plan/(?P<pk>\d+)/$', PlanDetailView.as_view(), name="plan_detail"),
     url(r'^(?P<pk_experiment>\d+)/plan/(?P<pk>\d+)/delete/$', PlanDeleteView.as_view(), name="plan_delete"),
     url(r'^(?P<pk_experiment>\d+)/plan/(?P<pk>\d+)/add/connection/$', PlanAddConnectionlView.as_view(), name="plan_add_connection"),

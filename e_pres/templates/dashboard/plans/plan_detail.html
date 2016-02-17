@@ -118,9 +118,16 @@ function onMapClick(e) {};
 <script>
 $(function() {
   $("#id_before").change(function() {
-    console.log("Handler for .change() called.");
-  });
-  
+    if($.isNumeric(this.value)) {
+    $.getJSON("/experiment/{{object.experiment.pk}}/plan/"+this.value+"/api/", function( data ) {
+      json_data = jQuery.parseJSON(data);
+      $.each(json_data, function(i, v) {
+      console.log(v.fields);
+      });
+    });
+  }
+});
+
 });
 </script>
 {% endblock %}

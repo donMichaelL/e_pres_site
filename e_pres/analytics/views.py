@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core import serializers
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -26,8 +26,8 @@ class PostExperiment(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
 # JSON
 class ReportFluxPostExperiment(View):
     def get(self, request, *args, **kwargs):
-        experiment = Experiment.objects.get(pk=kwargs['pk_experiment'])
-        checkpoint = Checkpoint.objects.get(pk=kwargs['pk'])
+        experiment = get_object_or_404(Experiment, pk=kwargs['pk_experiment'])
+        checkpoint = get_object_or_404(Checkpoint, pk=kwargs['pk'])
         report = CheckpointReport.objects.filter(experiment=experiment).filter(checkpoint=checkpoint)
         if request.user == experiment.building.user or request.user.is_superuser:
             return JsonResponse(serializers.serialize('json', report), safe=False)

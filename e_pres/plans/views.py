@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse_lazy
+from django.core import serializers
+from django.http import JsonResponse
 from django.contrib import messages
 from django.forms import formset_factory
 from django.views.generic import View
@@ -109,9 +111,9 @@ class PlanDeleteConnectionlView(LoginRequiredMixin, ContentUserOnlyMixin, View):
         return render(request, 'dashboard/plans/connections_delete.html', {'plan':plan})
 
 #JSON
-# class GetCheckpointsOfSpecificPlan(View):
-#     def get(self, request, *args, **kwargs):
-#         experiment = Experiment.objects.get(pk=kwargs['pk_experiment'])
-#         checkpoint = Checkpoint.objects.get(pk=kwargs['pk'])
-#         report = CheckpointReport.objects.filter(experiment=experiment).filter(checkpoint=checkpoint)
-#         return JsonResponse(serializers.serialize('json', report), safe=False)
+class GetCheckpointsOfSpecificPlan(View):
+    def get(self, request, *args, **kwargs):
+        experiment = get_object_or_404(Experiment, pk=kwargs['pk_experiment'])
+        plan = get_object_or_404(Plan, pk=kwargs['pk'])
+        checkpoints = plan.connection_set.all()
+        return JsonResponse(serializers.serialize('json', checkpoints), safe=False)
