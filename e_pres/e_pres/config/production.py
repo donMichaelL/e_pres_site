@@ -1,6 +1,8 @@
 from .base import *
 
-DEBUG = True
+DEBUG = False
+
+ALLOWED_HOSTS = ['.hawk1.di.uoa.gr']
 
 
 DATABASES = {
