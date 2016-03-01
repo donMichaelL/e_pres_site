@@ -47,10 +47,10 @@
    <div class="col-xs-12">
      <h1 class="lead">{{object.building}}</h1>
      {% for floor in object.building.floor_set.all %}
-     <div class="row">
+     <div class="row" style="margin-top:10px;">
        <div class="col-md-8" {% if forloop.counter == 1 %} data-step="2" data-intro="Click the image and insert a checkpoint" {% endif %}>
          <!-- <img src="{{floor.blueprint.url}}" class="img-responsive"/> -->
-         <div id="image-map-{{floor.pk}}" class="maps-blueprint"></div>
+         <div id="image-map-{{floor.pk}}" class="maps-blueprint" style="height:500px;"></div>
        </div>
        <div class="col-md-4" {% if forloop.counter == 1 %} data-step="3" data-intro="Save or Update a checkpoint" {% endif %}>
          <h4 class="text-center">{{floor}}</h4>
