@@ -41,3 +41,7 @@ class BuildingpageViewTest(TestCase):
         self.assertEqual(len(response.json()), 2)
         self.assertEqual(response.json()[0]['name'], "b1")
         self.assertEqual(response.json()[1]['name'], "b2")
+
+    def test_POST_403_visitor(self):
+        response = self.client.post(reverse('building_rest_list'))
+        self.assertEqual(response.status_code, 403)

@@ -14,7 +14,7 @@ class HomepageView(View):
         if request.user.is_authenticated():
             buildings = request.user.building_set.all()
             context = {'object_list': buildings}
-            return render(request,'dashboard/buildings/list_building.html', context)
+            return render(request,'front_homepage.html', context)
         else:
             form = LoginForm()
             context = {'form': form}
