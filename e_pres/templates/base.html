@@ -50,16 +50,8 @@
   <script src="{% static 'bower_components/masonry/dist/masonry.pkgd.min.js' %}"></script>
   <script src="{% static 'bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js'%}"></script>
   <script src="{% static 'bower_components/intro.js/minified/intro.min.js' %}"></script>
-  <script>
-  $('.grid').masonry({
-    itemSelector: '.grid-item',
-  });
-
-      $(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
-          $(".alert-success").alert('close');
-      });
-
-  </script>
+  <script src="{% static 'bower_components/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'js/main.js'%}"></script>
   {% block js %}
   {% endblock %}
   </body>

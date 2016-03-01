@@ -25,6 +25,7 @@
     "startbootstrap-sb-admin-2": "~1.0.8",
     "eonasdan-bootstrap-datetimepicker": "~4.17.37",
     "intro.js": "~1.1.1",
-    "jquery-animateNumber": "~0.0.12"
+    "jquery-animateNumber": "~0.0.12",
+    "imagesloaded": "~4.1.0"
   }
 }
