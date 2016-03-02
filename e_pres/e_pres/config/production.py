@@ -4,6 +4,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['.hawk1.di.uoa.gr']
 
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
 
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media")
