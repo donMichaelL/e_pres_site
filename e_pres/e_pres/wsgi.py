@@ -12,9 +12,10 @@ import os
 from django.core.wsgi import get_wsgi_application
 from django.conf import settings
 from whitenoise.django import DjangoWhiteNoise
+from rednoise import DjangoRedNoise
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "e_pres.settings")
 
 application = get_wsgi_application()
 if not settings.DEBUG:
-    application = DjangoWhiteNoise(application)
+    application = DjangoRedNoise(application)
