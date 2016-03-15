@@ -31,7 +31,7 @@
 
 
 
- <div clas="row">
+ <div class="row">
    <div class="col-xs-12 text-center extra-margin">
        <i class="fa fa-flask fa-5x"></i>
    </div>
@@ -50,7 +50,7 @@
      <div class="row" style="margin-top:10px;">
        <div class="col-md-8" {% if forloop.counter == 1 %} data-step="2" data-intro="Click the image and insert a checkpoint" {% endif %}>
          <!-- <img src="{{floor.blueprint.url}}" class="img-responsive"/> -->
-         <div id="image-map-{{floor.pk}}" class="maps-blueprint" style="height:500px;"></div>
+         <div id="image-map-{{floor.pk}}" class="maps-blueprint"></div>
        </div>
        <div class="col-md-4" {% if forloop.counter == 1 %} data-step="3" data-intro="Save or Update a checkpoint" {% endif %}>
          <h4 class="text-center">{{floor}}</h4>
