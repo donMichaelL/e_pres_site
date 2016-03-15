@@ -52,7 +52,7 @@
          <h4 class="text-center">{{floor}}</h4>
          <div class="panel panel-default" id="panel-{{floor.pk}}">
             {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
-            <div class="panel-body">
+            <div id="checkpoint-{{checkpoint.pk}}" class="panel-body">
               <form action="{% url 'checkpoint_new' pk=object.pk %}" method="POST" class="form-inline"> {% csrf_token %}
                 {{checkpoint.pk}}
                 <input type="hidden" name="coord_x" value="{{checkpoint.coord_x}}">
@@ -64,8 +64,8 @@
                 <input type="text" name="name" value="{{checkpoint.name}}" placeholder="Name">
                 IsExit?<input name="exit" type="checkbox" {% if checkpoint.exit %}checked {% endif %}>
                 <button type="submit" class="btn btn-success" name="action">Update</button>
-                <a href="{% url 'checkpoint_delete' pk_experiment=object.pk  pk=checkpoint.pk %}" type="button" class="btn btn-danger">X</a>
             </form>
+            <button class="btn btn-danger deleteCheckpoint" delete-id="{{checkpoint.pk}}" floor-pk>X</button>
           </div>
           {% endfor %}
         </div>
@@ -104,8 +104,8 @@
   {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
     var x = {{checkpoint.coord_x}}, y = {{checkpoint.coord_y}};
     var name = {{checkpoint.pk}};
-    marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name }),draggable:'true'}).addTo(map{{floor.pk}});
-    marker.on('dragend',function(event){
+    marker{{checkpoint.pk}} = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name }),draggable:'true'}).addTo(map{{floor.pk}});
+    marker{{checkpoint.pk}}.on('dragend',function(event){
       var marker = event.target;
       var position = marker.getLatLng();
       console.log(position);
@@ -114,7 +114,7 @@
       $('#panel-'+{{floor.pk}} +' .panel-body:nth-child('+ marker_id +') input[name="coord_x"]').val(position.lat);
       $('#panel-'+ {{floor.pk}} +' .panel-body:nth-child('+ marker_id +') input[name="coord_y"]').val(position.lng);
     });
-    map{{floor.pk}}.markers.push(marker);
+    map{{floor.pk}}.markers.push(marker{{checkpoint.pk}});
   {% endfor %}
 {% endfor %}
 
@@ -157,6 +157,29 @@ function onMapClick(e) {
 
 
 
+</script>
+
+
+<script>
+ $(function() {
+
+   $('.deleteCheckpoint').click(function(e){
+      var pk = parseInt($(this).attr('delete-id'));
+      $.ajax({
+        type: "POST",
+        url: 'checkpoint/' + pk+ '/delete/',
+        data: {
+          csrfmiddlewaretoken:  getCookie('csrftoken')
+        },
+      success: function(){
+        $("#checkpoint-" + pk).remove();
+        var marker_name = 'marker' + pk;
+        eval(marker_name)._removeIcon();
+      }
+      });
+   });
+
+ });
 </script>
 
 {% endblock %}
