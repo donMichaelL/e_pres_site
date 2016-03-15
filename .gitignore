@@ -7,6 +7,7 @@ e_pres/media/
 e_pres/tests
 e_pres/e_pres/settings.py
 e_pres/e_pres/config/secrets.json
+/media/
 
 e_pres/static/bower_components
 
