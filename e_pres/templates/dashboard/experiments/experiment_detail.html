@@ -19,11 +19,7 @@
 
 {% block title %}{{object.name}} {% endblock %}
 {% block main_header %}{{object.name}}
-{% if request.GET.next %}
-<a type="button"  href="{{request.GET.next}}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i> Back</a>
-{% else %}
-<a type="button"  href="{% url 'experiment_list' %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i> Back</a>
-{% endif %}
+<a type="button"  href="{% url 'building_detail' pk=object.building.pk %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i> Back to Building Details</a>
 {% endblock %}
 
 

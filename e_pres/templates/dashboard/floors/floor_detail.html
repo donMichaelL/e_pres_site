@@ -4,7 +4,9 @@
 
 
 {% block title %}{{object.name}} {% endblock %}
-{% block main_header %}{{object.name}} {% endblock %}
+{% block main_header %}{{object.name}}
+<a type="button"  href="{% url 'building_detail' pk=object.building.pk %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i> Back to Building Details</a>
+{% endblock %}
 
 {% block main_content %}
 <div clas="row">
