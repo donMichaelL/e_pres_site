@@ -10,7 +10,7 @@
  {% endblock %}
 
 {% block main_content %}
-<div clas="row">
+<div class="row">
   <div class="col-md-4">
     {% if object.photo %}<img src="{{object.photo.url}}" class="img-responsive"></img>
     {% else%}<img src="{% static 'img/building.jpg' %}" class="img-responsive"></img>
