@@ -16,7 +16,7 @@
   {%  for building in object_list %}
   <div class="grid-item">
     <div class="thumbnail ">
-      <a type="button" href="{% url 'building_delete' pk=building.pk %}" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
+      <a type="button" href="{% url 'building_delete' pk=building.pk %}" class="btn btn-danger btn-circle delete-button-building"><i class="fa fa-times"></i></a>
       {% if building.photo %}<a href="{{building.get_absolute_url}}"><img class="img-responsive" src="{{building.photo.url}}" alt="Building Photo"></a>
       {% else %}  <a href="{{building.get_absolute_url}}"><img class="img-responsive" src="{% static 'img/building.jpg' %}" alt="Building Photo"></a>
       {% endif %}

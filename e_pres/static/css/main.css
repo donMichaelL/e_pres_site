@@ -60,3 +60,9 @@
   margin-bottom: 20px;
   border: 1px solid #111;
 }
+
+.delete-button-building {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+}
