@@ -1,6 +1,6 @@
 .container-alert-flash {
   top:10px;
-  position: absolute;
+  position: fixed;
   z-index: 50000;
   width: 300px;
   right: 20px;

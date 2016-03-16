@@ -53,7 +53,7 @@
          <div class="panel panel-default" id="panel-{{floor.pk}}">
             {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
             <div id="checkpoint-{{checkpoint.pk}}" class="panel-body">
-              <form action="{% url 'checkpoint_new' pk=object.pk %}" method="POST" class="form-inline"> {% csrf_token %}
+              <form class="updateCheckpoint" action="{% url 'checkpoint_new' pk=object.pk %}" method="POST" class="form-inline"> {% csrf_token %}
                 {{checkpoint.pk}}
                 <input type="hidden" name="coord_x" value="{{checkpoint.coord_x}}">
                 <input type="hidden" name="coord_y" value="{{checkpoint.coord_y}}">
@@ -64,8 +64,8 @@
                 <input type="text" name="name" value="{{checkpoint.name}}" placeholder="Name">
                 IsExit?<input name="exit" type="checkbox" {% if checkpoint.exit %}checked {% endif %}>
                 <button type="submit" class="btn btn-success" name="action">Update</button>
+                <button class="btn btn-danger deleteCheckpoint" delete-id="{{checkpoint.pk}}">X</button>
             </form>
-            <button class="btn btn-danger deleteCheckpoint" delete-id="{{checkpoint.pk}}" floor-pk>X</button>
           </div>
           {% endfor %}
         </div>
@@ -125,7 +125,7 @@ function onMapClick(e) {
   var panel_id = (e.target._container.id).match(/\d+/)[0];
   var marker = new L.marker(e.latlng, {icon: new L.NumberedDivIcon({number: 'new'}),draggable:'true'});
   e.target.markers.push(marker);
-  var newRow = jQuery("<div class='panel-body'>  <form action='{% url "checkpoint_new" pk=object.pk  %}' method='POST'> {% csrf_token %} \
+  var newRow = jQuery("<div class='panel-body'>  <form class='addCheckpoint' action='{% url "checkpoint_new" pk=object.pk  %}' method='POST'> {% csrf_token %} \
     <input type='hidden' name='coord_x' value='" +e.latlng.lat+ "'> \
     <input type='hidden' name='coord_y' value='" +e.latlng.lng+ "'> \
     <input type='hidden' name='floor' value='"+ panel_id +"'> \
@@ -133,7 +133,7 @@ function onMapClick(e) {
     <input type='number' placeholder='flux' name='flux' value=''> \
     <input type='text' placeholder='name' name='name' value=''> \
     isExit? <input name='exit' type='checkbox'> \
-    <button type='submit' class='btn btn-default' name=action >Save</button> \
+    <button type='submit' class='btn btn-default' name='action'>Save</button> \
     </form></div> \
   ");
 
@@ -142,17 +142,16 @@ function onMapClick(e) {
   marker.on('dragend',function(event){
     var marker = event.target;
     var position = marker.getLatLng();
-    // marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
-    // e.target.panTo(new L.LatLng(position.lat, position.lng));
     var marker_id = e.target.markers.indexOf(marker);
     marker_id = marker_id + 1;
-
 
     $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_x"]').val(position.lat);
     $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_y"]').val(position.lng);
 
   });
     e.target.addLayer(marker);
+
+
   };
 
 
@@ -164,6 +163,7 @@ function onMapClick(e) {
  $(function() {
 
    $('.deleteCheckpoint').click(function(e){
+      e.preventDefault();
       var pk = parseInt($(this).attr('delete-id'));
       $.ajax({
         type: "POST",
@@ -175,9 +175,25 @@ function onMapClick(e) {
         $("#checkpoint-" + pk).remove();
         var marker_name = 'marker' + pk;
         eval(marker_name)._removeIcon();
+        notification_message('Checkpoint was succesfully deleted');
       }
       });
    });
+
+
+   $('.updateCheckpoint').submit(function(e){
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: 'add_checkpoint/',
+      data: $(this).serialize(),
+      success: function(){
+        notification_message('Checkpoint was succesfully updated');
+        }
+      });
+    });
+
+
 
  });
 </script>

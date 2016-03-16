@@ -26,3 +26,16 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+function notification_message(message) {
+    $("body").append("<div class='alert alert-success text-center alert-dismissible container-alert-flash '> \
+    <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button> \
+    	<p class='lead' style='font-size:14px;'><strong>"+ message +"</strong></p> \
+    </div>\
+    ");
+
+    $(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+        $(".alert-success").alert('close');
+    });
+
+}
