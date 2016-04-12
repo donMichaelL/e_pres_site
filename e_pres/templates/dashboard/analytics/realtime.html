@@ -1,0 +1,221 @@
+{% extends 'dashboard/base_logged.html' %}
+{% load poll_extras %}
+
+{% load staticfiles %}
+
+
+{% block css_styles %}
+<link href="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<link href="{% static "css/leaflet.css" %}" rel="stylesheet" type="text/css">
+<style>
+  .leaflet-div-icon {
+  background: transparent;
+  border: none;
+  }
+
+</style>
+<style>
+#plans, #checkpoints, #totaltime, #totalstudents {
+  font-size: 30px;
+}
+</style>
+{% endblock %}
+
+
+{% block title %}{{object.name}} {% endblock %}
+{% block main_header %}<i class="fa fa-flask fa-2x"></i>{{object.name}}{% endblock %}
+
+{% block main_content %}
+<div class="row" style="background-color:lightblue;">
+  <div class="col-xs-3 text-center extra-margin">
+    <h4>Evacuation Paths <span id="plans">0</span> </h4>
+  </div>
+  <div class="col-xs-3 text-center extra-margin">
+    <h4>Checkpoints <span id="checkpoints">0</span></h4>
+  </div>
+  <div class="col-xs-3 text-center extra-margin">
+    <h4>Total Time (sec) <span id="totaltime">0</span></h4>
+  </div>
+  <div class="col-xs-3 text-center extra-margin">
+    <h4>Total Students<span id="totalstudents">0</span></h4>
+  </div>
+</div>
+
+<div class="row">
+  {% for floor in object.building.floor_set.all %}
+  <div class="col-xs-12">
+    <h4 class="text-center lead">{{floor.name}}</h4>
+  </div>
+  <div class="row">
+    <div class="col-xs-7">
+      <div id="image-map-{{floor.pk}}" class="maps-blueprint" style="height:500px;"></div>
+    </div>
+    <div class="col-xs-5">
+      <table id="table-{{floor.pk}}" class="table table-bordered">
+        <thead>
+          <td>id</td>
+          <td>Name</td>
+          <td>Max Flux</td>
+          <td>Current Flux</td>
+          <th>Equalizer</th>
+        </thead>
+        <tbody>
+          {% for checkpoint in floor.checkpoint_set.all|in_category:object %}
+          <tr>
+            <td>{{checkpoint.pk}}</td>
+            <td>{% if checkpoint.name %}{{checkpoint.name}}{% else %}-{% endif %}</td>
+            <td>{% if checkpoint.flux %}{{checkpoint.flux}}{% else %}-{% endif %}</td>
+            <td id="node{{checkpoint.pk}}">0</td>
+            <td>
+              <div class="progress">
+                <div id="progress{{checkpoint.pk}}" class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+      </table>
+    </div>
+    <div id="chartContainer{{floor.pk}}" class="col-xs-5" style="height: 180px;">
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'js/mqttws31.js' %}"></script>
+<script src="{% static 'js/config.js' %}"></script>
+<script src="{% static 'js/mqtt_main.js' %}"></script>
+
+<script src="{% static 'js/leaflet.js' %}"></script>
+<script src="{% static 'js/leaf_custom.js' %}"></script>
+<script>
+var plan = [];
+{% for floor in object.building.floor_set.all %}
+  var map{{floor.pk}} = defineMap('image-map-{{floor.pk}}');
+  map{{floor.pk}}.markers = [];
+  setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
+  {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
+    var x = {{checkpoint.coord_x}}, y = {{checkpoint.coord_y}};
+    var name = {{checkpoint.pk}};
+    marker{{checkpoint.pk}} = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
+    map{{floor.pk}}.markers.push(marker{{checkpoint.pk}});
+  {% endfor %}
+
+
+  $('#table-{{floor.pk}} tr').click(function() {
+    row = this.rowIndex;
+
+
+
+  	$(this).addClass("slct");
+  	$(this).siblings().removeClass("slct");
+      for (var i = 0; i <   map{{floor.pk}}.markers.length; i++) {
+      	if(i==row-1){map{{floor.pk}}.markers[i]._icon.childNodes[0].src = "{% static 'img/target.png' %}";}
+      	else {map{{floor.pk}}.markers[i]._icon.childNodes[0].src = "{% static 'img/raspi.png' %}";}
+      }
+
+
+      var id_integer = this.children[0].innerHTML;
+      topicNode = '#node'+ id_integer;
+      var id_plus_weight = id_integer * 10;
+      var chart{{floor.pk}} = new CanvasJS.Chart("chartContainer{{floor.pk}}", {
+  		title: {
+  			text: "Node " + id_integer
+  		},
+
+  		 axisY:{
+  		    stripLines:[
+  		            {
+
+  		                value: id_plus_weight,
+  		                color:"#F57676",
+  		                label : "Limit" + id_plus_weight,
+  		                labelFontColor: "Black"
+  		            }
+  		            ]
+   },
+
+  		data: [
+  		{
+  			type: "spline",
+  			color: "black",
+  			dataPoints: [
+
+  			]
+  		}
+  		]
+  	});
+      chart{{floor.pk}}.render();
+      chart =   chart{{floor.pk}};
+
+  });
+{% endfor %}
+
+
+function onMapClick(e) {};
+</script>
+
+<script src="{% static 'bower_components/jquery-animateNumber/jquery.animateNumber.min.js' %}"></script>
+<script src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+  $('#plans').animateNumber({ number: {{plans | length}}});
+  $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
+  $('#totaltime').animateNumber({ number: 600 });
+  $('#totalstudents').animateNumber({ number: {{total_student}} });
+
+  window.onload = function () {
+    {% for floor in object.building.floor_set.all %}
+      {% with checkpoint=floor.checkpoint_set.first %}
+
+        chart{{floor.pk}} = new CanvasJS.Chart("chartContainer{{floor.pk}}",
+        {
+          theme: "theme2",
+          animationEnabled: true,
+          axisX: {
+            valueFormatString: "MMM",
+            interval:1,
+            intervalType: "month"
+
+          },
+          axisY:{
+            includeZero: false
+          },
+          axisX:{
+            labelAngle: 30
+          },
+          data: [
+          {
+            type: "line",
+            //lineThickness: 3,
+            dataPoints: [
+              {x:0 , y:0 },
+            {% for report in checkpoint.checkpointreport_set.all|in_category:object %}
+              { x: {{forloop.counter}}, y: {{report.current_flux}} {% if report.fail %}, markerColor: "red" {% endif %}  },
+            {% endfor %}
+            ]
+          }
+          ]
+        });
+{% endwith %}
+
+chart{{floor.pk}}.render();
+
+{% endfor %}
+
+
+}
+
+</script>
+{% endblock %}

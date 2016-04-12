@@ -32,3 +32,15 @@ class ReportFluxPostExperiment(View):
         if request.user == experiment.building.user or request.user.is_superuser:
             return JsonResponse(serializers.serialize('json', report), safe=False)
         return JsonResponse('PermissionDenied',status=403, safe=False)
+
+
+class RealTimeView(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
+    template_name = 'dashboard/analytics/realtime.html'
+    model = Experiment
+
+    def get_context_data(self, **kwargs):
+        context = super(RealTimeView, self).get_context_data(**kwargs)
+        context['plans'] = self.object.plan_set.all()
+        context['checkpoints'] = Checkpoint.objects.filter(experiment=self.object)
+        context['total_student'] = total_building_students(self.object)
+        return context

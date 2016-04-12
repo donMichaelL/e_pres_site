@@ -54,7 +54,7 @@
         <div class="media-body">
           <h4 class="media-heading">
             <a href="{% url 'experiment_delete' pk=test.pk %}?next={{object.get_absolute_url}}" type="button" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
-            <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details">{{test.name}}</a>
+            <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details">{{test.name}}</a> <a href="{% url 'realtime' pk=test.pk %}" style="color:red;font-size:smaller;text-decoration:none;">Real Time Demo</a>
             <p class="help-block small">Disaster: {{test.get_disaster_display}} {% if test.execuation_date %}Execuation Date:  {{test.execuation_date}} {% endif %}</p>
             <ul {% if test.plan_set.count > 0%} data-step="6" data-intro="Click for details"{% endif %}>
               {% for plan in test.plan_set.all %}<li><h5><a href="{% url 'plan_detail' pk_experiment=test.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
