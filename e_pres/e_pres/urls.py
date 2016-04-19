@@ -20,11 +20,14 @@ from django.contrib import admin
 # from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from accounts.views import HomepageView, LoginAfterPasswordChangeView, ProfileFormView
+from buildings.api_views import RestBuildingListView
 
 urlpatterns = [
     url(r'^$', HomepageView.as_view(), name="homepage"),
     url(r'^admin/', admin.site.urls),
     url(r'^profile/$', ProfileFormView.as_view(), name="profile_settings"),
+
+    url(r'^buildings/$', RestBuildingListView.as_view(), name="building_rest_list"),
     url(r'^building/', include('buildings.urls')),
     url(r'^experiment/', include('experiments.urls')),
     url(r'^accounts/password/change/$', LoginAfterPasswordChangeView.as_view(), name='account_change_password'),
