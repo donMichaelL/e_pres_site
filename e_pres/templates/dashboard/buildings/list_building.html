@@ -15,9 +15,11 @@
 
 
 {% verbatim %}
-<div ng-app='mainApp'>
-  <div masonry ng-controller="buildingController"  data-step="2" data-intro="Press any building to continue"  masonry-options="{ gutter: 10 }" >
-      <div class="masonry-brick" ng-repeat="building in buildings">
+<div ng-app='mainApp'  ng-controller="buildingController">
+  <input ng-model="filterText" style="margin-bottom:10px;"></input>
+
+  <div masonry data-step="2" data-intro="Press any building to continue"  masonry-options="{ gutter: 10 }" reload-on-show>
+      <div class="masonry-brick" ng-repeat="building in buildings| filter: filterText ">
         <div class="thumbnail">
           <a type="button" href="#" class="btn btn-danger btn-circle delete-button-building"><i class="fa fa-times"></i></a>
           <a href="{{getUrl(building.id)}}"> <img ng-src="{{getPhoto(building.photo)}}"  alt="Building Name" style="width:100%"></a>
@@ -57,7 +59,7 @@
 <script>
   var app = angular.module('mainApp', ['wu.masonry']);
 
-  app.controller('buildingController', ['$scope', '$http', function($scope, $http){
+  app.controller('buildingController', ['$scope', '$http', '$rootScope', '$timeout', function($scope, $http, $rootScope, $timeout){
     $scope.name = "Michael";
     $scope.buildings = [];
 
@@ -71,6 +73,12 @@
       } else
         return '/static/img/building.jpg';
     };
+
+   $scope.$watch('filterText', function() {
+     $timeout(function () {
+        $rootScope.$broadcast('masonry.reload');
+      }, 200);
+   });
 
     $http.get('/buildings/')
       .then(
