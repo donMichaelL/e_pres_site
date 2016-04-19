@@ -27,11 +27,14 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^profile/$', ProfileFormView.as_view(), name="profile_settings"),
 
-    url(r'^buildings/$', RestBuildingListView.as_view(), name="building_rest_list"),
     url(r'^building/', include('buildings.urls')),
     url(r'^experiment/', include('experiments.urls')),
     url(r'^accounts/password/change/$', LoginAfterPasswordChangeView.as_view(), name='account_change_password'),
     url(r'^accounts/', include('allauth.urls')),
+
+    # API URLS
+    url(r'^buildings/$', RestBuildingListView.as_view(), name="building_rest_list"),
+
 ]
 
 if settings.DEBUG:
