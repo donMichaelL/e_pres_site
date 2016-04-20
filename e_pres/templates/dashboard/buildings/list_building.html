@@ -17,13 +17,24 @@
 {% verbatim %}
 <div ng-app='mainApp'  ng-controller="buildingController">
 
-  <div class=" form-group has-feedback search-bar">
+  <div class="form-group has-feedback search-bar">
     <span class="glyphicon glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
-    <input ng-model="filterText" type="text" class="form-control" placeholder="Search for...">
+    <input ng-model="filterText" type="text" class="form-control extra-margin" placeholder="Search for...">
+    <div>
+      <label class="sort-icons">Sort By: </label>
+      <button ng-click="orderText='name'" class="btn btn-circle"><i class="fa fa-text-width" aria-hidden="true"></i></button>
+      <button ng-click="orderText='max_evacuation_time'" class="btn btn-circle"><i class="fa fa-clock-o" aria-hidden="true"></i></button>
+      <button ng-click="orderText='country'" class="btn btn-circle"><i class="fa fa-map-pin" aria-hidden="true"></i></button>
+    </div>
   </div>
 
+
+
+
+
+
   <div masonry data-step="2" data-intro="Press any building to continue"  masonry-options="{ gutter: 10 }" reload-on-show>
-      <div class="masonry-brick" ng-repeat="building in buildings| filter: filterText ">
+      <div class="masonry-brick" ng-repeat="building in buildings| filter: filterText | orderBy: orderText ">
         <div class="thumbnail">
           <a type="button" href="#" class="btn btn-danger btn-circle delete-button-building"><i class="fa fa-times"></i></a>
           <a href="{{getUrl(building.id)}}"> <img ng-src="{{getPhoto(building.photo)}}"  alt="Building Name" style="width:100%"></a>
