@@ -6,17 +6,21 @@
 {% block main_header %}Buildings {% endblock %}
 
 {% block main_content %}
-<div class="row">
+<!-- <div class="row">
   <div class="col-xs-12" data-step="1" data-intro="Insert New Building">
     <p ><a href="{% url 'building_new' %}" class="btn btn-success">Insert new Building</a></p>
   </div>
-</div>
+</div> -->
 
 
 
 {% verbatim %}
 <div ng-app='mainApp'  ng-controller="buildingController">
-  <input ng-model="filterText" style="margin-bottom:10px;"></input>
+
+  <div class=" form-group has-feedback search-bar">
+    <span class="glyphicon glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+    <input ng-model="filterText" type="text" class="form-control" placeholder="Search for...">
+  </div>
 
   <div masonry data-step="2" data-intro="Press any building to continue"  masonry-options="{ gutter: 10 }" reload-on-show>
       <div class="masonry-brick" ng-repeat="building in buildings| filter: filterText ">
