@@ -6,12 +6,6 @@
 {% block main_header %}Buildings {% endblock %}
 
 {% block main_content %}
-<!-- <div class="row">
-  <div class="col-xs-12" data-step="1" data-intro="Insert New Building">
-    <p ><a href="{% url 'building_new' %}" class="btn btn-success">Insert new Building</a></p>
-  </div>
-</div> -->
-
 
 
 {% verbatim %}
@@ -29,25 +23,72 @@
   </div>
 
 
-  <button class="btn btn-circle btn-success btn-lg add-new-button"><i class="fa fa-plus" aria-hidden="true"></i></button>
+  <button data-toggle="modal" data-target="#insertBuilding" class="btn btn-circle btn-success btn-lg add-new-button"><i class="fa fa-plus" aria-hidden="true"></i></button>
 
-
-
-  <div ng-controller="NewBuildingController" style="margin-bottom:80px;">
-      <p>{{building.name}}</p>
-    <form class="form-horizontal" name="buildingForm" ng-submit="submitBuilding()" novalidate>
-
-      <div class="form-group has-feedback" ng-class="{ 'has-error' : buildingForm.name.$error.required && !buildingForm.name.$pristine, 'has-success': buildingForm.name.$valid }">
-        <label for="name" class="col-sm-3 control-label">First Name</label>
-        <div class="col-sm-9">
-          <input type="text" class="form-control" id="name" name="name" placeholder="Enter First Name" ng-model="building.name" required/>
-          <span ng-show="buildingForm.name.$valid" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-          <span ng-show="buildingForm.name.$error.required && !buildingForm.name.$pristine" class="help-block">Building Name is required.</span>
-        </div>
+  <div ng-controller="NewBuildingController" style="margin-bottom:80px;" class="modal fade in" id="insertBuilding" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form class="form-horizontal" name="buildingForm" ng-submit="submitBuilding()" novalidate >
+          <div class="modal-header">
+            <h2>Insert a new Building</h2>
+          </div>
+          <div class="modal-body">
+         <!-- Name -->
+            <div class="form-group has-feedback" ng-class="{ 'has-error' : buildingForm.name.$error.required && !buildingForm.name.$pristine, 'has-success': buildingForm.name.$valid }">
+              <label for="name" class="col-sm-3 control-label">Building Name</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control"  name="name" placeholder="Enter Building Name" ng-model="building.name" required/>
+                <span ng-show="buildingForm.name.$valid" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                <span ng-show="buildingForm.name.$error.required && !buildingForm.name.$pristine" class="help-block">Building Name is required.</span>
+              </div>
+            </div>
+            <!-- Country -->
+            <div class="form-group has-feedback" ng-class="{'has-success':  buildingForm.country.$dirty}">
+              <label for="country" class="col-sm-3  control-label">Country</label>
+              <div class="controls col-sm-9">
+                <select class="select form-control" name="country"
+                  ng-model="building.country" ng-options="country.countryID as country.countryName for country in countries " required>
+                </select>
+              </div>
+            </div>
+            <!-- address -->
+            <div class="form-group has-feedback has-success">
+              <label for="address" class="col-sm-3 control-label">Building Address</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="address" placeholder="Enter Building Address" ng-model="building.address"/>
+              </div>
+            </div>
+            <!-- PostCode  -->
+            <div class="form-group has-feedback has-success">
+              <label for="postcode" class="col-sm-3 control-label">PostCode</label>
+              <div class="col-sm-9">
+                <input type="number" class="form-control"  name="postcode" placeholder="Enter Building PostCode" ng-model="building.postcode"/>
+              </div>
+            </div>
+            <!-- Max Evacuation Time -->
+            <div class="form-group has-feedback has-success">
+              <label for="postcode" class="col-sm-3 control-label">Maximum Evacuation Time</label>
+              <div class="col-sm-9">
+                <input type="number" class="form-control"  name="postcode" placeholder="Enter Building Maximum Evacuation Time" ng-model="building.max_evacuation_time"/>
+                <p class="help-block">in seconds</p>
+              </div>
+            </div>
+            <!-- Photo -->
+            <div class="form-group has-feedback has-success">
+              <label for="photo"  class="col-sm-3 control-label">Photo</label>
+              <div class="col-sm-9">
+                <input name="photo" type="file" />
+                <p class="help-block">Supported Formats: png, jpg, jpeg, bmp</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success" ng-disabled="buildingForm.$invalid">Send Comment</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </form>
       </div>
-
-    </form>
-
+    </div>
   </div>
 
 
@@ -86,6 +127,8 @@
 {% block js %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"> </script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+
 <script src="{% static 'bower_components/angular-masonry/angular-masonry.js' %}"></script>
 
 
@@ -122,6 +165,13 @@
       );
   }])
   .controller('NewBuildingController', ['$scope', function($scope){
+    $scope.countries = [
+       {countryID: 'gr', countryName: 'Greece'},
+       {countryID: 'rm', countryName: 'Romania'},
+       {countryID: 'it', countryName: 'Italy'},
+       {countryID: 'bg', countryName: 'Bulgary'}
+     ];
+
     $scope.building = {
                 name: "",
                 country: "",
