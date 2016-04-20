@@ -15,7 +15,7 @@
 
 
 {% verbatim %}
-<div ng-app='mainApp'  ng-controller="buildingController">
+<div ng-app='mainApp'  ng-controller="BuildingController">
 
   <div class="form-group has-feedback search-bar">
     <span class="glyphicon glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
@@ -29,8 +29,26 @@
   </div>
 
 
+  <button class="btn btn-circle btn-success btn-lg add-new-button"><i class="fa fa-plus" aria-hidden="true"></i></button>
 
 
+
+  <div ng-controller="NewBuildingController" style="margin-bottom:80px;">
+      <p>{{building.name}}</p>
+    <form class="form-horizontal" name="buildingForm" ng-submit="submitBuilding()" novalidate>
+
+      <div class="form-group has-feedback" ng-class="{ 'has-error' : buildingForm.name.$error.required && !buildingForm.name.$pristine, 'has-success': buildingForm.name.$valid }">
+        <label for="name" class="col-sm-3 control-label">First Name</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" id="name" name="name" placeholder="Enter First Name" ng-model="building.name" required/>
+          <span ng-show="buildingForm.name.$valid" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+          <span ng-show="buildingForm.name.$error.required && !buildingForm.name.$pristine" class="help-block">Building Name is required.</span>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
 
 
   <div masonry data-step="2" data-intro="Press any building to continue"  masonry-options="{ gutter: 10 }" reload-on-show>
@@ -74,7 +92,7 @@
 <script>
   var app = angular.module('mainApp', ['wu.masonry']);
 
-  app.controller('buildingController', ['$scope', '$http', '$rootScope', '$timeout', function($scope, $http, $rootScope, $timeout){
+  app.controller('BuildingController', ['$scope', '$http', '$rootScope', '$timeout', function($scope, $http, $rootScope, $timeout){
     $scope.name = "Michael";
     $scope.buildings = [];
 
@@ -102,6 +120,37 @@
           $scope.buildings = response.data;
         }
       );
+  }])
+  .controller('NewBuildingController', ['$scope', function($scope){
+    $scope.building = {
+                name: "",
+                country: "",
+                address: "",
+                postcode: "",
+                max_evacuation_time: "",
+                photo: ""
+              };
+
+    $scope.submitBuilding = function () {
+
+      //Step 2: This is how you record the date
+      //"The date property of your JavaScript object holding the comment" = new Date().toISOString();
+      $scope.comment.date = new Date().toISOString();
+      // Step 3: Push your comment into the dish's comment array
+      $scope.dish.comments.push($scope.comment);
+      //Step 4: reset your form to pristine
+      $scope.commentForm.$setPristine();
+
+      console.log($scope.dish);
+      //Step 5: reset your JavaScript object that holds your comment
+      $scope.comment = {
+        author: "",
+        rating: "5",
+        comment: "",
+        date:""
+      };
+    };
+
   }]);
 </script>
 
