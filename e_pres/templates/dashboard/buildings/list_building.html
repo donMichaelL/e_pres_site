@@ -28,7 +28,7 @@
   <div ng-controller="NewBuildingController" style="margin-bottom:80px;" class="modal fade in" id="insertBuilding" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
-        <form class="form-horizontal" name="buildingForm" ng-submit="submitBuilding()" novalidate >
+        <form class="form-horizontal" name="buildingForm" ng-submit="submitBuilding()" novalidate enctype="multipart/form-data">
           <div class="modal-header">
             <h2>Insert a new Building</h2>
           </div>
@@ -60,16 +60,16 @@
             </div>
             <!-- PostCode  -->
             <div class="form-group has-feedback has-success">
-              <label for="postcode" class="col-sm-3 control-label">PostCode</label>
+              <label for="tk" class="col-sm-3 control-label">PostCode</label>
               <div class="col-sm-9">
-                <input type="number" class="form-control"  name="postcode" placeholder="Enter Building PostCode" ng-model="building.postcode"/>
+                <input type="number" class="form-control"  name="tk" placeholder="Enter Building PostCode" ng-model="building.tk"/>
               </div>
             </div>
             <!-- Max Evacuation Time -->
             <div class="form-group has-feedback has-success">
-              <label for="postcode" class="col-sm-3 control-label">Maximum Evacuation Time</label>
+              <label for="max_evacuation_time" class="col-sm-3 control-label">Maximum Evacuation Time</label>
               <div class="col-sm-9">
-                <input type="number" class="form-control"  name="postcode" placeholder="Enter Building Maximum Evacuation Time" ng-model="building.max_evacuation_time"/>
+                <input type="number" class="form-control"  name="max_evacuation_time" placeholder="Enter Building Maximum Evacuation Time" ng-model="building.max_evacuation_time"/>
                 <p class="help-block">in seconds</p>
               </div>
             </div>
@@ -77,7 +77,7 @@
             <div class="form-group has-feedback has-success">
               <label for="photo"  class="col-sm-3 control-label">Photo</label>
               <div class="col-sm-9">
-                <input name="photo" type="file" />
+                <input name="photo" type="file" ng-model="building.photo"/>
                 <p class="help-block">Supported Formats: png, jpg, jpeg, bmp</p>
               </div>
             </div>
@@ -95,7 +95,7 @@
   <div masonry data-step="2" data-intro="Press any building to continue"  masonry-options="{ gutter: 10 }" reload-on-show>
       <div class="masonry-brick" ng-repeat="building in buildings| filter: filterText | orderBy: orderText ">
         <div class="thumbnail">
-          <a type="button" href="#" class="btn btn-danger btn-circle delete-button-building"><i class="fa fa-times"></i></a>
+          <button class="btn btn-danger btn-circle delete-button-building" ng-click="deleteBuilding(building.id)"><i class="fa fa-times"></i></button>
           <a href="{{getUrl(building.id)}}"> <img ng-src="{{getPhoto(building.photo)}}"  alt="Building Name" style="width:100%"></a>
             <div class="caption">
                 <h3 class="text-center">{{building.name}}</h3>
@@ -108,7 +108,7 @@
                     <p><a href="{{getUrl(building.id)}}" class="btn btn-info btn-block" role="button">Details</a>
                   </div>
                   <div class="">
-                    <a type="button"  href="#" class="btn btn-outline btn-danger btn-block">Delete</a>
+                    <button ng-click="deleteBuilding(building.id)" class="btn btn-outline btn-danger btn-block">Delete</button>
                   </div>
                 </div>
             </div>
@@ -136,79 +136,83 @@
   var app = angular.module('mainApp', ['wu.masonry']);
 
   app.controller('BuildingController', ['$scope', '$http', '$rootScope', '$timeout', function($scope, $http, $rootScope, $timeout){
-    $scope.name = "Michael";
-    $scope.buildings = [];
+        $scope.buildings = [];
 
-    $scope.getUrl = function(id){
-      return '/building/'+ id;
-    };
+        $scope.getUrl = function(id){
+          return '/building/'+ id;
+        };
 
-    $scope.getPhoto = function(photo){
-      if(photo){
-        return photo;
-      } else
-        return '/static/img/building.jpg';
-    };
+        $scope.getPhoto = function(photo){
+          if(photo){
+            return photo;
+          } else
+            return '/static/img/building.jpg';
+        };
 
-   $scope.$watch('filterText', function() {
-     $timeout(function () {
-        $rootScope.$broadcast('masonry.reload');
-      }, 200);
-   });
+       $scope.$watch('filterText', function() {
+         $timeout(function () {
+            $rootScope.$broadcast('masonry.reload');
+          }, 200);
+       });
 
-    $http.get('/buildings/')
-      .then(
-        function(response){
-          console.log(response.data);
-          $scope.buildings = response.data;
-        }
-      );
+        $http.get('/buildings/')
+          .then(
+            function(response){
+              $scope.buildings = response.data;
+            }
+          );
+
+        $scope.deleteBuilding = function(id){
+          console.log(id);
+        };
   }])
-  .controller('NewBuildingController', ['$scope', function($scope){
-    $scope.countries = [
-       {countryID: 'gr', countryName: 'Greece'},
-       {countryID: 'rm', countryName: 'Romania'},
-       {countryID: 'it', countryName: 'Italy'},
-       {countryID: 'bg', countryName: 'Bulgary'}
-     ];
 
-    $scope.building = {
-                name: "",
-                country: "",
-                address: "",
-                postcode: "",
-                max_evacuation_time: "",
-                photo: ""
-              };
 
-    $scope.submitBuilding = function () {
 
-      //Step 2: This is how you record the date
-      //"The date property of your JavaScript object holding the comment" = new Date().toISOString();
-      //$scope.comment.date = new Date().toISOString();
-      // Step 3: Push your comment into the dish's comment array
+  .controller('NewBuildingController', ['$scope', '$http', function($scope, $http){
 
-      var c = $scope.buildings.length + 1;
-      var item = $scope.building;
-      $scope.buildings.splice(0, 0, item);
+        $scope.countries = [
+           {countryID: 'gr', countryName: 'Greece'},
+           {countryID: 'rm', countryName: 'Romania'},
+           {countryID: 'it', countryName: 'Italy'},
+           {countryID: 'bg', countryName: 'Bulgary'}
+         ];
 
-      //Step 4: reset your form to pristine
-      $scope.buildingForm.$setPristine();
+        $scope.building = {
+                    name: "",
+                    country: "",
+                    address: "",
+                    tk: null,
+                    max_evacuation_time: null,
+                    photo: null
+                  };
 
-      console.log($scope.building);
-      //Step 5: reset your JavaScript object that holds your comment
-      $scope.building = {
-                  name: "",
-                  country: "",
-                  address: "",
-                  postcode: "",
-                  max_evacuation_time: "",
-                  photo: ""
-          };
+        $scope.submitBuilding = function () {
 
-      $('#insertBuilding').modal('hide');
+          object = $scope.building;
+          $http.defaults.headers.post['X-CSRFToken'] = getCookie('csrftoken');
+          $http.post('/buildings/', object)
+            .success(function(data, status){
+              var c = $scope.buildings.length + 1;
+              var item = data;
+              $scope.buildings.splice(0, 0, item);
+              notification_message("New Building added");
+            });
 
-    };
+          $scope.buildingForm.$setPristine();
+
+          $scope.building = {
+                      name: "",
+                      country: "",
+                      address: "",
+                      tk: null,
+                      max_evacuation_time: null,
+                      photo: null
+                    };
+
+          $('#insertBuilding').modal('hide');
+
+        };
 
   }]);
 </script>
@@ -228,4 +232,18 @@ $( document ).ready(function() {
   });
 });
 </script>
+
+<!-- // $.ajax({
+//   type: "POST",
+//   url: '/buildings/',
+//   data: {
+//     name: 'JQUERY magic',
+//     country: 'gr',
+//     user: 1,
+//     csrfmiddlewaretoken:  getCookie('csrftoken')
+//   },
+// success: function(data){
+//   console.log(data);
+// }
+// }); -->
 {% endblock %}
