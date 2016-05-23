@@ -28,7 +28,7 @@
         {% for floor in object.floor_set.all %}
         <div class="media">
         <a class="media-left" href="{% url 'floor_detail' pk=floor.pk pk_building=object.pk %}">
-          <img class="media-object img-responsive" width="60px;" src="{{floor.blueprint.url}}" alt="Generic placeholder image">
+          <img class="media-object" width="60px;" src="{{floor.blueprint.url}}" alt="Generic placeholder image">
         </a>
           <div class="media-body">
             <h4 class="media-heading">
