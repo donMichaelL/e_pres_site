@@ -3,17 +3,48 @@
 
 
 {% block title %}Evacuation Preparedness Questionnaire{% endblock %}
-{% block main_header %}Evacuation Preparedness Questionnaire{% endblock %}
+{% block main_header %}{{object.name}}<a type="button"  href="{% url 'building_detail' pk=object.pk %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i>
+ Back to Building Details</a>{% endblock %}
 
 
 {% block main_content %}
 <div class="row">
-  <div class="col-xs-12" data-step="1" data-intro="Insert New Building">
-    <>Building Name</p>
+  <div class="col-sm-8 col-sm-offset-2" >
+    <h2>Evacuation Preparedness Questionnaire</h2>
+    <p class="help-block">The purpose of this questionnaire is to identify weaknesses tha could potentially affect the evacusation procedure and take remedy actions to improve
+    security of the evacuees and the overall security status of the establishment.</p>
   </div>
 </div>
 
 
-{{object_list}}
+<div class="row" data-step="1" data-intro="Answer the questionnaire">
+  <div class="col-sm-8 col-sm-offset-2">
+    <form id="questionnaire" name="questionnaire">
+      {% for question in preparedness_questions %}
+        <div>
+          <h3>{{forloop.counter}}. {{question}}</h3>
+          <div class="radio">
+            <label><input type="radio" name="{{question.id}}" required>Yes</label>
+          </div>
+          <div class="radio">
+            <label><input type="radio" name="{{question.id}}">No</label>
+          </div>
+        </div>
+      {% endfor %}
+      <div class="form-group">
+        <input type="submit" class="btn btn-success" value="Submit">
+      </div>
+    </form>
+  </div>
+</div>
 
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+  $(function() {
+
+  })
+</script>
 {% endblock %}

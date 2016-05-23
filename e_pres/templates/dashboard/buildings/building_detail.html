@@ -15,6 +15,7 @@
     {% if object.photo %}<img src="{{object.photo.url}}" class="img-responsive"></img>
     {% else%}<img src="{% static 'img/building.jpg' %}" class="img-responsive"></img>
     {% endif %}
+    <a type="button"  href="{% url 'questionnaire_list' pk=object.pk %}" class="btn btn-outline btn-danger">Evacuation Preparedness Questionnaire</a>
     <form method="POST" action="" enctype="multipart/form-data"  data-step="1" data-intro="Update your Building">  {% csrf_token %}
       {{form | crispy }}
       <button type="submit" class="btn btn-success" name="action">Update Building</button>
