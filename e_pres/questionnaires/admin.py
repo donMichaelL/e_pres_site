@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import EvaluationQuestionnaireQuestion, EvacuationQuestionnaire, EvacuationQuestionnaireAnswer
+from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaire, PreparednessQuestionnaireAnswer
 
 
-class EvacuationQuestionnaireAnswerAdmin(admin.ModelAdmin):
-    model = EvacuationQuestionnaireAnswer
+class PreparednessQuestionnaireAnswerAdmin(admin.ModelAdmin):
+    model = PreparednessQuestionnaireAnswer
     list_display = ['__unicode__', 'question', 'answer']
 
 
-admin.site.register(EvaluationQuestionnaireQuestion)
-admin.site.register(EvacuationQuestionnaire)
-admin.site.register(EvacuationQuestionnaireAnswer, EvacuationQuestionnaireAnswerAdmin)
+admin.site.register(PreparednessQuestionnaireQuestion)
+admin.site.register(PreparednessQuestionnaire)
+admin.site.register(PreparednessQuestionnaireAnswer, PreparednessQuestionnaireAnswerAdmin)

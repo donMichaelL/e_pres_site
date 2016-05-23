@@ -1,0 +1,19 @@
+{% extends 'dashboard/base_logged.html' %}
+{% load staticfiles %}
+
+
+{% block title %}Evacuation Preparedness Questionnaire{% endblock %}
+{% block main_header %}Evacuation Preparedness Questionnaire{% endblock %}
+
+
+{% block main_content %}
+<div class="row">
+  <div class="col-xs-12" data-step="1" data-intro="Insert New Building">
+    <>Building Name</p>
+  </div>
+</div>
+
+
+{{object_list}}
+
+{% endblock %}

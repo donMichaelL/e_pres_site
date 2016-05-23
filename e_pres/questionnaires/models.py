@@ -7,21 +7,21 @@ ANSWERS_CHOICES = (
     ('no', 'NO')
 )
 
-class EvaluationQuestionnaireQuestion(models.Model):
+class PreparednessQuestionnaireQuestion(models.Model):
     question = models.CharField(max_length=240)
 
     def __unicode__(self):
         return self.question
 
-class EvacuationQuestionnaire(models.Model):
+class PreparednessQuestionnaire(models.Model):
     building = models.OneToOneField(Building)
 
     def __unicode__(self):
         return self.building.name
 
-class EvacuationQuestionnaireAnswer(models.Model):
-    questionnaire = models.ForeignKey(EvacuationQuestionnaire)
-    question = models.ForeignKey(EvaluationQuestionnaireQuestion)
+class PreparednessQuestionnaireAnswer(models.Model):
+    questionnaire = models.ForeignKey(PreparednessQuestionnaire)
+    question = models.ForeignKey(PreparednessQuestionnaireQuestion)
     answer = models.CharField(max_length=3, choices=ANSWERS_CHOICES)
 
     class Meta:
