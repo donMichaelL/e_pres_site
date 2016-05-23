@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 from .views import BuildingListView, BuildingNewView, BuildingDetailView, BuildingDeleteView, FloorNewView, FloorDetailView, FloorDeleteView
+from questionnaire.views import EvacuationQuestionnaireView
 
 urlpatterns = [
     url(r'^$', BuildingListView.as_view(), name="building_list"),
@@ -9,4 +10,6 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/floor/new/$', FloorNewView.as_view(), name="floor_new"),
     url(r'^(?P<pk_building>\d+)/floor/(?P<pk>\d+)/$', FloorDetailView.as_view(), name="floor_detail"),
     url(r'^(?P<pk_building>\d+)/floor/(?P<pk>\d+)/delete/$', FloorDeleteView.as_view(), name="floor_delete"),
+
+    url(r'^(?P<pk>\d+)/questionnaire/$', EvacuationQuestionnaireView.as_view(), name="questionnaire_list"),
 ]
