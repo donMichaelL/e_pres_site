@@ -24,10 +24,10 @@
         <div>
           <h3>{{forloop.counter}}. {{question}}</h3>
           <div class="radio">
-            <label><input type="radio" name="{{question.id}}" required>Yes</label>
+            <label><input type="radio" name="{{question.id}}" value="yes" required>Yes</label>
           </div>
           <div class="radio">
-            <label><input type="radio" name="{{question.id}}">No</label>
+            <label><input type="radio" name="{{question.id}}" value="no">No</label>
           </div>
         </div>
       {% endfor %}
@@ -44,7 +44,16 @@
 {% block js %}
 <script type="text/javascript">
   $(function() {
+    $('#questionnaire').submit(function(event){
+      event.preventDefault();
+      ab = $('input:checked');
+      for (i = 0; i < ab.length; i++) {
+        question_id = $(ab[i]).attr('name');
+        answer = $(ab[i]).attr('value');
+        console.log(question_id+' '+ answer);
+      }
 
+    })
   })
 </script>
 {% endblock %}
