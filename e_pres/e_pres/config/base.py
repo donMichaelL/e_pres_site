@@ -74,7 +74,7 @@ INSTALLED_APPS = [
     'experiments',
     'plans',
     'analytics',
-    'questionnaire',
+    'questionnaires',
 ]
 
 MIDDLEWARE_CLASSES = [

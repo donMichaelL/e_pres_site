@@ -7,7 +7,7 @@ from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from experiments.models import return_choices
-from questionnaire.models import EvacuationQuestionnaire
+from questionnaires.models import EvacuationQuestionnaire
 from .forms import BuildingForm, FloorForm
 from .models import Building, Floor
 from .mixins import ContentUserOnlyMixin, FloorContentUserOnlyMixin
