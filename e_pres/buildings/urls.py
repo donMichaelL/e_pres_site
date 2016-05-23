@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from .views import BuildingListView, BuildingNewView, BuildingDetailView, BuildingDeleteView, FloorNewView, FloorDetailView, FloorDeleteView
-from questionnaires.views import PreparednessQuestionnaireView
+from questionnaires.views import PreparednessQuestionnaireView, PreparednessQuestionnaireNew
 
 urlpatterns = [
     url(r'^$', BuildingListView.as_view(), name="building_list"),
@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^(?P<pk_building>\d+)/floor/(?P<pk>\d+)/$', FloorDetailView.as_view(), name="floor_detail"),
     url(r'^(?P<pk_building>\d+)/floor/(?P<pk>\d+)/delete/$', FloorDeleteView.as_view(), name="floor_delete"),
 
-    url(r'^(?P<pk>\d+)/questionnaire/$', PreparednessQuestionnaireView.as_view(), name="questionnaire_list"),
+    url(r'^(?P<pk>\d+)/questionnaire/$', PreparednessQuestionnaireView.as_view(), name="preparedness_questionnaire_list"),
+    url(r'^(?P<pk>\d+)/questionnaire/new/$', PreparednessQuestionnaireNew.as_view(), name="preparedness_questionnaire_new"),
 ]
