@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404
+import json
 from django.http import JsonResponse
 from django.views.generic.detail import DetailView
 from django.views.generic import View
 from buildings.models import Building
-from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaire
+from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaire, PreparednessQuestionnaireAnswer
 
 
 class PreparednessQuestionnaireView(DetailView):
@@ -17,9 +18,14 @@ class PreparednessQuestionnaireView(DetailView):
 
 
 class PreparednessQuestionnaireNew(View):
-    http_method_names = ['post']
-
     def post(self, request, *args, **kwargs):
         building = get_object_or_404(Building, pk=kwargs['pk'])
         questionnaire = get_object_or_404(PreparednessQuestionnaire, building=building)
-        return JsonResponse('PermissionDenied',status=403, safe=False)
+        answers = request.POST.get('answers')
+        dicto = json.loads(answers)
+        for question_id, answer in dicto.iteritems():
+            question = get_object_or_404(PreparednessQuestionnaireQuestion, pk=question_id)
+            obj, created = PreparednessQuestionnaireAnswer.objects.get_or_create(questionnaire=questionnaire, question=question)
+            obj.answer = answer
+            obj.save()
+        return JsonResponse('ok',status=200, safe=False)

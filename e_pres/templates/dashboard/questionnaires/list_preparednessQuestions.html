@@ -3,7 +3,7 @@
 
 
 {% block title %}Evacuation Preparedness Questionnaire{% endblock %}
-{% block main_header %}{{object.name}}<a type="button"  href="{% url 'building_detail' pk=object.pk %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i>
+{% block main_header %}{{object.name}} <a type="button"  href="{% url 'building_detail' pk=object.pk %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i>
  Back to Building Details</a>{% endblock %}
 
 
@@ -46,12 +46,30 @@
   $(function() {
     $('#questionnaire').submit(function(event){
       event.preventDefault();
+      var dict = {};
       ab = $('input:checked');
       for (i = 0; i < ab.length; i++) {
         question_id = $(ab[i]).attr('name');
         answer = $(ab[i]).attr('value');
-        console.log(question_id+' '+ answer);
+        dict[question_id]=answer;
+
       }
+
+      $.ajax({
+        type: "POST",
+        url: 'new/',
+        data: {
+          questionnaire: {{object.id}},
+          answers: JSON.stringify(dict),
+          csrfmiddlewaretoken:  getCookie('csrftoken')
+        },
+      success: function(){
+        window.location.href = "{% url 'building_detail' pk=object.pk %}";
+        notification_message('OK preparedness_questions');
+      }
+      });
+
+
 
     })
   })
