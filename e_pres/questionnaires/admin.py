@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaire, PreparednessQuestionnaireAnswer
+from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer
 
 
 class PreparednessQuestionnaireAnswerAdmin(admin.ModelAdmin):
@@ -8,5 +8,4 @@ class PreparednessQuestionnaireAnswerAdmin(admin.ModelAdmin):
 
 
 admin.site.register(PreparednessQuestionnaireQuestion)
-admin.site.register(PreparednessQuestionnaire)
 admin.site.register(PreparednessQuestionnaireAnswer, PreparednessQuestionnaireAnswerAdmin)

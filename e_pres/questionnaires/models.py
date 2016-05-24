@@ -13,19 +13,21 @@ class PreparednessQuestionnaireQuestion(models.Model):
     def __unicode__(self):
         return self.question
 
-class PreparednessQuestionnaire(models.Model):
-    building = models.OneToOneField(Building)
-
-    def __unicode__(self):
-        return self.building.name
 
 class PreparednessQuestionnaireAnswer(models.Model):
-    questionnaire = models.ForeignKey(PreparednessQuestionnaire)
+    building = models.ForeignKey(Building)
     question = models.ForeignKey(PreparednessQuestionnaireQuestion)
     answer = models.CharField(max_length=3, choices=ANSWERS_CHOICES)
 
     class Meta:
-        unique_together = ('questionnaire', 'question',)
+        unique_together = ('building', 'question',)
 
     def __unicode__(self):
-        return self.questionnaire.__unicode__()
+        return self.building.__unicode__()
+
+
+class EvaluationQuestionnaireQuestion(models.Model):
+    question = models.CharField(max_length=240)
+
+    def __unicode__(self):
+        return self.question

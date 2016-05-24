@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.generic.detail import DetailView
 from django.views.generic import View
 from buildings.models import Building
-from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaire, PreparednessQuestionnaireAnswer
+from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer
 
 
 class PreparednessQuestionnaireView(DetailView):
@@ -20,12 +20,11 @@ class PreparednessQuestionnaireView(DetailView):
 class PreparednessQuestionnaireNew(View):
     def post(self, request, *args, **kwargs):
         building = get_object_or_404(Building, pk=kwargs['pk'])
-        questionnaire = get_object_or_404(PreparednessQuestionnaire, building=building)
         answers = request.POST.get('answers')
         dicto = json.loads(answers)
         for question_id, answer in dicto.iteritems():
             question = get_object_or_404(PreparednessQuestionnaireQuestion, pk=question_id)
-            obj, created = PreparednessQuestionnaireAnswer.objects.get_or_create(questionnaire=questionnaire, question=question)
+            obj, created = PreparednessQuestionnaireAnswer.objects.get_or_create(building=building, question=question)
             obj.answer = answer
             obj.save()
         return JsonResponse('ok',status=200, safe=False)

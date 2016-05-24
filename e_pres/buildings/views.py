@@ -7,7 +7,7 @@ from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from experiments.models import return_choices
-from questionnaires.models import PreparednessQuestionnaire, PreparednessQuestionnaireAnswer
+from questionnaires.models import PreparednessQuestionnaireAnswer
 from .forms import BuildingForm, FloorForm
 from .models import Building, Floor
 from .mixins import ContentUserOnlyMixin, FloorContentUserOnlyMixin
@@ -33,7 +33,6 @@ class BuildingNewView(LoginRequiredMixin, FormView):
         building = form.save(commit=False)
         building.user = self.request.user
         building.save()
-        PreparednessQuestionnaire.objects.create(building=building)
         messages.success(self.request, ' %s was created.'% building.name )
         return super(BuildingNewView, self).form_valid(form)
 
