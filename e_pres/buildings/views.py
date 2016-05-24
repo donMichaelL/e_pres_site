@@ -7,7 +7,7 @@ from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from experiments.models import return_choices
-from questionnaires.models import PreparednessQuestionnaire
+from questionnaires.models import PreparednessQuestionnaire, PreparednessQuestionnaireAnswer
 from .forms import BuildingForm, FloorForm
 from .models import Building, Floor
 from .mixins import ContentUserOnlyMixin, FloorContentUserOnlyMixin
@@ -50,6 +50,7 @@ class BuildingDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, D
     def get_context_data(self, **kwargs):
         context = super(BuildingDetailView, self).get_context_data(**kwargs)
         context['disaster_choices'] = return_choices()
+        context['preparedness_questionnaire'] = PreparednessQuestionnaireAnswer.objects.count()
         return context
 
 
