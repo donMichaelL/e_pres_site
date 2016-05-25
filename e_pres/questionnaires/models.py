@@ -44,3 +44,20 @@ class EvaluationQuestionnaireAnswer(models.Model):
 
     def __unicode__(self):
         return self.experiment.__unicode__()
+
+
+class EvaluationStudentsQuestionnaire(models.Model):
+    question = models.CharField(max_length=240)
+
+    def __unicode__(self):
+        return self.question
+
+
+class EvaluationStudentsQuestionnaireAnswer(models.Model):
+    experiment = models.ForeignKey(Experiment)
+    question = models.ForeignKey(EvaluationStudentsQuestionnaire)
+    answer = models.CharField(max_length=3, choices=ANSWERS_CHOICES)
+    ip = models.GenericIPAddressField()
+
+    def __unicode__(self):
+        return self.experiment.__unicode__()
