@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer, EvaluationQuestionnaireQuestion, EvaluationQuestionnaireAnswer, EvaluationStudentsQuestionnaire, EvaluationStudentsQuestionnaireAnswer
+from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer, EvaluationQuestionnaireQuestion, EvaluationQuestionnaireAnswer, EvaluationStudentsQuestionnaireQuestion, EvaluationStudentsQuestionnaireAnswer, EvaluationTeachersQuestionnaireQuestion, EvaluationTeachersQuestionnaireAnswer
 
 
 class PreparednessQuestionnaireAnswerAdmin(admin.ModelAdmin):
@@ -25,5 +25,14 @@ class EvaluationStudentsQuestionnaireAnswerAdmin(admin.ModelAdmin):
         list_filter = ('experiment',)
         list_display = ['__unicode__', 'question', 'answer', 'ip']
 
-admin.site.register(EvaluationStudentsQuestionnaire)
+admin.site.register(EvaluationStudentsQuestionnaireQuestion)
 admin.site.register(EvaluationStudentsQuestionnaireAnswer, EvaluationStudentsQuestionnaireAnswerAdmin)
+
+
+class EvaluationTeacherQuestionnaireAnswerAdmin(admin.ModelAdmin):
+        model = EvaluationTeachersQuestionnaireAnswer
+        list_filter = ('experiment',)
+        list_display = ['__unicode__', 'question', 'answer', 'ip']
+
+admin.site.register(EvaluationTeachersQuestionnaireQuestion)
+admin.site.register(EvaluationTeachersQuestionnaireAnswer, EvaluationTeacherQuestionnaireAnswerAdmin)

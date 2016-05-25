@@ -5,7 +5,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic import View
 from buildings.models import Building
 from experiments.models import Experiment
-from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer, EvaluationQuestionnaireQuestion, EvaluationQuestionnaireAnswer, EvaluationStudentsQuestionnaire, EvaluationStudentsQuestionnaireAnswer
+from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer, EvaluationQuestionnaireQuestion, EvaluationQuestionnaireAnswer, EvaluationStudentsQuestionnaireQuestion, EvaluationStudentsQuestionnaireAnswer
 
 
 class PreparednessQuestionnaireView(DetailView):
@@ -71,8 +71,8 @@ class EvaluationStudentsQuestionnaireView(View):
         if already_answred:
             context['answered'] = True
         else:
-            questions = EvaluationStudentsQuestionnaire.objects.all()
-            context['experiment'] = experiment  
+            questions = EvaluationStudentsQuestionnaireQuestion.objects.all()
+            context['experiment'] = experiment
             context['questions'] = questions
         return render(request, 'student_questionnaire.html', context)
 
