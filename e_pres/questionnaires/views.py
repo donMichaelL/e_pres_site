@@ -5,7 +5,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic import View
 from buildings.models import Building
 from experiments.models import Experiment
-from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer, EvaluationQuestionnaireQuestion, EvaluationQuestionnaireAnswer
+from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer, EvaluationQuestionnaireQuestion, EvaluationQuestionnaireAnswer, EvaluationStudentsQuestionnaire, EvaluationStudentsQuestionnaireAnswer
 
 
 class PreparednessQuestionnaireView(DetailView):
@@ -52,3 +52,47 @@ class EvaluationQuestionnaireNew(View):
             obj.answer = answer
             obj.save()
         return JsonResponse('ok', status=200, safe=False)
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+class EvaluationStudentsQuestionnaireView(View):
+    def get(self, request, *args, **kwargs):
+        ip = get_client_ip(request)
+        experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
+        context = {};
+        already_answred = EvaluationStudentsQuestionnaireAnswer.objects.filter(experiment=experiment, ip=ip).count()
+        if already_answred:
+            context['answered'] = True
+        else:
+            questions = EvaluationStudentsQuestionnaire.objects.all()
+            context['experiment'] = experiment  
+            context['questions'] = questions
+        return render(request, 'student_questionnaire.html', context)
+
+    def post(self, request, *args, **kwargs):
+        print 'hello'
+        ip = get_client_ip(request)
+        experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
+        already_answred = EvaluationStudentsQuestionnaireAnswer.objects.filter(experiment=experiment, ip=ip).count()
+        if already_answred:
+            return JsonResponse('ok', status=200, safe=False)
+        else:
+            answers = request.POST.get('answers')
+            dicto = json.loads(answers)
+            for question_id, answer in dicto.iteritems():
+                question = get_object_or_404(EvaluationStudentsQuestionnaire, pk=question_id)
+                obj, created = EvaluationStudentsQuestionnaireAnswer.objects.get_or_create(experiment=experiment, question=question, ip=ip)
+                obj.answer = answer
+                obj.save()
+            return JsonResponse('ok', status=200, safe=False)
+
+
+class EvaluationStudentsQuestionnaireNew(View):
+    pass

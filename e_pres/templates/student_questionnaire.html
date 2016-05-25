@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block css_styles %}
+<style>
+.row{
+  padding-top: 100px;
+}
+</style>
+{% endblock %}
+
+{% block title %}Students Questionnaire{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4 text-center">
+      <img src="{% static 'img/logo.png' %}">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      {% if answered %}
+        <h2 style="text-align:center;">Thank you for your participation !</h2>
+      {% else %}
+      <form id="questionnaire" name="questionnaire">
+        {% for question in questions %}
+          <div>
+            <h3>{{forloop.counter}}. {{question}}</h3>
+            <div class="radio">
+              <label><input type="radio" name="{{question.id}}" value="yes" required>Yes</label>
+            </div>
+            <div class="radio">
+              <label><input type="radio" name="{{question.id}}" value="no">No</label>
+            </div>
+          </div>
+        {% endfor %}
+        <div class="form-group">
+          <input type="submit" class="btn btn-success" value="Submit">
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+{% if not answered %}
+<script type="text/javascript">
+  $(function() {
+    $('#questionnaire').submit(function(event){
+      event.preventDefault();
+      var dict = {};
+      ab = $('input:checked');
+      for (i = 0; i < ab.length; i++) {
+        question_id = $(ab[i]).attr('name');
+        answer = $(ab[i]).attr('value');
+        dict[question_id]=answer;
+      }
+      console.log(dict);
+      $.ajax({
+        type: "POST",
+        url: '',
+        data: {
+          questionnaire: {{experiment.pk}},
+          answers: JSON.stringify(dict),
+          csrfmiddlewaretoken:  getCookie('csrftoken')
+        },
+      success: function(){
+        window.location.href = "";
+        notification_message('OK preparedness_questions');
+      }
+      });
+    })
+  })
+</script>
+{% endif %}
+{% endblock %}
