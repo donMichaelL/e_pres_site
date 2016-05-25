@@ -4,6 +4,7 @@ from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaire
 
 class PreparednessQuestionnaireAnswerAdmin(admin.ModelAdmin):
     model = PreparednessQuestionnaireAnswer
+    list_filter = ('building',)
     list_display = ['__unicode__', 'question', 'answer']
 
 
