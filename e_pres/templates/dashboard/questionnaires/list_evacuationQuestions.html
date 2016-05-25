@@ -2,17 +2,19 @@
 {% load staticfiles %}
 
 
-{% block title %}Evacuation Preparedness Questionnaire{% endblock %}
-{% block main_header %}{{object.name}} <a type="button"  href="{% url 'building_detail' pk=object.pk %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i>
+{% block title %}Evacuation Drill Evaluation Questionnaire{% endblock %}
+{% block main_header %}{{object.name}} <a type="button"  href="{% url 'building_detail' pk=object.building.pk %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i>
  Back to Building Details</a>{% endblock %}
 
 
 {% block main_content %}
 <div class="row">
   <div class="col-sm-8 col-sm-offset-2" >
-    <h2>Evacuation Preparedness Questionnaire</h2>
-    <p class="help-block">The purpose of this questionnaire is to identify weaknesses tha could potentially affect the evacusation procedure and take remedy actions to improve
-    security of the evacuees and the overall security status of the establishment.</p>
+    <h2>Evacuation Drill Evaluation Questionnaire</h2>
+    <p class="help-block">The purpose of this questionnaire is to provide the necessary information to the evacuation drill
+organizer and pinpoint possible drawbacks which might have led to delays in the building
+evacuation procedure. It is a valuable tool which, in addition to the in-field data acquired by the
+system, will lead to evacuation drill improvement and optimization.</p>
   </div>
 </div>
 
@@ -20,7 +22,7 @@
 <div class="row" data-step="1" data-intro="Answer the questionnaire">
   <div class="col-sm-8 col-sm-offset-2">
     <form id="questionnaire" name="questionnaire">
-      {% for question in preparedness_questions %}
+      {% for question in evacuation_questions %}
         <div>
           <h3>{{forloop.counter}}. {{question}}</h3>
           <div class="radio">
@@ -37,9 +39,7 @@
     </form>
   </div>
 </div>
-
 {% endblock %}
-
 
 {% block js %}
 <script type="text/javascript">
@@ -52,9 +52,8 @@
         question_id = $(ab[i]).attr('name');
         answer = $(ab[i]).attr('value');
         dict[question_id]=answer;
-
       }
-
+      console.log(dict);
       $.ajax({
         type: "POST",
         url: 'new/',
@@ -64,7 +63,7 @@
           csrfmiddlewaretoken:  getCookie('csrftoken')
         },
       success: function(){
-        window.location.href = "{% url 'building_detail' pk=object.pk %}";
+        window.location.href = "{% url 'building_detail' pk=object.building.pk %}";
         notification_message('OK preparedness_questions');
       }
       });

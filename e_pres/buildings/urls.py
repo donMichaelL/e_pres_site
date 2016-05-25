@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^(?P<pk_building>\d+)/floor/(?P<pk>\d+)/$', FloorDetailView.as_view(), name="floor_detail"),
     url(r'^(?P<pk_building>\d+)/floor/(?P<pk>\d+)/delete/$', FloorDeleteView.as_view(), name="floor_delete"),
 
-    url(r'^(?P<pk>\d+)/questionnaire/$', PreparednessQuestionnaireView.as_view(), name="preparedness_questionnaire_list"),
-    url(r'^(?P<pk>\d+)/questionnaire/new/$', PreparednessQuestionnaireNew.as_view(), name="preparedness_questionnaire_new"),
+    url(r'^(?P<pk>\d+)/preparedness_questionnaire/$', PreparednessQuestionnaireView.as_view(), name="preparedness_questionnaire_list"),
+    url(r'^(?P<pk>\d+)/preparedness_questionnaire/new/$', PreparednessQuestionnaireNew.as_view(), name="preparedness_questionnaire_new"),
+
 ]
