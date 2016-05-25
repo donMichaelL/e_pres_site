@@ -11,7 +11,7 @@
 {% block main_content %}
 <div clas="row">
   <div class="col-md-6">
-    <img src="{{object.blueprint.url}}" height="400px;"></img>
+    <img class="img-responsive" src="{{object.blueprint.url}}" height="400px;"></img>
   </div>
   <div class="col-md-6">
     <form method="POST" action="" enctype="multipart/form-data">  {% csrf_token %}
