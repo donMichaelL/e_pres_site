@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 import json
+from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 from django.views.generic.detail import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -39,6 +40,13 @@ class EvaluationQuestionnaireView(DetailView):
     model = Experiment
     template_name = 'dashboard/questionnaires/list_evacuationQuestions.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj.building.user == request.user or request.user.is_superuser:
+            return super(EvaluationQuestionnaireView, self).dispatch( request, *args, **kwargs)
+        else:
+            raise PermissionDenied()
+
     def get_context_data(self, **kwargs):
         context = super(EvaluationQuestionnaireView, self).get_context_data(**kwargs)
         context['evacuation_questions'] = EvaluationQuestionnaireQuestion.objects.all()
@@ -48,6 +56,8 @@ class EvaluationQuestionnaireView(DetailView):
 class EvaluationQuestionnaireNew(View):
     def post(self, request, *args, **kwargs):
         experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
+        if experiment.building.user != request.user and not request.user.is_superuser:
+            return JsonResponse('Error', status=403, safe=False)
         answers = request.POST.get('answers')
         dicto = json.loads(answers)
         for question_id, answer in dicto.iteritems():
