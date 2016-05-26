@@ -49,7 +49,7 @@ class BuildingDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, D
     def get_context_data(self, **kwargs):
         context = super(BuildingDetailView, self).get_context_data(**kwargs)
         context['disaster_choices'] = return_choices()
-        context['preparedness_questionnaire'] = PreparednessQuestionnaireAnswer.objects.count()
+        context['preparedness_questionnaire'] = PreparednessQuestionnaireAnswer.objects.filter(building=self.object).count()
         return context
 
 

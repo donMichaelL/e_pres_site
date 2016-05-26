@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from .views import ExperimentListView, ExperimentNewView, ExperimentDeleteView, ExperimentDetailView, CheckpointInsertView, CheckpointDeleteView
 from plans.views import PlanNewView, PlanDetailView, PlanDeleteView, PlanAddConnectionlView, PlanDeleteConnectionlView, GetCheckpointsOfSpecificPlan
 from analytics.views import PostExperiment, ReportFluxPostExperiment, RealTimeView
-from questionnaires.views import EvaluationQuestionnaireView, EvaluationQuestionnaireNew, EvaluationStudentsQuestionnaireView, EvaluationStudentsQuestionnaireNew
+from questionnaires.views import EvaluationQuestionnaireView, EvaluationQuestionnaireNew, EvaluationStudentsQuestionnaireView, EvaluationTeachersQuestionnaireNew
 
 
 urlpatterns = [
@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/evacuation_questionnaire/new/$', EvaluationQuestionnaireNew.as_view(), name="evacuation_questionnaire_new"),
 
     url(r'^(?P<pk>\d+)/student_questionnaire/$', EvaluationStudentsQuestionnaireView.as_view(), name="student_questionnaire_list"),
-    url(r'^(?P<pk>\d+)/student_questionnaire/new/$', EvaluationStudentsQuestionnaireNew.as_view(), name="student_questionnaire_new"),
+    url(r'^(?P<pk>\d+)/teacher_questionnaire/new/$', EvaluationTeachersQuestionnaireNew.as_view(), name="teachers_questionnaire_list"),
 ]
