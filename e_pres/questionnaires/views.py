@@ -8,6 +8,7 @@ from buildings.mixins import ContentUserOnlyMixin
 from django.views.generic import View
 from buildings.models import Building
 from experiments.models import Experiment
+from .mixins import EvaluationContentUserOnlyMixin
 from .models import PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer, EvaluationQuestionnaireQuestion, EvaluationQuestionnaireAnswer, EvaluationStudentsQuestionnaireQuestion, EvaluationStudentsQuestionnaireAnswer, EvaluationTeachersQuestionnaireQuestion, EvaluationTeachersQuestionnaireAnswer
 
 
@@ -21,7 +22,7 @@ class PreparednessQuestionnaireView(LoginRequiredMixin, ContentUserOnlyMixin, De
         return context
 
 
-class PreparednessQuestionnaireNew(View):
+class PreparednessQuestionnaireNew(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         building = get_object_or_404(Building, pk=kwargs['pk'])
         if building.user != request.user and not request.user.is_superuser:
@@ -36,16 +37,9 @@ class PreparednessQuestionnaireNew(View):
         return JsonResponse('ok', status=200, safe=False)
 
 
-class EvaluationQuestionnaireView(DetailView):
+class EvaluationQuestionnaireView(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
     model = Experiment
     template_name = 'dashboard/questionnaires/list_evacuationQuestions.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        if obj.building.user == request.user or request.user.is_superuser:
-            return super(EvaluationQuestionnaireView, self).dispatch( request, *args, **kwargs)
-        else:
-            raise PermissionDenied()
 
     def get_context_data(self, **kwargs):
         context = super(EvaluationQuestionnaireView, self).get_context_data(**kwargs)
@@ -53,7 +47,7 @@ class EvaluationQuestionnaireView(DetailView):
         return context
 
 
-class EvaluationQuestionnaireNew(View):
+class EvaluationQuestionnaireNew(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
         if experiment.building.user != request.user and not request.user.is_superuser:
