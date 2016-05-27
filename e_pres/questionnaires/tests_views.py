@@ -61,10 +61,23 @@ class PreparednessFormTest(TestCase):
         })
         self.assertRedirects(response, reverse('homepage')+ '?next=/building/1/preparedness_questionnaire/')
 
-    def test_POST_user_can_answer_hist_questionnaire(self):
+    def test_POST_user_can_answer_his_questionnaire(self):
         user = self.log_user()
         question_pk = PreparednessQuestionnaireQuestion.objects.first().pk
         dicto ='{"'+ str(question_pk) +'":"yes"}'
+        response = self.client.post(reverse('preparedness_questionnaire_new', kwargs={'pk': user.building_set.first().pk}), data={
+            'answers': dicto
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(PreparednessQuestionnaireAnswer.objects.count(), 1)
+
+    def test_POST_user_can_answer_hist_questionnaire_only_once(self):
+        user = self.log_user()
+        question_pk = PreparednessQuestionnaireQuestion.objects.first().pk
+        dicto ='{"'+ str(question_pk) +'":"yes"}'
+        response = self.client.post(reverse('preparedness_questionnaire_new', kwargs={'pk': user.building_set.first().pk}), data={
+            'answers': dicto
+        })
         response = self.client.post(reverse('preparedness_questionnaire_new', kwargs={'pk': user.building_set.first().pk}), data={
             'answers': dicto
         })
