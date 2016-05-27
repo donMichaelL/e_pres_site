@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from buildings.models import Building
 from experiments.models import Experiment
-from .models import EvaluationQuestionnaireAnswer, EvaluationQuestionnaireQuestion, PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer
+from .models import EvaluationStudentsQuestionnaireAnswer, EvaluationStudentsQuestionnaireQuestion, EvaluationQuestionnaireAnswer, EvaluationQuestionnaireQuestion, PreparednessQuestionnaireQuestion, PreparednessQuestionnaireAnswer
 
 
 class PreparednessViewTest(TestCase):
@@ -212,3 +212,58 @@ class EvaluationQuestionnaireFormTest(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(EvaluationQuestionnaireAnswer.objects.count(), 1)
+
+
+class EvaluationStudentsQuestionnaireViewTest(TestCase):
+    def setUp(self):
+        my_admin = User.objects.create_superuser('myuser', 'myemail@test.com', 'password')
+        user = User.objects.create_user(username='me', password='pass')
+        b1 = Building.objects.create(user=user, name='b1', country='gr')
+        user_b = User.objects.create_user(username='me2', password='pass')
+        b2 = Building.objects.create(user=user_b, name='b2', country='gr')
+        EvaluationStudentsQuestionnaireQuestion.objects.create(question='Are you sure?')
+        experiment = Experiment.objects.create(user=user, building=b1, name='Experiment',disaster='eq')
+
+    def log_user(self):
+        user = User.objects.get(username='me')
+        self.client.login(username=user.username, password='pass')
+        return user
+
+    def test_GET_visitor_see_template_not_answered(self):
+        response = self.client.get(reverse('student_questionnaire_list', kwargs={'pk':Experiment.objects.first().pk}))
+        question = EvaluationStudentsQuestionnaireQuestion.objects.first()
+        self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(response.context['questions'], question)
+        self.assertTemplateUsed(response, 'student_questionnaire.html')
+
+    def test_GET_visitor_see_template_answered(self):
+        response = self.client.get(reverse('student_questionnaire_list', kwargs={'pk':Experiment.objects.first().pk}))
+        experiment = Experiment.objects.first()
+        question = EvaluationStudentsQuestionnaireQuestion.objects.first()
+        EvaluationStudentsQuestionnaireAnswer.objects.create(experiment=experiment, question=question, answer="YES", ip="127.0.0.1")
+        response = self.client.get(reverse('student_questionnaire_list', kwargs={'pk':Experiment.objects.first().pk}))
+        question = EvaluationStudentsQuestionnaireQuestion.objects.first()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['answered'], True)
+        self.assertTemplateUsed(response, 'student_questionnaire.html')
+
+    def test_POST_visitor_post_questionnaire_student(self):
+        question_pk = EvaluationStudentsQuestionnaireQuestion.objects.first().pk
+        dicto ='{"'+ str(question_pk) +'":"yes"}'
+        response = self.client.post(reverse('student_questionnaire_list', kwargs={'pk': Experiment.objects.first().pk}), data={
+            'answers': dicto
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(EvaluationStudentsQuestionnaireAnswer.objects.count(), 1)
+
+    def test_POST_visitor_post_questionnaire_student_only_once(self):
+        question_pk = EvaluationStudentsQuestionnaireQuestion.objects.first().pk
+        dicto ='{"'+ str(question_pk) +'":"yes"}'
+        response = self.client.post(reverse('student_questionnaire_list', kwargs={'pk': Experiment.objects.first().pk}), data={
+            'answers': dicto
+        })
+        response = self.client.post(reverse('student_questionnaire_list', kwargs={'pk': Experiment.objects.first().pk}), data={
+            'answers': dicto
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(EvaluationStudentsQuestionnaireAnswer.objects.count(), 1)
