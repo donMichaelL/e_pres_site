@@ -22,6 +22,8 @@ class PlanNewView(LoginRequiredMixin, ContentUserOnlyMixin, CreateView):
 
     def get_success_url(self):
         if self.request.GET.get('next', ''):
+            if self.request.GET.get('next', '') == 'new_object':
+                return reverse_lazy('plan_detail', kwargs={'pk_experiment': self.object.experiment.pk, 'pk': self.object.pk})
             return (self.request.GET.get('next', ''))
         return  reverse_lazy('experiment_list')
 
