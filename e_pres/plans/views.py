@@ -82,7 +82,7 @@ class PlanDeleteView(LoginRequiredMixin, ContentUserOnlyMixin, DeleteView):
         return super(PlanDeleteView, self).delete(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy('experiment_list')
+        return reverse_lazy('building_detail', kwargs={'pk': self.object.experiment.building.pk})
 
 
 class PlanAddConnectionlView(LoginRequiredMixin, ContentUserOnlyMixin, View):
