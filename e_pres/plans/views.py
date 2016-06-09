@@ -60,6 +60,7 @@ class PlanDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, Detai
         ConnectionFormSet = formset_factory(ConnectionForm, extra=0)
         context['formset'] = ConnectionFormSet()
         context['empty_plan'] = False if self.object.connection_set.all().count() else True
+        context['other_plans'] = Plan.objects.filter(experiment=self.object.experiment).exclude(pk=self.object.pk)
         return context
 
     def get_form(self, form_class):

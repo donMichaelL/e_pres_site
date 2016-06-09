@@ -7,13 +7,19 @@
 {% block css_styles %}
 <link href="{% static "css/leaflet.css" %}" rel="stylesheet" type="text/css">
 <style>
-.panel-body{
+.panel-body {
       box-shadow: 0 5px 5px rgba(0,0,0,.05);
 }
-.node{
+.node {
   margin:5px 30%;
   font-size: x-large;
 }
+.list-path {
+  border-style: solid;
+  border-color: #ABC7E0;
+  padding: 14px;
+}
+
 </style>
 {% endblock %}
 
@@ -48,11 +54,20 @@
     {% endfor %}
   </div>
     <div class="col-md-4" id="plan">
-      <div data-step="4" data-intro="Create new plan">
-        <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=object.experiment.pk %}?next=new_object" data-step="" data-intro="">{% csrf_token %}
-          <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
-          <button type="submit" class="btn btn-info btn-sm ">New Evacuation Path</button>
-        </form>
+      <div class="list-path">
+        <div>
+          <h4>Other Paths of the Experiment {{object.experiment}}</h4>
+          <ul {% if other_plans.count > 0%}>
+            {% for plan in other_plans %}<li><h5><a href="{% url 'plan_detail' pk_experiment=object.experiment.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+        <div data-step="4" data-intro="Create new plan">
+          <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=object.experiment.pk %}?next=new_object" data-step="" data-intro="">{% csrf_token %}
+            <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
+            <button type="submit" class="btn btn-info btn-sm ">New Evacuation Path</button>
+          </form>
+        </div>
       </div>
       <div data-step="3" data-intro="Save your plan">
       <h3>Evacuation Path</h3>
