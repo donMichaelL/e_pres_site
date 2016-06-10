@@ -11,6 +11,9 @@ class Plan(models.Model):
     max_evacuation_time = models.PositiveIntegerField(verbose_name="Maximum Evacuation Time in Sec",null=True, blank=True, default=0)
     leader = models.CharField(max_length=70, null=True, blank=True);
 
+    class Meta:
+        ordering = ['name']
+
     def __unicode__(self):
         return self.name
 
