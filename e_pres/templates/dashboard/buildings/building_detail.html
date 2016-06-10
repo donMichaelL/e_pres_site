@@ -66,9 +66,15 @@
 
 
             <p class="help-block small">Disaster: {{test.get_disaster_display}} {% if test.execuation_date %}Execuation Date:  {{test.execuation_date}} {% endif %}</p>
-            <ul {% if test.plan_set.count > 0%} data-step="6" data-intro="Click for details"{% endif %}>
-              {% for plan in test.plan_set.all %}<li><h5><a href="{% url 'plan_detail' pk_experiment=test.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
-            </ul>
+
+            {% if test.plan_set.count > 0 %}
+            <button class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#demo{{forloop.counter}}">Paths</button>
+            <div id="demo{{forloop.counter}}" class="collapse">
+              <ul data-step="6" data-intro="Click for details">
+                {% for plan in test.plan_set.all %}<li><h5><a href="{% url 'plan_detail' pk_experiment=test.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
+              </ul>
+            </div>
+            {% endif %}
             <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=test.pk %}?next={{object.get_absolute_url}}" data-step="5" data-intro="Insert new Evacuation Path">{% csrf_token %}
               <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
               <button type="submit" class="btn btn-info btn-sm ">New Evacuation Path</button>
