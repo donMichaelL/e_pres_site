@@ -23,7 +23,7 @@ from accounts.views import HomepageView, LoginAfterPasswordChangeView, ProfileFo
 
 urlpatterns = [
     url(r'^$', HomepageView.as_view(), name="homepage"),
-    url(r'^language-selector$', LanguageChooserView.as_view(), name="language_selector"),
+    url(r'^language-selector/$', LanguageChooserView.as_view(), name="language_selector"),
     url(r'^admin/', admin.site.urls),
     url(r'^profile/$', ProfileFormView.as_view(), name="profile_settings"),
     url(r'^building/', include('buildings.urls')),

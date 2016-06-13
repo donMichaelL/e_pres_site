@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.views.generic import View
 from django.contrib import messages
+from django.utils.translation import LANGUAGE_SESSION_KEY
 from allauth.account.forms import LoginForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from allauth.account.views import PasswordChangeView, LoginView
@@ -53,5 +54,9 @@ class ProfileFormView(LoginRequiredMixin, View):
 
 class LanguageChooserView(View):
     def post(self, request, *args, **kwargs):
-        print request.data
-        return JsonResponse('ok', status=200)
+        language = request.POST.get('language')
+        if language == 'el':
+            request.session[LANGUAGE_SESSION_KEY] = 'el'
+        else:
+            request.session[LANGUAGE_SESSION_KEY] = 'en'
+        return JsonResponse('ok', status=200, safe=False)
