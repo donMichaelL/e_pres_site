@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-13 09:40+0000\n"
+"POT-Creation-Date: 2016-06-13 12:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,6 +26,7 @@ msgstr ""
 msgid "Greek"
 msgstr ""
 
-#: templates/account/login.html:13
-msgid "Welcome to TaskBuster!"
-msgstr "Καλησέρα"
+#: templates/account/login.html:7 templates/account/login.html.py:8
+#: templates/account/login.html:20
+msgid "Log In"
+msgstr "Είσοδος"

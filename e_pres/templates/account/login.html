@@ -4,13 +4,12 @@
 
 
 
-{% block title %}Log In {% endblock %}
-{% block paneltitle %}Log In{% endblock %}
+{% block title %}{% trans 'Log In' %} {% endblock %}
+{% block paneltitle %}{% trans 'Log In' %}{% endblock %}
 
 
 
 {% block form %}
-  <h1>{% trans "Welcome to TaskBuster!"%}</h1>
 
   <form class="login" method="POST" action="{% url 'account_login' %}"> {% csrf_token %}
     {{ form | crispy }}
@@ -18,7 +17,7 @@
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
     <a class="btn" href="{% url 'account_reset_password' %}">Forgot Password ?</a>
-    <input type="submit" class="btn btn-lg btn-success btn-block" value="Log In">
+    <input type="submit" class="btn btn-lg btn-success btn-block" value="{% trans 'Log In' %}">
   </form>
 
 {% endblock %}
