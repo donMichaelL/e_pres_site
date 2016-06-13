@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-13 12:17+0000\n"
+"POT-Creation-Date: 2016-06-13 12:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,62 @@ msgstr ""
 msgid "Greek"
 msgstr ""
 
+#: e_pres/config/base.py:173
+msgid "Italian"
+msgstr ""
+
+#: e_pres/config/base.py:174
+msgid "Bulgarian"
+msgstr ""
+
+#: e_pres/config/base.py:175
+msgid "Romanian"
+msgstr ""
+
 #: templates/account/login.html:7 templates/account/login.html.py:8
 #: templates/account/login.html:20
 msgid "Log In"
 msgstr "Είσοδος"
+
+#: templates/dashboard/base_logged.html:14
+#: templates/dashboard/base_logged.html:23
+#, fuzzy
+#| msgid "Log In"
+msgid "Log Out"
+msgstr "Είσοδος"
+
+#: templates/dashboard/base_logged.html:17
+msgid "Are you sure you want to Log Out?"
+msgstr "Είστε σίγουροι για την αποσύνδεση ?"
+
+#: templates/dashboard/base_logged.html:24
+msgid "Cancel"
+msgstr "Άκυρο"
+
+#: templates/dashboard/base_logged.html:47
+msgid "Help Me"
+msgstr "Βοήθεια"
+
+#: templates/dashboard/base_logged.html:61
+msgid "User Profile"
+msgstr "Προφίλ Χρήστη"
+
+#: templates/dashboard/base_logged.html:63
+msgid "Password Reset"
+msgstr "Επαναφορά κωδικού"
+
+#: templates/dashboard/base_logged.html:67
+msgid "Logout"
+msgstr "Έξοδος"
+
+#: templates/dashboard/base_logged.html:90
+msgid "Homepage"
+msgstr "Αρχική Σελίδα"
+
+#: templates/dashboard/base_logged.html:93
+msgid "Buildings"
+msgstr "Κτήρια"
+
+#: templates/dashboard/base_logged.html:96
+msgid "Experiments"
+msgstr "Πειράματα"

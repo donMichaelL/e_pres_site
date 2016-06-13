@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load staticfiles %}
 
 
@@ -10,17 +11,17 @@
   		<div class="modal-content">
   			<div class="modal-header">
   				<button type="button" class="close" data-dismiss="modal">&times;</button>
-  				<h4 class="modal-title">Log Out</h4>
+  				<h4 class="modal-title"> {% trans 'Log Out' %}</h4>
   			</div>
   			<div class="modal-body text-center">
-  				<p align="center">Are you sure you want to Log Out?</p>
+  				<p align="center"> {% trans 'Are you sure you want to Log Out?' %}</p>
   				<form class="form" method="post" action="{% url 'account_logout' %}">
   					{% csrf_token %}
   					{% if redirect_field_value %}
   					<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
   					{% endif %}
-  					<button type="submit" class="btn btn-warning "><i class="fa fa-sign-out fa-fw"></i>Log Out</button>
-  					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+  					<button type="submit" class="btn btn-warning "><i class="fa fa-sign-out fa-fw"></i>{% trans 'Logout' %}</button>
+  					<button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
   				</form>
   			</div>
   		</div>
@@ -43,7 +44,7 @@
 
       <ul class="nav navbar-top-links navbar-right">
         <li >
-           <a class="" href="javascript:void(0);" onclick="javascript:introJs().start();"><i class="fa fa-info-circle"></i> Help Me</a>
+           <a class="" href="javascript:void(0);" onclick="javascript:introJs().start();"><i class="fa fa-info-circle"></i>  {% trans 'Help Me' %}</a>
         </li>
         <li>
           <span class="lang flag-icon flag-icon-gb" id="en"></span>
@@ -57,13 +58,13 @@
                   <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
               </a>
               <ul class="dropdown-menu ">
-                  <li><a href="{% url 'profile_settings' %}"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                  <li><a href="{% url 'profile_settings' %}"><i class="fa fa-user fa-fw"></i>  {% trans 'User Profile' %}</a>
                   </li>
-                  <li><a href="{% url 'account_change_password' %}"><i class="fa fa-gear fa-fw"></i> Password Reset</a>
+                  <li><a href="{% url 'account_change_password' %}"><i class="fa fa-gear fa-fw"></i>  {% trans 'Password Reset' %}</a>
                   </li>
                   <li class="divider"></li>
                   <li>
-                    <a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    <a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-sign-out fa-fw"></i>  {% trans 'Logout' %}</a>
                   </li>
               </ul>
               <!-- /.dropdown-user -->
@@ -86,13 +87,13 @@
                       </div>
                   </li> -->
                   <li>
-                      <a href="{% url 'homepage' %}"><i class="fa fa-home fa-fw"></i> Homepage</a>
+                      <a href="{% url 'homepage' %}"><i class="fa fa-home fa-fw"></i> {% trans 'Homepage' %}</a>
                   </li>
                   <li>
-                      <a href="{% url 'building_list' %}"><i class="fa fa-building fa-fw"></i> Buildings</a>
+                      <a href="{% url 'building_list' %}"><i class="fa fa-building fa-fw"></i>  {% trans 'Buildings' %}</a>
                   </li>
                   <li>
-                      <a href="{% url 'experiment_list' %}"><i class="fa fa-flask fa-fw"></i> Experiments</a>
+                      <a href="{% url 'experiment_list' %}"><i class="fa fa-flask fa-fw"></i>  {% trans 'Experiments' %}</a>
                   </li>
               </ul>
           </div>
