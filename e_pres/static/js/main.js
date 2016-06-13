@@ -39,3 +39,22 @@ function notification_message(message) {
     });
 
 }
+
+$(document).ready(function(){
+  $('.lang').click(function(event){
+    var language = event.target.id;
+    $.ajax({
+      type: "POST",
+      url: 'language-selector/',
+      data: {
+        language: language,
+        csrfmiddlewaretoken:  getCookie('csrftoken')
+      },
+    success: function(){
+      console.log('ok');
+      }
+    });
+    location.reload();
+
+  });
+});

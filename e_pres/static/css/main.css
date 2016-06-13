@@ -8,6 +8,10 @@
   padding: 30px;
 }
 
+.lang {
+cursor: pointer; 
+}
+
 .extra-margin{
   margin-bottom: 20px;
 }
