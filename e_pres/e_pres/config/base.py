@@ -170,6 +170,9 @@ from django.utils.translation import ugettext_lazy as _
 LANGUAGES = (
     ('en', _('English')),
     ('el', _('Greek')),
+    ('it', _('Italian')),
+    ('bg', _('Bulgarian')),
+    ('ro', _('Romanian')),
 )
 
 LOCALE_PATHS = (

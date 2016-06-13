@@ -57,6 +57,12 @@ class LanguageChooserView(View):
         language = request.POST.get('language')
         if language == 'el':
             request.session[LANGUAGE_SESSION_KEY] = 'el'
+        elif language == 'it':
+            request.session[LANGUAGE_SESSION_KEY] = 'it'
+        elif language == 'ro':
+            request.session[LANGUAGE_SESSION_KEY] = 'ro'
+        elif language == 'bg':
+            request.session[LANGUAGE_SESSION_KEY] = 'bg'
         else:
             request.session[LANGUAGE_SESSION_KEY] = 'en'
         return JsonResponse('ok', status=200, safe=False)
