@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-13 12:51+0000\n"
+"POT-Creation-Date: 2016-06-13 12:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,12 +44,16 @@ msgid "Log In"
 msgstr ""
 
 #: templates/dashboard/base_logged.html:14
-#: templates/dashboard/base_logged.html:23
 msgid "Log Out"
 msgstr ""
 
 #: templates/dashboard/base_logged.html:17
 msgid "Are you sure you want to Log Out?"
+msgstr ""
+
+#: templates/dashboard/base_logged.html:23
+#: templates/dashboard/base_logged.html:67
+msgid "Logout"
 msgstr ""
 
 #: templates/dashboard/base_logged.html:24
@@ -68,18 +72,44 @@ msgstr ""
 msgid "Password Reset"
 msgstr ""
 
-#: templates/dashboard/base_logged.html:67
-msgid "Logout"
-msgstr ""
-
 #: templates/dashboard/base_logged.html:90
 msgid "Homepage"
 msgstr ""
 
 #: templates/dashboard/base_logged.html:93
+#: templates/dashboard/buildings/list_building.html:5
+#: templates/dashboard/buildings/list_building.html:6
 msgid "Buildings"
 msgstr ""
 
 #: templates/dashboard/base_logged.html:96
 msgid "Experiments"
+msgstr ""
+
+#: templates/dashboard/buildings/list_building.html:11
+msgid "Insert New Building"
+msgstr ""
+
+#: templates/dashboard/buildings/list_building.html:15
+msgid "Press any building to continue"
+msgstr ""
+
+#: templates/dashboard/buildings/list_building.html:25
+msgid "Country"
+msgstr ""
+
+#: templates/dashboard/buildings/list_building.html:26
+msgid "Address"
+msgstr ""
+
+#: templates/dashboard/buildings/list_building.html:27
+msgid "Max Evacuation Time"
+msgstr ""
+
+#: templates/dashboard/buildings/list_building.html:31
+msgid "Details"
+msgstr ""
+
+#: templates/dashboard/buildings/list_building.html:34
+msgid "Delete"
 msgstr ""

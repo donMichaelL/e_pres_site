@@ -1,18 +1,19 @@
 {% extends 'dashboard/base_logged.html' %}
+{% load i18n %}
 {% load staticfiles %}
 
 
-{% block title %}Buildings {% endblock %}
-{% block main_header %}Buildings {% endblock %}
+{% block title %} {% trans 'Buildings' %} {% endblock %}
+{% block main_header %}{% trans 'Buildings' %}  {% endblock %}
 
 {% block main_content %}
 <div class="row">
   <div class="col-xs-12" data-step="1" data-intro="Insert New Building">
-    <p ><a href="{% url 'building_new' %}" class="btn btn-success">Insert new Building</a></p>
+    <p ><a href="{% url 'building_new' %}" class="btn btn-success">{% trans 'Insert New Building' %} </a></p>
   </div>
 </div>
 
-<div class="grid" {% if object_list.count > 0%} data-step="2" data-intro="Press any building to continue" {% endif %}>
+<div class="grid" {% if object_list.count > 0%} data-step="2" data-intro="{% trans 'Press any building to continue' %} " {% endif %}>
   {%  for building in object_list %}
   <div class="grid-item">
     <div class="thumbnail ">
@@ -22,16 +23,16 @@
       {% endif %}
       <div class="caption">
         <h3 class="text-center">{{building.name}}</h3>
-        <p>Country: {{building.get_country_display}}</p>
-        {% if building.address and building.tk %}<p>Address: {{building.address}} {{building.tk}}</p> {% endif %}
-        {% if building.max_evacuation_time %}<p>Max Evaluation Time: <span class="label label-default">{{building.max_evacuation_time}} sec</span></p>{% endif %}
+        <p>{% trans 'Country' %} : {{building.get_country_display}}</p>
+        {% if building.address and building.tk %}<p>{% trans 'Address' %} : {{building.address}} {{building.tk}}</p> {% endif %}
+        {% if building.max_evacuation_time %}<p>{% trans 'Max Evacuation Time' %} : <span class="label label-default">{{building.max_evacuation_time}} sec</span></p>{% endif %}
         <br>
         <div class="">
           <div class="">
-            <p><a href="{{building.get_absolute_url}}" class="btn btn-info btn-block" role="button">Details</a>
+            <p><a href="{{building.get_absolute_url}}" class="btn btn-info btn-block" role="button">{% trans 'Details' %} </a>
           </div>
           <div class="">
-            <a type="button"  href="{% url 'building_delete' pk=building.pk %}" class="btn btn-outline btn-danger btn-block">Delete</a>
+            <a type="button"  href="{% url 'building_delete' pk=building.pk %}" class="btn btn-outline btn-danger btn-block">{% trans 'Delete' %} </a>
           </div>
         </div>
       </div>

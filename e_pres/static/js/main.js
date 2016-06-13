@@ -45,7 +45,7 @@ $(document).ready(function(){
     var language = event.target.id;
     $.ajax({
       type: "POST",
-      url: 'language-selector/',
+      url: '/language-selector/',
       data: {
         language: language,
         csrfmiddlewaretoken:  getCookie('csrftoken')
