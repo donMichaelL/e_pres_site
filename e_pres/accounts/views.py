@@ -5,6 +5,7 @@ from django.contrib import messages
 from allauth.account.forms import LoginForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from allauth.account.views import PasswordChangeView, LoginView
+from django.http import JsonResponse
 from buildings.models import Building
 from .forms import UserForm, UserProfileForm
 
@@ -48,3 +49,9 @@ class ProfileFormView(LoginRequiredMixin, View):
                 'user_profile_form': user_profile_form
         }
         return render(request,'dashboard/profile.html', context)
+
+
+class LanguageChooserView(View):
+    def post(self, request, *args, **kwargs):
+        print request.data
+        return JsonResponse('ok', status=200)
