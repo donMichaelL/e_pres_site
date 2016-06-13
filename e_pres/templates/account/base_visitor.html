@@ -4,7 +4,7 @@
 
 {% block css_styles %}
 <style>
-.row{
+body{
   padding-top: 100px;
 }
 </style>
@@ -16,6 +16,13 @@
   <div class="row">
     <div class="col-md-4 col-md-offset-4 text-center">
       <img src="{% static 'img/logo.png' %}">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4 text-center">
+      <p><span class="lang" id="en">English</span>
+         <span class="lang" id="el">Greece</span>
+      </p>
     </div>
   </div>
   <div class="row">
@@ -34,4 +41,16 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+  $('.lang').click(function(event){
+    var language = event.target.id;
+    location.reload();
+
+  });
+});
+</script>
 {% endblock %}
