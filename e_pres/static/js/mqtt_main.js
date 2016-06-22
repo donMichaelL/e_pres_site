@@ -48,9 +48,12 @@ function onConnectionLost(responseObject) {
 
 // called when a message arrives
 function onMessageArrived(message) {
-  // console.log(message.payloadString);
-  var number = message.payloadString.match(/\d+/)[0];
-  var tpc = message.destinationName;
+  console.log(message.payloadString);
+  var jsonMessage = JSON.parse(message.payloadString);
+  console.log(jsonMessage);
+
+  var number = jsonMessage.flux;
+  var tpc = jsonMessage.antenna;
 
   var node = '#node'+ tpc;
   //var badge = '#badge' + tpc;
