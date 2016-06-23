@@ -108,11 +108,10 @@
     marker{{checkpoint.pk}}.on('dragend',function(event){
       var marker = event.target;
       var position = marker.getLatLng();
-      console.log(position);
       var marker_id = map{{floor.pk}}.markers.indexOf(marker);
       marker_id = marker_id + 1;
-      $('#panel-'+{{floor.pk}} +' .panel-body:nth-child('+ marker_id +') input[name="coord_x"]').val(position.lat);
-      $('#panel-'+ {{floor.pk}} +' .panel-body:nth-child('+ marker_id +') input[name="coord_y"]').val(position.lng);
+      $('#panel-'+{{floor.pk}} +' .panel-body:nth-child('+ marker_id +') input[name="coord_x"]').val((position.lat).toFixed(3));
+      $('#panel-'+ {{floor.pk}} +' .panel-body:nth-child('+ marker_id +') input[name="coord_y"]').val((position.lng).toFixed(3));
     });
     map{{floor.pk}}.markers.push(marker{{checkpoint.pk}});
   {% endfor %}
@@ -122,12 +121,13 @@
 
 var id = 1;
 function onMapClick(e) {
+  console.log('clicl');
   var panel_id = (e.target._container.id).match(/\d+/)[0];
   var marker = new L.marker(e.latlng, {icon: new L.NumberedDivIcon({number: 'new'}),draggable:'true'});
   e.target.markers.push(marker);
   var newRow = jQuery("<div class='panel-body'>  <form class='addCheckpoint' action='{% url "checkpoint_new" pk=object.pk  %}' method='POST'> {% csrf_token %} \
-    <input type='hidden' name='coord_x' value='" +e.latlng.lat+ "'> \
-    <input type='hidden' name='coord_y' value='" +e.latlng.lng+ "'> \
+    <input type='hidden' name='coord_x' value='" + (e.latlng.lat).toFixed(3) + "'> \
+    <input type='hidden' name='coord_y' value='" + (e.latlng.lng).toFixed(3) + "'> \
     <input type='hidden' name='floor' value='"+ panel_id +"'> \
     <input type='hidden' name='experiment' value='"+{{object.pk}} +"'> \
     <input type='number' placeholder='flux' name='flux' value=''> \
@@ -145,8 +145,10 @@ function onMapClick(e) {
     var marker_id = e.target.markers.indexOf(marker);
     marker_id = marker_id + 1;
 
-    $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_x"]').val(position.lat);
-    $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_y"]').val(position.lng);
+    // console.log((position.lng).toFixed(3));
+
+    $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_x"]').val((position.lat).toFixed(3));
+    $('#panel-'+panel_id +' .panel-body:nth-child('+ marker_id +') input[name="coord_y"]').val((position.lng).toFixed(3));
 
   });
     e.target.addLayer(marker);
