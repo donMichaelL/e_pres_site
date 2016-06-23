@@ -102,7 +102,7 @@
   map{{floor.pk}}.markers = [];
   setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
   {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
-    var x = {{checkpoint.coord_x}}, y = {{checkpoint.coord_y}};
+    var x = Number({{checkpoint.coord_x}}), y = Number({{checkpoint.coord_y}});
     var name = {{checkpoint.pk}};
     marker{{checkpoint.pk}} = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name }),draggable:'true'}).addTo(map{{floor.pk}});
     marker{{checkpoint.pk}}.on('dragend',function(event){
