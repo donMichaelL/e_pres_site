@@ -86,7 +86,7 @@ msgstr "Κτήρια"
 
 #: templates/dashboard/base_logged.html:96
 msgid "Experiments"
-msgstr "Πειράματα"
+msgstr "Άσκηση"
 
 #: templates/dashboard/buildings/list_building.html:11
 msgid "Insert New Building"
