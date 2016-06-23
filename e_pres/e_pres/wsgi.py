@@ -14,7 +14,10 @@ from django.conf import settings
 from whitenoise.django import DjangoWhiteNoise
 from rednoise import DjangoRedNoise
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "e_pres.settings")
+if settings.DEBUG:
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "e_pres.settings")
+else:
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "e_pres.config.production")
 
 application = get_wsgi_application()
 if not settings.DEBUG:
