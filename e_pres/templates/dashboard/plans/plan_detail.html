@@ -56,8 +56,8 @@
     <div class="col-md-4" id="plan">
       <div class="list-path">
         <div>
-          <h4>Other Paths of the Experiment {{object.experiment}}</h4>
           <ul {% if other_plans.count > 0%}>
+          <h4>Other Paths of the Experiment {{object.experiment}}</h4>
             {% for plan in other_plans %}<li><h5><a href="{% url 'plan_detail' pk_experiment=object.experiment.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
           </ul>
           {% endif %}
@@ -69,7 +69,8 @@
           </form>
         </div>
       </div>
-      <div data-step="3" data-intro="Save your plan">
+    </div>
+    <div data-step="3" data-intro="Save your plan">
       <h3>Evacuation Path</h3>
       {% for connection in object.connection_set.all  %}
       <div class='panel panel-success'>
@@ -82,12 +83,11 @@
       {% if forloop.last %}<a href="{% url 'plan_delete_connections' pk=object.pk pk_experiment=object.experiment.pk %}" class="btn btn-danger">Clear</a> {% endif  %}
       {% empty %}
       <form method="POST" action="{% url 'plan_add_connection' pk_experiment=object.experiment.pk pk=object.pk %}" id="form-plan"> {% csrf_token %}
-        {{formset.as_p}}
-        <button id="submit" type="submit" class="btn btn-primary" name="action">Save</button>
+      {{formset.as_p}}
+      <button id="submit" type="submit" class="btn btn-primary" name="action">Save</button>
       </form>
       {% endfor %}
       <br>
-    </div>
   </div>
   </div>
 </div>
