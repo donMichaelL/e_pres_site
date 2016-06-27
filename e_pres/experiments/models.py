@@ -18,6 +18,10 @@ class Experiment(models.Model):
     execution_date = models.DateField(null=True, blank=True)
     execution_time = models.TimeField(null=True, blank=True)
     finished = models.BooleanField(default=False)
+    in_progress = models.BooleanField(default=False)
+    expected_evacuation_time = models.IntegerField(null=True, blank=True, help_text="in seconds")
+    evacuation_time = models.IntegerField(null=True, blank=True)
+    starting_time = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 

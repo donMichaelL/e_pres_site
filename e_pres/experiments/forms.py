@@ -7,7 +7,7 @@ from .models import Experiment, Checkpoint
 class ExperimentForm(forms.ModelForm):
     class Meta:
         model = Experiment
-        exclude = ['user']
+        exclude = ['user', 'finished', 'in_progress', 'evacuation_time', 'starting_time']
 
     def __init__(self, *args, **kwargs):
         super(ExperimentForm, self).__init__(*args, **kwargs)

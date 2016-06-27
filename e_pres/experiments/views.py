@@ -1,6 +1,8 @@
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
+from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
@@ -77,6 +79,28 @@ class ExperimentDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView,
         context['checkpoints'] = Checkpoint.objects.filter(experiment=self.object)
         return context
 
+class ExperimentStartView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
+        if request.user == experiment.building.user or request.user.is_superuser:
+            experiment.in_progress = True
+            experiment.starting_time = timezone.now()
+            experiment.save()
+            return JsonResponse('ok',status=200, safe=False)
+        return JsonResponse('PermissionDenied',status=403, safe=False)
+
+class ExperimentStopView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
+        if request.user == experiment.building.user or request.user.is_superuser:
+            experiment.finished = True
+            experiment.in_progress = False
+            now_time = timezone.now()
+            seconds = (now_time - experiment.starting_time).total_seconds()
+            experiment.evacuation_time = seconds
+            experiment.save()
+            return JsonResponse('ok',status=200, safe=False)
+        return JsonResponse('PermissionDenied',status=403, safe=False)
 
 class CheckpointInsertView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
