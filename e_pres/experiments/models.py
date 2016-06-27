@@ -17,6 +17,7 @@ class Experiment(models.Model):
     disaster = models.CharField(max_length=2, choices=DISASTER_CHOICHES)
     execution_date = models.DateField(null=True, blank=True)
     execution_time = models.TimeField(null=True, blank=True)
+    finished = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 
