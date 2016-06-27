@@ -56,9 +56,8 @@
         <div class="media-body">
           <h4 class="media-heading">
             <a href="{% url 'experiment_delete' pk=test.pk %}?next={{object.get_absolute_url}}" type="button" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
-            {% if forloop.first	 %}
+            {% if test.finished	 %}
               <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details">{{test.name}}</a> <a href="{% url 'post_experiment' pk=test.pk %}" style="color:blue;font-size:smaller;text-decoration:none;">Results</a>
-
             {% else %}
             <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details">{{test.name}}</a> <a href="{% url 'realtime' pk=test.pk %}" style="color:red;font-size:smaller;text-decoration:none;">Real Time Demo</a>
             {% endif %}
