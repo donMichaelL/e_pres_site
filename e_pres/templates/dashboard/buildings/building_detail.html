@@ -17,10 +17,15 @@
     {% endif %}
     <a type="button"  href="{% url 'preparedness_questionnaire_list' pk=object.pk %}"
         class="btn btn-outline btn-{% if preparedness_questionnaire %}info{% else %}danger{% endif %}">Evacuation Preparedness Questionnaire</a>
-    <form method="POST" action="" enctype="multipart/form-data"  data-step="1" data-intro="Update your Building">  {% csrf_token %}
-      {{form | crispy }}
-      <button type="submit" class="btn btn-success" name="action">Update Building</button>
-    </form>
+    <hr/>
+    <button data-toggle="collapse" data-target="#updateBuilding">Update Building Settings</button>
+    
+    <div id="updateBuilding" class="collapse">
+      <form method="POST" action="" enctype="multipart/form-data"  data-step="1" data-intro="Update your Building">  {% csrf_token %}
+        {{form | crispy }}
+        <button type="submit" class="btn btn-success" name="action">Update Building</button>
+      </form>
+    </div>
   </div>
   <div class="col-md-8">
 
