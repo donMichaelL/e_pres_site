@@ -18,6 +18,7 @@
     cursor: pointer;
   }
 
+
 </style>
 <style>
 #plans, #checkpoints, #totaltime, #totalstudents {
@@ -57,7 +58,7 @@
     <h4>Checkpoints <span id="checkpoints">0</span></h4>
   </div>
   <div class="col-xs-3 text-center extra-margin">
-    <h4>Total Time (sec) <span id="totaltime">0</span></h4>
+    <h4>Expected Evacuation Time (sec) <span id="totaltime">0</span></h4>
   </div>
   <div class="col-xs-3 text-center extra-margin">
     <h4>Total Students<span id="totalstudents">0</span></h4>
@@ -122,6 +123,7 @@
 <script src="{% static 'js/leaf_custom.js' %}"></script>
 
 <script>
+
   $('#start').click(function(e){
     $.ajax({
       type: "POST",
@@ -233,7 +235,7 @@ function onMapClick(e) {};
 <script>
   $('#plans').animateNumber({ number: {{plans | length}}});
   $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
-  $('#totaltime').animateNumber({ number: 600 });
+  $('#totaltime').animateNumber({ number: {{ object.expected_evacuation_time|default_if_none:"nothing" }} });
   $('#totalstudents').animateNumber({ number: {{total_student}} });
 
   window.onload = function () {

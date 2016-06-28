@@ -19,7 +19,7 @@ class Experiment(models.Model):
     execution_time = models.TimeField(null=True, blank=True)
     finished = models.BooleanField(default=False)
     in_progress = models.BooleanField(default=False)
-    expected_evacuation_time = models.IntegerField(null=True, blank=True, help_text="in seconds")
+    expected_evacuation_time = models.IntegerField(null=True, blank=True)
     evacuation_time = models.IntegerField(null=True, blank=True)
     starting_time = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)

@@ -92,7 +92,7 @@
         <div class="panel panel-{% if object.building.max_evacuation_time  and object.building.max_evacuation_time > 100 %}danger{% else %}success {% endif %}">
           <div class="panel-heading">Total Evacuation Time</div>
           <div class="panel-body align-center">
-            <h2 class="text-center">600 <small>sec</small></h2>
+            <h2 class="text-center">{{object.evacuation_time}} <small>sec</small></h2>
           </div>
         </div>
       </div>
@@ -193,7 +193,7 @@ function onMapClick(e) {};
 <script>
   $('#plans').animateNumber({ number: {{plans | length}}});
   $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
-  $('#totaltime').animateNumber({ number: 600 });
+  $('#totaltime').animateNumber({ number: {{object.evacuation_time}} });
   $('#totalstudents').animateNumber({ number: {{total_student}} });
 
 
