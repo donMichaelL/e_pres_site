@@ -32,16 +32,20 @@
        <i class="fa fa-flask fa-5x"></i>
    </div>
    <div class="col-xs-12">
-     <form method="POST" action="" class="form-inline" data-step="1" data-intro="Update your experiment">  {% csrf_token %}
-       {{form| crispy}}
-       <br>
-       <br>
-       <button type="submit" class="btn btn-success" name="action">Update Experiment</button>
-     </form>
+     <button data-toggle="collapse" data-target="#updateExperiment">Update Building Settings</button>
+     <div id="updateExperiment" class="collapse">
+       <form method="POST" action="" class="form-inline" data-step="1" data-intro="Update your experiment">  {% csrf_token %}
+         {{form| crispy}}
+         <br>
+         <br>
+         <button type="submit" class="btn btn-success" name="action">Update Experiment</button>
+       </form>
+     </div>
    </div>
 
    <div class="col-xs-12">
      <h1 class="lead">{{object.building}}</h1>
+     <p>Press the blueprint fill the form and press save. When you finish return to building detail to insert Paths</p>
      {% for floor in object.building.floor_set.all %}
      <div class="row" style="margin-top:10px;">
        <div class="col-md-8" {% if forloop.counter == 1 %} data-step="2" data-intro="Click the image and insert a checkpoint" {% endif %}>

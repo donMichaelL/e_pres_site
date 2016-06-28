@@ -3,7 +3,6 @@
 {% load crispy_forms_tags %}
 
 
-
 {% block title %}{{object.name}} {% endblock %}
 {% block main_header %}{{object.name}} <a type="button"  href="{% url 'building_list' %}" class="btn btn-outline btn-default"><i class="fa fa-arrow-left"></i>
  Back to Building list</a>
@@ -15,13 +14,14 @@
     {% if object.photo %}<img src="{{object.photo.url}}" class="img-responsive"></img>
     {% else%}<img src="{% static 'img/building.jpg' %}" class="img-responsive"></img>
     {% endif %}
+    <br>
     <a type="button"  href="{% url 'preparedness_questionnaire_list' pk=object.pk %}"
-        class="btn btn-outline btn-{% if preparedness_questionnaire %}info{% else %}danger{% endif %}">Evacuation Preparedness Questionnaire</a>
+        class="btn btn-outline btn-{% if preparedness_questionnaire %}info{% else %}danger{% endif %}" data-step="1" data-intro="Respond the Questionnaire">Evacuation Preparedness Questionnaire</a>
     <hr/>
     <button data-toggle="collapse" data-target="#updateBuilding">Update Building Settings</button>
-    
+
     <div id="updateBuilding" class="collapse">
-      <form method="POST" action="" enctype="multipart/form-data"  data-step="1" data-intro="Update your Building">  {% csrf_token %}
+      <form method="POST" action="" enctype="multipart/form-data">  {% csrf_token %}
         {{form | crispy }}
         <button type="submit" class="btn btn-success" name="action">Update Building</button>
       </form>
@@ -31,7 +31,13 @@
 
     <div class="row">
       <div class="col-xs-12">
-        <h2 class="text-center">Floors</h2>
+        <h2 class="text-center">
+          {% if object.floor_set.count == 0 %}
+            <span class="lead tips">Next Step: Insert all building Floors </span>
+          {% else %}
+          Floors
+          {% endif %}
+        </h2>
         {% for floor in object.floor_set.all %}
         <div class="media">
         <a class="media-left" href="{% url 'floor_detail' pk=floor.pk pk_building=object.pk %}">
@@ -48,11 +54,19 @@
           </div>
         </div>
         {% endfor%}
-        <div class="text-center" data-step="2" data-intro="Insert a Floor"><a href="{% url 'floor_new' pk=object.pk %}" class="btn btn-info">New Floor</a></div>
+        <div class="text-center" data-step="2" data-intro="Insert a Floor"><a href="{% url 'floor_new' pk=object.pk %}" class="btn btn-info">Insert New Floor</a></div>
     </div>
     <div class="col-xs-12">
-      <h2 class="text-center">Experiments</h2>
 
+
+      {% if object.floor_set.count != 0 %}
+      <h2 class="text-center">
+        {% if object.experiment_set.count == 0 %}
+          <span class="lead tips">Next Step: Insert a Drill </span>
+          {% else %}
+        Drills
+        {% endif %}
+      </h2>
       {% for test in object.experiment_set.all %}
       <div class="media">
       <a class="media-left">
@@ -61,14 +75,19 @@
         <div class="media-body">
           <h4 class="media-heading">
             <a href="{% url 'experiment_delete' pk=test.pk %}?next={{object.get_absolute_url}}" type="button" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
+            {% if test.checkpoint_set.count == 0 %}
+              <span class="lead tips">Next Step: Click drill name to insert checkpoints </span>
+            {% endif %}
+            <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details">{{test.name}}</a>
             {% if test.finished	 %}
-              <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details">{{test.name}}</a> <a href="{% url 'post_experiment' pk=test.pk %}" style="color:blue;font-size:smaller;text-decoration:none;">Results</a>
+            <a href="{% url 'post_experiment' pk=test.pk %}" style="color:blue;font-size:smaller;text-decoration:none;">Results</a>
             {% else %}
-            <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details">{{test.name}}</a> <a href="{% url 'realtime' pk=test.pk %}" style="color:red;font-size:smaller;text-decoration:none;">Real Time Demo</a>
+            <a href="{% url 'realtime' pk=test.pk %}" style="color:red;font-size:smaller;text-decoration:none;">Real Time Demo</a>
             {% endif %}
 
 
             <p class="help-block small">Disaster: {{test.get_disaster_display}} {% if test.execuation_date %}Execuation Date:  {{test.execuation_date}} {% endif %}</p>
+            {% if test.checkpoint_set.count != 0 %}
 
             {% if test.plan_set.count > 0 %}
             <button class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#demo{{forloop.counter}}">Paths</button>
@@ -77,17 +96,23 @@
                 {% for plan in test.plan_set.all %}<li><h5><a href="{% url 'plan_detail' pk_experiment=test.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
               </ul>
             </div>
+            {% else %}
+            <span class="lead tips">Next Step: Add as many paths as neccesary </span>
             {% endif %}
+
             <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=test.pk %}?next={{object.get_absolute_url}}" data-step="5" data-intro="Insert new Evacuation Path">{% csrf_token %}
               <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
-              <button type="submit" class="btn btn-info btn-sm ">New Evacuation Path</button>
+              <button type="submit" class="btn btn-info btn-sm ">Insert new Evacuation Path</button>
             </form>
+            {% endif %}
           </h4>
         </div>
       </div>
       {% endfor%}
+
       <div class="text-center">
-        <form method="POST" action="{% url 'experiment_new' %}?next={{object.get_absolute_url}}"  class="form-inline" role="form" data-step="3" data-intro="Insert new Experiment">{% csrf_token %}
+        <form method="POST" action="{% url 'experiment_new' %}?next={{object.get_absolute_url}}"  class="form-inline" role="form" data-step="3" data-intro="Inse
+        rt new Experiment">{% csrf_token %}
           <div class="form-group">
             <input type="text" class="form-control" name="name" placeholder="Experiment Name*">
           </div>
@@ -99,13 +124,11 @@
             </select>
           </div>
           <input type="hidden" class="form-control" name="building" value="{{object.pk}}">
-          <button type="submit" class="btn btn-info">New Experiment</button>
+          <button type="submit" class="btn btn-info">Insert New Drill</button>
         </form>
-
       </div>
 
-
-
+      {% endif %}
     </div>
 
   </div>

@@ -8,8 +8,12 @@
   padding: 30px;
 }
 
+.tips{
+  color: red;
+}
+
 .lang {
-cursor: pointer; 
+cursor: pointer;
 }
 
 .extra-margin{
