@@ -44,7 +44,15 @@ class ExperimentNewView(LoginRequiredMixin, FormView):
         messages.success(self.request, ' %s was created.'% test.name )
         return super(ExperimentNewView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super(ExperimentNewView, self).get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', '')
+        print context['next']
+        return context
+
     def get_success_url(self):
+        print self.request.GET.get('next', '')
+        print 'hello'
         if self.request.GET.get('next', ''):
             return (self.request.GET.get('next', ''))
         return  reverse_lazy('experiment_list')

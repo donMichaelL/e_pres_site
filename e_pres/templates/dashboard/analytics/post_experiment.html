@@ -108,6 +108,10 @@
 
 
 <div class="row" style="margin-top:100px;">
+  <a type="button"  href="{% url 'evacuation_questionnaire_list' pk=object.pk %}" class="btn btn-outline btn-{% if test.evaluationquestionnaireanswer_set.count < 1 %}danger{% else %}info{% endif %}"
+  >Evacuation Drill Evaluation Questionnaire</a>
+  <a type="button"  href="{% url 'student_questionnaire_list' pk=object.pk %}" class="btn btn-outline btn-default">Students Questionnaire</a>
+  <a type="button"  href="{% url 'teachers_questionnaire_list' pk=object.pk %}" class="btn btn-outline btn-default">Teachers Questionnaire</a>
   <table class="table table-striped">
    <thead>
      <tr>

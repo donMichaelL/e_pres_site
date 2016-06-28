@@ -61,11 +61,6 @@
             {% else %}
             <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details">{{test.name}}</a> <a href="{% url 'realtime' pk=test.pk %}" style="color:red;font-size:smaller;text-decoration:none;">Real Time Demo</a>
             {% endif %}
-            <a type="button"  href="{% url 'evacuation_questionnaire_list' pk=test.pk %}" class="btn btn-outline btn-{% if test.evaluationquestionnaireanswer_set.count < 1 %}danger{% else %}info{% endif %}"
-            >Evacuation Drill Evaluation Questionnaire</a>
-            <a type="button"  href="{% url 'student_questionnaire_list' pk=test.pk %}" class="btn btn-outline btn-default">Students Questionnaire</a>
-            <a type="button"  href="{% url 'teachers_questionnaire_list' pk=test.pk %}" class="btn btn-outline btn-default">Teachers Questionnaire</a>
-
 
 
             <p class="help-block small">Disaster: {{test.get_disaster_display}} {% if test.execuation_date %}Execuation Date:  {{test.execuation_date}} {% endif %}</p>
