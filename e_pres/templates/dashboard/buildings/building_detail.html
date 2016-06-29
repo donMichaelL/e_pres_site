@@ -114,7 +114,7 @@
         <form method="POST" action="{% url 'experiment_new' %}?next={{object.get_absolute_url}}"  class="form-inline" role="form" data-step="3" data-intro="Inse
         rt new Experiment">{% csrf_token %}
           <div class="form-group">
-            <input type="text" class="form-control" name="name" placeholder="Experiment Name*">
+            <input type="text" class="form-control" name="name" placeholder="Drill Name*">
           </div>
           <div class="form-group">
             <select class="form-control" name="disaster">

@@ -18,6 +18,7 @@
   border-style: solid;
   border-color: #ABC7E0;
   padding: 14px;
+  margin-top: 10px;
 }
 
 </style>
@@ -32,21 +33,26 @@
  {% block main_content %}
  <div clas="row">
    <div class="col-md-8">
-     <form method="POST" action="" class="form-inline" data-step="1" data-intro="Update your plan">  {% csrf_token %}
-       {{form | crispy }}
-       <br>
-       <br>
-       <button type="submit" class="btn btn-success" name="action">Update Evacuation Path</button>
-     </form>
+     <button data-toggle="collapse" data-target="#updatePath">Update Path Settings</button>
+     <div id="updatePath" class="collapse">
+       <form method="POST" action="" class="form-inline" data-step="1" data-intro="Update your plan">  {% csrf_token %}
+         {{form | crispy }}
+         <br>
+         <br>
+         <button type="submit" class="btn btn-success" name="action">Update Evacuation Path</button>
+       </form>
+     </div>
    </div>
    <div class="col-md-4 ">
-     <a type="button"  href="{% url 'plan_delete' pk=object.pk pk_experiment=object.experiment.pk  %}" class="btn btn-outline btn-danger btn-lg pull-right">Delete</a>
+     <a type="button"  href="{% url 'plan_delete' pk=object.pk pk_experiment=object.experiment.pk  %}" class="btn btn-outline btn-danger btn-lg pull-right">Delete Path</a>
    </div>
  </div>
 
 <div class="row">
   <div class="col-md-8" data-step="2" data-intro="Click checkpoints to create a new plan">
     <h1 class="lead">{{object.experiment.building}}</h1>
+    <p>Press the blueprint fill the form and press save. When you finish return to building detail to insert Paths</p>
+
     {% for floor in object.experiment.building.floor_set.all %}
       <!-- <img src="{{floor.blueprint.url}}" class="img-responsive"/> -->
       <h4 class="lead text-center">{{floor}}</h4>
@@ -62,6 +68,7 @@
           </ul>
           {% endif %}
         </div>
+        <br>
         <div data-step="4" data-intro="Create new plan">
           <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=object.experiment.pk %}?next=new_object" data-step="" data-intro="">{% csrf_token %}
             <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
