@@ -62,7 +62,7 @@
               <tbody>
                 {% for checkpoint in floor.checkpoint_set.all|in_category:object %}
                 <tr>
-                  <td>{{checkpoint.pk}}</td>
+                  <td>{{checkpoint.sequence}}</td>
                   <td>{% if checkpoint.name %}{{checkpoint.name}}{% else %}-{% endif %}</td>
                   <td>{% if checkpoint.flux %}{{checkpoint.flux}}{% else %}-{% endif %}</td>
                 </tr>
@@ -151,7 +151,7 @@ var plan = [];
   setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
   {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
     var x =  Number({{checkpoint.coord_x}}), y = Number({{checkpoint.coord_y}});
-    var name = {{checkpoint.pk}};
+    var name = {{checkpoint.sequence}};
     marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
     map{{floor.pk}}.markers.push(marker);
   {% endfor %}

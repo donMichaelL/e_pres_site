@@ -58,7 +58,7 @@
             {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
             <div id="checkpoint-{{checkpoint.pk}}" class="panel-body">
               <form class="updateCheckpoint" action="{% url 'checkpoint_new' pk=object.pk %}" method="POST" class="form-inline"> {% csrf_token %}
-                {{checkpoint.pk}}
+                {{checkpoint.sequence}}
                 <input type="hidden" name="coord_x" value="{{checkpoint.coord_x}}">
                 <input type="hidden" name="coord_y" value="{{checkpoint.coord_y}}">
                 <input type="hidden" name="pk" value={{checkpoint.pk}}>
@@ -67,7 +67,7 @@
                 <input type="number" width="100px" name="flux" value={{checkpoint.flux}} placeholder="Flux">
                 <input type="text" name="name" value="{{checkpoint.name}}" placeholder="Name">
                 IsExit?<input name="exit" type="checkbox" {% if checkpoint.exit %}checked {% endif %}>
-                <button type="submit" class="btn btn-success" name="action">Update</button>
+                <button type="submit" class="btn btn-success  btn-outline" name="action">Update</button>
                 <button class="btn btn-danger deleteCheckpoint" delete-id="{{checkpoint.pk}}">X</button>
             </form>
           </div>
@@ -107,7 +107,7 @@
   setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
   {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
     var x = Number({{checkpoint.coord_x}}), y = Number({{checkpoint.coord_y}});
-    var name = {{checkpoint.pk}};
+    var name = {{checkpoint.sequence}};
     marker{{checkpoint.pk}} = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name }),draggable:'true'}).addTo(map{{floor.pk}});
     marker{{checkpoint.pk}}.on('dragend',function(event){
       var marker = event.target;

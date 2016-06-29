@@ -59,45 +59,43 @@
       <div id="image-map-{{floor.pk}}" class="maps-blueprint"></div>
     {% endfor %}
   </div>
-    <div class="col-md-4" id="plan">
-      <div class="list-path">
-        <div>
-          <ul {% if other_plans.count > 0%}>
-          <h4>Other Paths of the Experiment {{object.experiment}}</h4>
-            {% for plan in other_plans %}<li><h5><a href="{% url 'plan_detail' pk_experiment=object.experiment.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
-          </ul>
-          {% endif %}
-        </div>
-        <br>
-        <div data-step="4" data-intro="Create new plan">
-          <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=object.experiment.pk %}?next=new_object" data-step="" data-intro="">{% csrf_token %}
-            <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
-            <button type="submit" class="btn btn-info btn-sm ">New Evacuation Path</button>
-          </form>
-        </div>
+  <div class="col-md-4" id="plan">
+    <div class="list-path">
+      <div>
+        <ul {% if other_plans.count > 0%}>
+        <h4>Other Paths of the Experiment {{object.experiment}}</h4>
+          {% for plan in other_plans %}<li><h5><a href="{% url 'plan_detail' pk_experiment=object.experiment.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      <br>
+      <div data-step="4" data-intro="Create new plan">
+        <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=object.experiment.pk %}?next=new_object" data-step="" data-intro="">{% csrf_token %}
+          <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
+          <button type="submit" class="btn btn-info btn-sm ">New Evacuation Path</button>
+        </form>
       </div>
     </div>
-    <div data-step="3" data-intro="Save your plan">
-      <h3>Evacuation Path</h3>
-      {% for connection in object.connection_set.all  %}
-      <div class='panel panel-success'>
-        <div class='panel-body'>
-          <p><u> Step {{forloop.counter}}</u></p>
-          <p class="node"> Node. {{connection.checkpoint.pk}} {% if forloop.last %}<i class="fa fa-times-circle-o">{% else %} <i class="fa fa-arrow-down"></i>{% endif %}</i></p>
-          <p><i>{{connection.checkpoint.floor.name}}<i></p>
-        </div>
+    <h3>Evacuation Path</h3>
+    {% for connection in object.connection_set.all  %}
+    <div class='panel panel-success'>
+      <div class='panel-body'>
+        <p><u> Step {{forloop.counter}}</u></p>
+        <p class="node"> Node. {{connection.checkpoint.sequence}} {% if forloop.last %}<i class="fa fa-times-circle-o">{% else %} <i class="fa fa-arrow-down"></i>{% endif %}</i></p>
+        <p><i>{{connection.checkpoint.floor.name}}<i></p>
       </div>
-      {% if forloop.last %}<a href="{% url 'plan_delete_connections' pk=object.pk pk_experiment=object.experiment.pk %}" class="btn btn-danger">Clear</a> {% endif  %}
-      {% empty %}
-      <form method="POST" action="{% url 'plan_add_connection' pk_experiment=object.experiment.pk pk=object.pk %}" id="form-plan"> {% csrf_token %}
-        {{formset.as_p}}
-        <button id="submit" type="submit" class="btn btn-primary" name="action">Save</button>
-        <a id="clear" type="" class="btn btn-danger">Clear</a>
-      </form>
-      {% endfor %}
-      <br>
+    </div>
+    {% if forloop.last %}<a href="{% url 'plan_delete_connections' pk=object.pk pk_experiment=object.experiment.pk %}" class="btn btn-danger">Clear</a> {% endif  %}
+    {% empty %}
+    <form method="POST" action="{% url 'plan_add_connection' pk_experiment=object.experiment.pk pk=object.pk %}" id="form-plan"> {% csrf_token %}
+      {{formset.as_p}}
+      <button id="submit" type="submit" class="btn btn-primary" name="action">Save</button>
+      <a id="clear" type="" class="btn btn-danger">Clear</a>
+    </form>
+    {% endfor %}
+    <br/>
   </div>
-  </div>
+
 </div>
 
 
@@ -116,17 +114,18 @@ var plan = [];
   setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
   {% for checkpoint in floor.checkpoint_set.all|in_category:object.experiment  %}
     var x = Number({{checkpoint.coord_x}}), y = Number({{checkpoint.coord_y}});
-    var name = {{checkpoint.pk}};
-    marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
+    var name = {{checkpoint.sequence}};
+    var node_id = {{checkpoint.pk}}
+    marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name, node_id: node_id })}).addTo(map{{floor.pk}});
     map{{floor.pk}}.markers.push(marker);
     {% if empty_plan %}
     marker.on('click',function(event){
         var marker = event.target;
-        var marker_id = marker.options.icon.options.number;
+        var marker_id = marker.options.icon.options.node_id;
         plan.push(marker);
         var iteration = plan.length
         var newRow = jQuery("<div class='panel panel-default'> \
-        <div class='panel-body'><p><u> Step "+ iteration +"</u></p><p class='node'> Node." + marker_id+" <i class='fa fa-arrow-down'></i> \
+        <div class='panel-body'><p><u> Step "+ iteration +"</u></p><p class='node'> Node." + marker.options.icon.options.number+" <i class='fa fa-arrow-down'></i> \
         </p> \
         </div> \
         </div> \

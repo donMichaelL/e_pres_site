@@ -114,6 +114,8 @@ class CheckpointInsertView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         form = CheckpointForm(request.POST)
         experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
+        order_list =  experiment.checkpoint_set.values_list('sequence', flat=True)
+        next_order = [item for item in range(1, 11) if item not in order_list][0]
         if experiment.building.user != request.user:
             if not request.user.is_superuser:
              return PermissionDenied()
@@ -121,12 +123,22 @@ class CheckpointInsertView(LoginRequiredMixin, View):
             pk = form.cleaned_data['pk']
             if pk:
                 checkpoint = get_object_or_404(Checkpoint, pk=pk)
+                sequence = checkpoint.sequence
                 new_form = CheckpointForm(request.POST, instance=checkpoint)
+                print new_form.fields['flux']
                 new_form.save()
+                checkpoint = get_object_or_404(Checkpoint, pk=pk)
+                checkpoint.sequence = sequence
+                checkpoint.save()
                 messages.success(self.request, 'Checkpoint: %s was updated.'% checkpoint.pk )
             else:
-                checkpoint = form.save()
-                messages.success(self.request, 'Checkpoint: %s was created.'% checkpoint.pk )
+                if next_order < 10:
+                    checkpoint = form.save()
+                    checkpoint.sequence = next_order
+                    checkpoint.save()
+                    messages.success(self.request, 'Checkpoint: %s was created.'% checkpoint.pk )
+                else:
+                    messages.success(self.request, 'The limit is 10 nodes')
         else:
             print form.errors
         return redirect(reverse_lazy('experiment_detail', kwargs={'pk': kwargs['pk']}))

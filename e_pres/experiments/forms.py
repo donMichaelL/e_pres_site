@@ -23,6 +23,7 @@ class ExperimentForm(forms.ModelForm):
 
 class CheckpointForm(forms.ModelForm):
     pk = forms.IntegerField(required=False)
+    
     class Meta:
         model = Checkpoint
         fields = '__all__'

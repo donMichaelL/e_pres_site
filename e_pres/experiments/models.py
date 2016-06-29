@@ -40,6 +40,7 @@ class Checkpoint(models.Model):
     floor = models.ForeignKey(Floor)
     experiment = models.ForeignKey(Experiment)
     name = models.CharField(max_length=60, null=True, blank=True)
+    sequence = models.PositiveSmallIntegerField(blank=True, null=True)
     flux = models.PositiveSmallIntegerField(null=True, blank=True)
     coord_x = models.DecimalField(max_digits=8, decimal_places=3)
     coord_y = models.DecimalField(max_digits=8, decimal_places=3)
@@ -50,3 +51,6 @@ class Checkpoint(models.Model):
 
     def get_experiment_absolute_url(self):
         return reverse("experiment_detail", kwargs={"pk": self.experiment.pk})
+
+    class Meta:
+        ordering = ["sequence"]
