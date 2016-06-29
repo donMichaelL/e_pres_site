@@ -18,12 +18,12 @@ class ExperimentForm(forms.ModelForm):
             'id': 'timepicker'
             })
         self.fields['execution_date'].input_formats = ['%d-%m-%Y']
-        self.fields['expected_evacuation_time'].label = "Expected Evacuation Time (seconds)"
+        self.fields['expected_evacuation_time'].label = "Expected Evacuation Time (minutes)"
 
 
 class CheckpointForm(forms.ModelForm):
     pk = forms.IntegerField(required=False)
-    
+
     class Meta:
         model = Checkpoint
         fields = '__all__'

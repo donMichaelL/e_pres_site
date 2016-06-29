@@ -62,7 +62,7 @@
               <tbody>
                 {% for checkpoint in floor.checkpoint_set.all|in_category:object %}
                 <tr>
-                  <td>{{checkpoint.sequence}}</td>
+                  <td>{{checkpoint.pk}}</td>
                   <td>{% if checkpoint.name %}{{checkpoint.name}}{% else %}-{% endif %}</td>
                   <td>{% if checkpoint.flux %}{{checkpoint.flux}}{% else %}-{% endif %}</td>
                 </tr>
@@ -92,7 +92,7 @@
         <div class="panel panel-{% if object.building.max_evacuation_time  and object.building.max_evacuation_time > 100 %}danger{% else %}success {% endif %}">
           <div class="panel-heading">Total Evacuation Time</div>
           <div class="panel-body align-center">
-            <h2 class="text-center">{{object.evacuation_time}} <small>sec</small></h2>
+            <h2 class="text-center">{{object.evacuation_time|default_if_none:'0'}} <small>sec</small></h2>
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@
      {% for plan in object.plan_set.all %}
      <tr>
        <td><a href="{% url 'plan_detail' pk_experiment=object.pk pk=plan.pk %}">{{plan.name}}</a></td>
-       <td>{% for connection in plan.connection_set.all %} {{connection.checkpoint.pk}}--> {% endfor%}X</td>
+       <td>{% for connection in plan.connection_set.all %} {{connection.checkpoint.sequence}}--> {% endfor%}X</td>
        <td>{% if 100 >= plan.max_evacuation_time %} <i class="fa fa-check"></i> {% else %} <i class="fa fa-times"></i>{% endif %}100sec <small> /{{plan.max_evacuation_time}}sec</small></td>
        <td><i class="fa fa-times"></i>42</td>
        <td> <i class="fa fa-check"></i></td>
@@ -150,8 +150,9 @@ var plan = [];
   map{{floor.pk}}.markers = [];
   setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
   {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
+  console.log('he;;o');
     var x =  Number({{checkpoint.coord_x}}), y = Number({{checkpoint.coord_y}});
-    var name = {{checkpoint.sequence}};
+    var name = {{checkpoint.pk}};
     marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
     map{{floor.pk}}.markers.push(marker);
   {% endfor %}
@@ -160,7 +161,7 @@ var plan = [];
   $('#table-{{floor.pk}} tr').click(function() {
     var number = $(this).closest('table').attr('id').match(/\d+/)[0];
     row = this.firstElementChild.textContent;
-    $.getJSON("post-execution/"+ row, function( data ) {
+    $.getJSON(""+ row, function( data ) {
       json_data = jQuery.parseJSON(data);
       chart{{floor.pk}}.options.data[0].dataPoints =  [{x:0, y:0}];
       chart{{floor.pk}}.render();
@@ -197,7 +198,7 @@ function onMapClick(e) {};
 <script>
   $('#plans').animateNumber({ number: {{plans | length}}});
   $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
-  $('#totaltime').animateNumber({ number: {{object.evacuation_time}} });
+  $('#totaltime').animateNumber({ number:  {{object.evacuation_time|default_if_none:"0"}}});
   $('#totalstudents').animateNumber({ number: {{total_student}} });
 
 

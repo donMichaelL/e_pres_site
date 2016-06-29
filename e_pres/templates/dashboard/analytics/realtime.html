@@ -235,7 +235,7 @@ function onMapClick(e) {};
 <script>
   $('#plans').animateNumber({ number: {{plans | length}}});
   $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
-  $('#totaltime').animateNumber({ number: {{ object.expected_evacuation_time|default_if_none:"nothing" }} });
+  $('#totaltime').animateNumber({ number: {{ object.expected_evacuation_time|default_if_none:"0" }} });
   $('#totalstudents').animateNumber({ number: {{total_student}} });
 
   window.onload = function () {

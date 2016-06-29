@@ -62,19 +62,18 @@
   <div class="col-md-4" id="plan">
     <div class="list-path">
       <div>
-        <ul {% if other_plans.count > 0%}>
+        {% if other_plans.count > 0%}
+        <ul>
         <h4>Other Paths of the Experiment {{object.experiment}}</h4>
           {% for plan in other_plans %}<li><h5><a href="{% url 'plan_detail' pk_experiment=object.experiment.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
         </ul>
         {% endif %}
       </div>
       <br>
-      <div data-step="4" data-intro="Create new plan">
-        <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=object.experiment.pk %}?next=new_object" data-step="" data-intro="">{% csrf_token %}
+        <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=object.experiment.pk %}?next=new_object">{% csrf_token %}
           <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
           <button type="submit" class="btn btn-info btn-sm ">New Evacuation Path</button>
         </form>
-      </div>
     </div>
     <h3>Evacuation Path</h3>
     {% for connection in object.connection_set.all  %}

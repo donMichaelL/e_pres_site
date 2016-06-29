@@ -125,7 +125,6 @@ class CheckpointInsertView(LoginRequiredMixin, View):
                 checkpoint = get_object_or_404(Checkpoint, pk=pk)
                 sequence = checkpoint.sequence
                 new_form = CheckpointForm(request.POST, instance=checkpoint)
-                print new_form.fields['flux']
                 new_form.save()
                 checkpoint = get_object_or_404(Checkpoint, pk=pk)
                 checkpoint.sequence = sequence
