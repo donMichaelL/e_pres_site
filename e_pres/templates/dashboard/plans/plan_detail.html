@@ -90,8 +90,9 @@
       {% if forloop.last %}<a href="{% url 'plan_delete_connections' pk=object.pk pk_experiment=object.experiment.pk %}" class="btn btn-danger">Clear</a> {% endif  %}
       {% empty %}
       <form method="POST" action="{% url 'plan_add_connection' pk_experiment=object.experiment.pk pk=object.pk %}" id="form-plan"> {% csrf_token %}
-      {{formset.as_p}}
-      <button id="submit" type="submit" class="btn btn-primary" name="action">Save</button>
+        {{formset.as_p}}
+        <button id="submit" type="submit" class="btn btn-primary" name="action">Save</button>
+        <a id="clear" type="" class="btn btn-danger">Clear</a>
       </form>
       {% endfor %}
       <br>
@@ -159,7 +160,12 @@ $(function() {
     });
   }
 });
-
 });
+
+$('#clear').click(function(){
+  location.reload();
+});
+
+
 </script>
 {% endblock %}
