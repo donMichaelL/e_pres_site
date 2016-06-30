@@ -45,11 +45,11 @@ function onMessageArrived(message) {
     $(progress).width(result + "%");
     marker._icon.childNodes[1].innerHTML =  nodeNumber + ":" + number.toString();
     if(dangerousValue(parseInt(number), maxFluxCurrentNode)){
-    	$(node).parent().addClass('alert');
+    	$(node).parent().addClass('alert-box');
   	  marker._icon.childNodes[0].src = "/static/img/danger.png";
     	$(progress).addClass('progress-bar-danger');
       }else {
-    	   $(node).parent().removeClass('alert');
+    	   $(node).parent().removeClass('alert-box');
     	    if(tpc == row) {
             marker._icon.childNodes[0].src = "/static/img/target.png";
           }
