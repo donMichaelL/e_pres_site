@@ -149,8 +149,8 @@
         csrfmiddlewaretoken:  getCookie('csrftoken')
       },
     success: function(){
-      message = new Paho.MQTT.Message('{"experiment": 22}');
-      message.destinationName = "new_experiment/" + "22";
+      message = new Paho.MQTT.Message('{"experiment": {{object.pk}}}');
+      message.destinationName = "new_experiment/" + "{{object.pk}}";
       client.send(message);
       $('#start').addClass('hidden');
       $('#stop').removeClass('hidden');
