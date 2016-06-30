@@ -60,6 +60,10 @@ cursor: pointer;
   .grid-item { width: calc(25% - 10px); }
 }
 
+@media screen and (max-width: 1000px) {
+  #page-wrapper { margin-left: 0px; margin-top:60px; }
+}
+
 .grid{
   margin-top:10px;
 }
@@ -73,4 +77,8 @@ cursor: pointer;
   position: absolute;
   right: -8px;
   top: -8px;
+}
+
+.alert{
+  background-color: red;
 }

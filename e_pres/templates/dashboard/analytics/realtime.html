@@ -50,6 +50,7 @@
   </div>
 </div>
 
+
 <div class="row" style="background-color:lightblue;">
   <div class="col-xs-3 text-center extra-margin">
     <h4>Evacuation Paths <span id="plans">0</span> </h4>
@@ -65,49 +66,65 @@
   </div>
 </div>
 
+<hr/>
+
 <div class="row">
-  {% for floor in object.building.floor_set.all %}
-  <div class="col-xs-12">
-    <h4 class="text-center lead">{{floor.name}}</h4>
+  <div class="col-sm-4">
+    <div class="row">
+      <div class="col-xs-12">
+        <h4 class="text-center lead">Events Feed  </h4>
+      </div>
+      <div class="col-xs-12">
+        <ul id="eventsFeed" class="list-group">
+        </ul>
+      </div>
+    </div>
   </div>
+
+<div class="col-sm-8">
   <div class="row">
-    <div class="col-xs-7">
-      <div id="image-map-{{floor.pk}}" class="maps-blueprint" style="height:500px;"></div>
+    {% for floor in object.building.floor_set.all %}
+    <div class="col-xs-12">
+      <h4 class="text-center lead">{{floor.name}}</h4>
     </div>
-    <div class="col-xs-5">
-      <table id="table-{{floor.pk}}" class="table table-bordered">
-        <thead>
-          <td>id</td>
-          <td>Name</td>
-          <td>Max Flux</td>
-          <td>Current Flux</td>
-          <th>Equalizer</th>
-        </thead>
-        <tbody>
-          {% for checkpoint in floor.checkpoint_set.all|in_category:object %}
-          <tr>
-            <td>{{checkpoint.sequence}}</td>
-            <td>{% if checkpoint.name %}{{checkpoint.name}}{% else %}-{% endif %}</td>
-            <td>{% if checkpoint.flux %}{{checkpoint.flux}}{% else %}-{% endif %}</td>
-            <td id="node{{checkpoint.pk}}">0</td>
-            <td>
-              <div class="progress">
-                <div id="progress{{checkpoint.pk}}" class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+    <div class="row">
+      <div class="col-xs-7">
+        <div id="image-map-{{floor.pk}}" class="maps-blueprint" style="height:500px;"></div>
+      </div>
+      <div class="col-xs-5">
+        <table id="table-{{floor.pk}}" class="table table-bordered">
+          <thead>
+            <td>id</td>
+            <td>Name</td>
+            <td>Max Flux</td>
+            <td>Current Flux</td>
+            <th>Equalizer</th>
+          </thead>
+          <tbody>
+            {% for checkpoint in floor.checkpoint_set.all|in_category:object %}
+            <tr>
+              <td>{{checkpoint.sequence}}</td>
+              <td>{% if checkpoint.name %}{{checkpoint.name}}{% else %}-{% endif %}</td>
+              <td>{% if checkpoint.flux %}{{checkpoint.flux}}{% else %}-{% endif %}</td>
+              <td id="node{{checkpoint.pk}}">0</td>
+              <td>
+                <div class="progress">
+                  <div id="progress{{checkpoint.pk}}" class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                  </div>
                 </div>
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-      </tbody>
-      </table>
+              </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+      </div>
+      <div id="chartContainer{{floor.pk}}" class="col-xs-5" style="height: 180px;">
+      </div>
     </div>
-    <div id="chartContainer{{floor.pk}}" class="col-xs-5" style="height: 180px;">
-    </div>
+    {% endfor %}
   </div>
-
-  {% endfor %}
 </div>
-
+</div>
 
 
 
@@ -163,6 +180,7 @@
 </script>
 <script>
 var plan = [];
+
 {% for floor in object.building.floor_set.all %}
   var map{{floor.pk}} = defineMap('image-map-{{floor.pk}}');
   map{{floor.pk}}.markers = [];
@@ -170,7 +188,8 @@ var plan = [];
   {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
     var x = Number({{checkpoint.coord_x}}), y = Number({{checkpoint.coord_y}});
     var name = {{checkpoint.sequence}};
-    marker{{checkpoint.pk}} = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
+    var flux = {{checkpoint.flux|default_if_none:0}};
+    marker{{checkpoint.pk}} = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name, flux: flux })}).addTo(map{{floor.pk}});
     map{{floor.pk}}.markers.push(marker{{checkpoint.pk}});
   {% endfor %}
 
@@ -178,6 +197,9 @@ var plan = [];
   $('#table-{{floor.pk}} tr').click(function() {
     row = this.rowIndex;
 
+    maxFluxCurrentNode = $(this).find(':nth-child(3)').html();
+    if(isNaN(maxFluxCurrentNode)){
+    }
 
 
   	$(this).addClass("slct");
@@ -190,7 +212,7 @@ var plan = [];
 
       var id_integer = this.children[0].innerHTML;
       topicNode = '#node'+ id_integer;
-      var id_plus_weight = id_integer * 10;
+      var id_plus_weight = maxFluxCurrentNode;
       var chart{{floor.pk}} = new CanvasJS.Chart("chartContainer{{floor.pk}}", {
   		title: {
   			text: "Node " + id_integer

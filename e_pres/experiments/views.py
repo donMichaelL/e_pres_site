@@ -52,7 +52,6 @@ class ExperimentNewView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         print self.request.GET.get('next', '')
-        print 'hello'
         if self.request.GET.get('next', ''):
             return (self.request.GET.get('next', ''))
         return  reverse_lazy('experiment_list')

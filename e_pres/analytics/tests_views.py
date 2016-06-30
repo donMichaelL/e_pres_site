@@ -24,7 +24,7 @@ class PostExperimentViewTest(TestCase):
 
     def test_GET_redirect_to_login(self):
         response = self.client.get(reverse('post_experiment', kwargs={'pk': Experiment.objects.first().pk}))
-        self.assertRedirects(response, reverse('homepage') + '?next=/experiment/1/post-execution')
+        self.assertRedirects(response, reverse('homepage') + '?next=/experiment/1/post-execution/')
 
     def test_GET_template_user_not_show_other_user_post_experiment(self):
         self.log_user()
