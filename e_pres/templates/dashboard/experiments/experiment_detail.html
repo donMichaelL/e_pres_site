@@ -45,8 +45,10 @@
 
    <div class="col-xs-12">
      <h1 class="lead">{{object.building}}</h1>
-     <p>Press the blueprint fill the form and press save. When you finish return to building detail to insert Paths</p>
-     {% for floor in object.building.floor_set.all %}
+     <div class="alert alert-info" role="alert">
+       <p class="lead">Click on the floor map to insert checkpoint, fill out the form on the right, press save when you are done. Repeat for up to 10 checkpoints.</p>
+     </div>
+    {% for floor in object.building.floor_set.all %}
      <div class="row" style="margin-top:10px;">
        <div class="col-md-8" {% if forloop.counter == 1 %} data-step="2" data-intro="Click the image and insert a checkpoint" {% endif %}>
          <!-- <img src="{{floor.blueprint.url}}" class="img-responsive"/> -->

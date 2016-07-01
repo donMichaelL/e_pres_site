@@ -51,7 +51,10 @@
 <div class="row">
   <div class="col-md-8" data-step="2" data-intro="Click checkpoints to create a new plan">
     <h1 class="lead">{{object.experiment.building}}</h1>
-    <p>Press the blueprint fill the form and press save. When you finish return to building detail to insert Paths</p>
+    <div class="alert alert-info" role="alert">
+      <p class="lead">Click subsequent checkpoints on the floor maps to define the evacuation path followed by evacuees. On the right press save when you are done.</p>
+    </div>
+
 
     {% for floor in object.experiment.building.floor_set.all %}
       <!-- <img src="{{floor.blueprint.url}}" class="img-responsive"/> -->

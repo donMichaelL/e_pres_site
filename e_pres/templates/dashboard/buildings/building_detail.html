@@ -33,7 +33,7 @@
       <div class="col-xs-12">
         <h2 class="text-center">
           {% if object.floor_set.count == 0 %}
-            <span class="lead tips">Next Step: Insert all building Floors </span>
+            <span class="lead tips">Next Step: Insert Building Floors </span>
           {% else %}
           Floors
           {% endif %}
@@ -69,16 +69,17 @@
       </h2>
       {% for test in object.experiment_set.all %}
       <div class="media">
-      <a class="media-left">
+      <a class="media-left" href="{{test.get_absolute_url}}">
         <i class="fa fa-flask fa-3x"></i>
       </a>
         <div class="media-body">
           <h4 class="media-heading">
             <a href="{% url 'experiment_delete' pk=test.pk %}?next={{object.get_absolute_url}}" type="button" class="btn btn-danger btn-circle pull-right"><i class="fa fa-times"></i></a>
             {% if test.checkpoint_set.count == 0 %}
-              <span class="lead tips">Next Step: Click drill name to insert checkpoints </span>
+              <span class="lead tips">Next Step: Select Drill to insert checkpoints</span>
+              <br/>
             {% endif %}
-            <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details">{{test.name}}</a>
+            <a href="{{test.get_absolute_url}}" data-step="4" data-intro="Click for details" class="btn btn-primary">{{test.name}}</a>
             {% if test.finished	 %}
             <a href="{% url 'post_experiment' pk=test.pk %}" style="color:blue;font-size:smaller;text-decoration:none;">Results</a>
             {% else %}
@@ -88,22 +89,23 @@
 
             <p class="help-block small">Disaster: {{test.get_disaster_display}} {% if test.execuation_date %}Execuation Date:  {{test.execuation_date}} {% endif %}</p>
             {% if test.checkpoint_set.count != 0 %}
-
+            <hr/>
             {% if test.plan_set.count > 0 %}
-            <button class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#demo{{forloop.counter}}">Paths</button>
+            <button class="btn btn-xs" data-toggle="collapse" data-target="#demo{{forloop.counter}}">Paths</button>
             <div id="demo{{forloop.counter}}" class="collapse">
               <ul data-step="6" data-intro="Click for details">
                 {% for plan in test.plan_set.all %}<li><h5><a href="{% url 'plan_detail' pk_experiment=test.pk pk=plan.pk %}">{{plan}}</a></h5></li>{% endfor %}
               </ul>
             </div>
             {% else %}
-            <span class="lead tips">Next Step: Add as many paths as neccesary </span>
+            <span class="lead tips">Next Step: Add as many Evacuation Paths as neccesary </span>
             {% endif %}
 
             <form class="form-inline" method="POST" action="{% url 'new_plan' pk_experiment=test.pk %}?next={{object.get_absolute_url}}" data-step="5" data-intro="Insert new Evacuation Path">{% csrf_token %}
               <input type="text" class="form-control input-sm" name="name" placeholder="Evacuation Path Name*">
               <button type="submit" class="btn btn-info btn-sm ">Insert new Evacuation Path</button>
             </form>
+            <hr/>
             {% endif %}
           </h4>
         </div>
