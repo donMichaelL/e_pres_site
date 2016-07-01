@@ -28,3 +28,6 @@ class Connection(models.Model):
 
     def __unicode__(self):
         return self.plan.name
+
+    class Meta:
+        ordering = ["seq"]
