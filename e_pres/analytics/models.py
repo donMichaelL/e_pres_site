@@ -8,6 +8,8 @@ class CheckpointReport(models.Model):
     checkpoint = models.ForeignKey(Checkpoint)
     current_flux = models.PositiveSmallIntegerField(null=True, blank=True)
     fail = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+
 
     def __unicode__(self):
         return self.experiment.name
@@ -18,6 +20,8 @@ class CheckpointFailPlan(models.Model):
     plan = models.ForeignKey(Plan)
     last_current_checkpoint = models.ForeignKey(Checkpoint)
     tag = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+
 
     def __unicode__(self):
         return self.experiment.name
