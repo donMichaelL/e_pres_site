@@ -41,7 +41,7 @@ td {
     <h4>Total Time (sec) <span id="totaltime">0</span></h4>
   </div>
   <div class="col-xs-3 text-center extra-margin">
-    <h4>Total Students<span id="totalstudents">0</span></h4>
+    <h4>Total Students <span id="totalstudents">0</span></h4>
   </div>
 </div>
 
@@ -65,7 +65,7 @@ td {
               <tbody>
                 {% for checkpoint in floor.checkpoint_set.all|in_category:object %}
                 <tr>
-                  <td>{{checkpoint.pk}}</td>
+                  <td pk="{{checkpoint.pk}}">{{checkpoint.sequence}}</td>
                   <td>{% if checkpoint.name %}{{checkpoint.name}}{% else %}-{% endif %}</td>
                   <td>{% if checkpoint.flux %}{{checkpoint.flux}}{% else %}-{% endif %}</td>
                 </tr>
@@ -100,12 +100,14 @@ td {
         </div>
       </div>
     </div>
+    {% if object.execution_date and object.execution_time %}
     <div class="row">
       <div class="col-xs-12">
         <h1 class="text-center"><small><i class="fa fa-calendar"></i></small> {{object.execution_date|date:"d F Y"}}</h1>
         <h2 class="text-center"><small><i class="fa fa-clock-o"></i></small> {{object.execution_time|date:"H:i"}}</h2>
       </div>
     </div>
+    {% endif %}
   </div>
 </div>
 
@@ -153,9 +155,8 @@ var plan = [];
   map{{floor.pk}}.markers = [];
   setMap(map{{floor.pk}}, {{floor.blueprint.width}}, {{floor.blueprint.height}}, '{{floor.blueprint.url}}')
   {% for checkpoint in floor.checkpoint_set.all|in_category:object  %}
-  console.log('he;;o');
     var x =  Number({{checkpoint.coord_x}}), y = Number({{checkpoint.coord_y}});
-    var name = {{checkpoint.pk}};
+    var name = {{checkpoint.sequence}};
     marker = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name })}).addTo(map{{floor.pk}});
     map{{floor.pk}}.markers.push(marker);
   {% endfor %}
@@ -163,7 +164,8 @@ var plan = [];
 
   $('#table-{{floor.pk}} tr').click(function() {
     var number = $(this).closest('table').attr('id').match(/\d+/)[0];
-    row = this.firstElementChild.textContent;
+    row = this.firstElementChild.getAttribute('pk');
+
     $.getJSON(""+ row, function( data ) {
       json_data = jQuery.parseJSON(data);
       chart{{floor.pk}}.options.data[0].dataPoints =  [{x:0, y:0}];
