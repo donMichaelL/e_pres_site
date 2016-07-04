@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'plans',
     'analytics',
     'questionnaires',
+    'tags',
 ]
 
 MIDDLEWARE_CLASSES = [
