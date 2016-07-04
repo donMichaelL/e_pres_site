@@ -20,6 +20,7 @@ from django.contrib import admin
 # from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from accounts.views import HomepageView, LoginAfterPasswordChangeView, ProfileFormView, LanguageChooserView
+from tags.views import InitTagsView
 
 urlpatterns = [
     url(r'^$', HomepageView.as_view(), name="homepage"),
@@ -30,6 +31,7 @@ urlpatterns = [
     url(r'^experiment/', include('experiments.urls')),
     url(r'^accounts/password/change/$', LoginAfterPasswordChangeView.as_view(), name='account_change_password'),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^init-tags/', InitTagsView.as_view(), name="init_tags"),
 ]
 
 if settings.DEBUG:
