@@ -13,6 +13,7 @@ var row = -1;
 
 function onConnect() {
   console.log("onConnect");
+  $('#start').removeClass('hidden');
   client.subscribe(topic);
 }
 

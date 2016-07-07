@@ -36,7 +36,7 @@
   <div class="col-xs-12" style="text-align: center;">
       {% if not experiment.finished %}
       {% if not experiment.in_progress %}
-	      <button id="start" type="button" class="btn btn-success btn-lg">Start</button>
+	      <button id="start" type="button" class="btn btn-success btn-lg hidden">Start</button>
     	  <button id="stop" type="button" class="btn btn-danger btn-lg hidden">Stop</button>
         <a href="{% url 'post_experiment' pk=object.pk %}" id="post-execution" type="button" class="btn btn-info btn-lg hidden">Post-Execution Page</a>
         {% else %}
