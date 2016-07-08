@@ -17,11 +17,10 @@ class CheckpointReport(models.Model):
 
 class CheckpointFailPlan(models.Model):
     experiment = models.ForeignKey(Experiment)
-    plan = models.ForeignKey(Plan)
-    last_current_checkpoint = models.ForeignKey(Checkpoint)
     tag = models.CharField(max_length=70)
+    plan = models.ForeignKey(Plan)
+    last_current_checkpoint = models.ForeignKey(Checkpoint, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
-
 
     def __unicode__(self):
         return self.experiment.name

@@ -7,10 +7,31 @@
 
 
 {% block main_content %}
+<table class="table">
+<tr>
+  <td>Teacher<td/>
+  <td>Students<td/>
+</tr>
+{% for teacher in teachers %}
+<tr>
+  <td>{{teacher}}</td>
+  {% for tag in  teacher.leader.all %}
+    <td>{{tag}}</td>
+  {% endfor %}
+  </tr>
+{% endfor %}
+</table>
+<form id="deleteTeacherTags">
+  <select>
+    {% for teacher in teachers %}
+     <option value="{{teacher.tag_string}}">{{teacher.tag_string}}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-danger">Delete All Tags of The Teacher</button>
+</form>
+<hr/>
 <div id="tags">
-  <form class="tag_form">
-    <button type="submit">Save</button>
-  </form>
+
 </div>
 
 {% endblock %}
@@ -19,16 +40,40 @@
 <script src="{% static 'js/mqttws31.js' %}"></script>
 <script>
 
+var teacherTag;
 $(document).on('submit', '.tag_form', function(e) {
     e.preventDefault();
-    console.log('hello');
-    // Do stuff with the formid
+    var form = $(this);
+    var tag = form.find('input[type=text]').val();
+    var isTeacher = form.find('input[type=checkbox]').is(':checked');
+    if(teacherTag==undefined && !isTeacher){
+      notification_message('Insert teacher tag first');
+      return false;
+    }
+    $.ajax({
+      type: "POST",
+      url: '',
+      data: {
+        csrfmiddlewaretoken:  getCookie('csrftoken'),
+        tag: tag,
+        teacher: teacherTag
+      },
+    success: function(){
+      form.find('button[type=submit]').hide();
+      $('.isTeacher').hide();
+      if(isTeacher)
+        $('#deleteTeacherTags select').append('<option val="'+tag+'">'+tag+'</option>')
+    }
+    });
+    if(isTeacher){
+      teacherTag = tag;
+    }
     return false;
 });
 
 
 $(document).ready(function() {
-  var tagTable = [];
+  var tagTable = {{tags|safe}};
   client = new Paho.MQTT.Client('localhost', Number(9001), "web_" + parseInt(Math.random() * 100));
   client.onConnectionLost = onConnectionLost;
   client.onMessageArrived = onMessageArrived;
@@ -48,17 +93,38 @@ $(document).ready(function() {
     detectedTag = jsonMessage.tag;
     if(tagTable.indexOf(detectedTag) == -1){
       tagTable.push(detectedTag);
-      console.log(tagTable);
       data = '<form class="tag_form">'
       data += '<input type="text" readonly value="'+ detectedTag +'">'
-      data += '<input type="checkbox" name="teacher">'
+      data += '<input type="checkbox" class="isTeacher" name="teacher">'
       data += '<button type="submit">Save</button>'
       data += '</form>'
       $("#tags").append(data);
     }
+    else{
+    }
   }
 
-
+  $('#deleteTeacherTags').submit(function(e){
+    e.preventDefault();
+    var tag_option = $(this).find('option:selected')
+    var tag = tag_option.val();
+    $.ajax({
+      type: "DELETE",
+      url: '?tag='+ tag +'',
+      beforeSend: function(xhr) {
+       xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+     },
+     success: function(data){
+       for(var elem in data){
+         var index = tagTable.indexOf(data[elem]);
+         tagTable.splice(index, 1);
+       }
+       var index = tagTable.indexOf(tag);
+       tagTable.splice(index, 1);
+       tag_option.remove();
+    }
+    });
+  });
 
 });
 
