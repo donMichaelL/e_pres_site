@@ -8,6 +8,7 @@ from django.views.generic import View
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.views.generic.detail import DetailView
 from experiments.models import Experiment, Checkpoint
+from tags.models import Tag
 from .models import Plan, Connection
 from .forms import PlanForm, ConnectionForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -36,6 +37,7 @@ class PlanNewView(LoginRequiredMixin, ContentUserOnlyMixin, CreateView):
         form = super(PlanNewView, self).get_form(form_class)
         experiment = get_object_or_404(Experiment, pk=self.kwargs['pk_experiment'])
         form.fields['before'].choices = [("", "---------"),] + [(plan.pk, plan.name) for plan in experiment.plan_set.all()]
+        form.fields['tag_leader'].queryset = Tag.objects.filter(teacher__isnull=True, user=self.request.user)
         return form
 
     def form_valid(self, form):
@@ -67,6 +69,7 @@ class PlanDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, Detai
         form = super(PlanDetailView, self).get_form(form_class)
         experiment = get_object_or_404(Experiment, pk=self.kwargs['pk_experiment'])
         form.fields['before'].choices = [("", "---------"),] + [(plan.pk, plan.name) for plan in experiment.plan_set.exclude(pk=self.get_object().pk)]
+        form.fields['tag_leader'].queryset = Tag.objects.filter(teacher__isnull=True, user=self.request.user)
         return form
 
     def form_valid(self, form):

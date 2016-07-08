@@ -1,4 +1,5 @@
-from django import  forms
+from django import forms
+from tags.models import Tag
 from .models import Plan, Connection
 
 class PlanForm(forms.ModelForm):
@@ -8,7 +9,8 @@ class PlanForm(forms.ModelForm):
 
     # def __init__(self, *args, **kwargs):
     #     super(PlanForm, self).__init__(*args, **kwargs)
-        #self.fields['before'].choices =
+    #     print self
+    #     self.fields['tag_leader'].queryset = Tag.objects.filter(teacher__isnull=True)
 
 
 class ConnectionForm(forms.ModelForm):
