@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CheckpointReport
+from .models import CheckpointReport, CheckpointFailPlan
 # Register your models here.
 
 class CheckpointReportAdmin(admin.ModelAdmin):
@@ -13,3 +13,9 @@ class CheckpointReportAdmin(admin.ModelAdmin):
         return obj.checkpoint.flux
 
 admin.site.register(CheckpointReport, CheckpointReportAdmin)
+
+
+class CheckpointFailPlanAdmin(admin.ModelAdmin):
+    model = CheckpointFailPlan
+
+admin.site.register(CheckpointFailPlan, CheckpointFailPlanAdmin)
