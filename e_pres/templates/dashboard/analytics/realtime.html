@@ -149,9 +149,10 @@
         csrfmiddlewaretoken:  getCookie('csrftoken')
       },
     success: function(){
-      message = new Paho.MQTT.Message('{"experiment": {{object.pk}}}');
-      message.destinationName = "new_experiment/" + "{{object.pk}}";
+      message = new Paho.MQTT.Message('{"service": "start" ,"experiment": {{object.pk}}}');
+      message.destinationName = "storm/Control";
       client.send(message);
+
       $('#start').addClass('hidden');
       $('#stop').removeClass('hidden');
       notification_message('Experiment is in progress');
@@ -167,8 +168,8 @@
         csrfmiddlewaretoken:  getCookie('csrftoken')
       },
     success: function(){
-      message = new Paho.MQTT.Message("hello");
-      message.destinationName = "stop_experiment/" + "{{object.id}}";
+      message = new Paho.MQTT.Message('{"service": "stop"');
+      message.destinationName = "storm/Control";
       client.send(message);
       $('#stop').addClass('hidden');
       $('#post-execution').removeClass('hidden');
