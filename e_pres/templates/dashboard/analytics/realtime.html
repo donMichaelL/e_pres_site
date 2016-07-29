@@ -150,7 +150,7 @@
       },
     success: function(){
       message = new Paho.MQTT.Message('{"service": "start" ,"experiment": {{object.pk}}}');
-      message.destinationName = "storm/Control";
+      message.destinationName = "Storm/Control";
       client.send(message);
 
       $('#start').addClass('hidden');
@@ -169,7 +169,7 @@
       },
     success: function(){
       message = new Paho.MQTT.Message('{"service": "stop"');
-      message.destinationName = "storm/Control";
+      message.destinationName = "Storm/Control";
       client.send(message);
       $('#stop').addClass('hidden');
       $('#post-execution').removeClass('hidden');
