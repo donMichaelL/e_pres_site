@@ -181,6 +181,12 @@
 </script>
 <script>
 var plan = [];
+var checkpointDiction = {};
+var planDicton = {};
+
+{% for plan in object.plan_set.all %}
+  planDicton["{{plan.pk}}"] = "{{plan.name}}";
+{% endfor %}
 
 {% for floor in object.building.floor_set.all %}
   var map{{floor.pk}} = defineMap('image-map-{{floor.pk}}');
@@ -192,6 +198,7 @@ var plan = [];
     var flux = {{checkpoint.flux|default_if_none:0}};
     marker{{checkpoint.pk}} = new L.marker([ x, y], {icon: new L.NumberedDivIcon({number: name, flux: flux })}).addTo(map{{floor.pk}});
     map{{floor.pk}}.markers.push(marker{{checkpoint.pk}});
+    checkpointDiction["{{checkpoint.pk}}"] = {{checkpoint.sequence}}
   {% endfor %}
 
 

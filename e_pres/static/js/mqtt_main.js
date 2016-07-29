@@ -27,7 +27,9 @@ function onConnectionLost(responseObject) {
 function onMessageArrived(message) {
   var jsonMessage = JSON.parse(message.payloadString);
   if(message.destinationName == 'output/error'){
-    var probleMessage = translateErrorCode(jsonMessage.errorCode);
+    var lastCorrectCheckpoint = checkpointDiction[jsonMessage.lastCorrectCheckpoint]
+    var planName = planDicton[jsonMessage.planId]
+    var probleMessage = translateErrorCode(jsonMessage.errorCode, lastCorrectCheckpoint, planName );
     $('#eventsFeed').prepend('<li class="list-group-item list-group-item-danger">'+ probleMessage +'</li>');
   }
   else {
@@ -91,13 +93,13 @@ function updateGraph(new_value){
 	chart.render();
 };
 
-function translateErrorCode(errorCode){
+function translateErrorCode(errorCode, lastCorrectCheckpoint="starting", planName){
   switch(parseInt(errorCode)) {
     case 1:
-        return 'Not Correct Path';
+        return 'Not Correct Path '+ lastCorrectCheckpoint + ' checkpoint in path '+ planName ;
         break;
     case 2:
-        return 'Not Path After Path';
+        return 'Not Path After Path checkpoint '+ lastCorrectCheckpoint + ' in path '+ planName ;
         break;
   };
 };
