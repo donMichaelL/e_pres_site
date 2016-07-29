@@ -137,14 +137,26 @@ td {
        <td>{{plan.tag_leader}}
        <td>{% if 100 >= plan.max_evacuation_time %} <i class="fa fa-check"></i> {% else %} <i class="fa fa-times"></i>{% endif %}100sec <small> /{{plan.max_evacuation_time}}sec</small></td>
        <td>
-         {% with plan.get_correct_execution_failures as failuresTable %}
-          {% for fail in failuresTable %}
-            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="{{fail|get_item:'tag'|join:", " }}">{{fail|get_item:'sequence'}}</button>
-          {% endfor %}
+         {% with plan.get_path_after_path_failures as failuresTable %}
+           {% for fail in failuresTable %}
+             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="{{fail|get_item:'tag'|join:", " }}">{{fail|get_item:'sequence'}}</button>
+           {% endfor %}
          {% endwith %}
        </td>
-       <td> <i class="fa fa-check"></i></td>
-       <td> <i class="fa fa-check"></i></td>
+       <td>
+         {% with plan.get_correct_execution_failures as failuresTable %}
+           {% for fail in failuresTable %}
+             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="{{fail|get_item:'tag'|join:", " }}">{{fail|get_item:'sequence'}}</button>
+           {% endfor %}
+         {% endwith %}
+        </td>
+       <td>
+         {% with plan.get_teacher_failures as failuresTable %}
+           {% for fail in failuresTable %}
+             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="{{fail|get_item:'tag'|join:", " }}">{{fail|get_item:'sequence'}}</button>
+           {% endfor %}
+         {% endwith %}
+       </td>
      </tr>
      {% endfor %}
    </tbody>

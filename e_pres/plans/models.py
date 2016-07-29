@@ -23,8 +23,20 @@ class Plan(models.Model):
 
     @property
     def get_correct_execution_failures(self):
+        return self.returnFailureResults(1)
+
+    @property
+    def get_path_after_path_failures(self):
+        return self.returnFailureResults(2)
+
+    @property
+    def get_teacher_failures(self):
+        return self.returnFailureResults(3)
+
+    def returnFailureResults(self, error_code):
         results = []
-        correct_execution = self.checkpointfailplan_set.filter(error_code=1)
+        correct_execution = self.checkpointfailplan_set.filter(error_code=error_code)
+        print correct_execution
         for failure in correct_execution:
             sequence = failure.last_current_checkpoint.sequence if failure.last_current_checkpoint != None else "Starting"
             found = False
