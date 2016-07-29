@@ -122,6 +122,7 @@ td {
      <tr>
        <th>Path</th>
        <th>Details</th>
+       <th>Teacher Tag</th>
        <th>Evacuation Time/ Expected Time</th>
        <th>Path Before Path</th>
        <th>Correct Execution</th>
@@ -133,6 +134,7 @@ td {
      <tr>
        <td><a href="{% url 'plan_detail' pk_experiment=object.pk pk=plan.pk %}">{{plan.name}}</a></td>
        <td>{% for connection in plan.connection_set.all %} {{connection.checkpoint.sequence}}--> {% endfor%}X</td>
+       <td>{{plan.tag_leader}}
        <td>{% if 100 >= plan.max_evacuation_time %} <i class="fa fa-check"></i> {% else %} <i class="fa fa-times"></i>{% endif %}100sec <small> /{{plan.max_evacuation_time}}sec</small></td>
        <td>
          {% with plan.get_correct_execution_failures as failuresTable %}
