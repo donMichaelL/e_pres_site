@@ -21,6 +21,24 @@ class Plan(models.Model):
     def get_absolute_url(self):
         return reverse("plan_detail", kwargs={"pk": self.pk, "pk_experiment": self.experiment.pk})
 
+    @property
+    def get_correct_execution_failures(self):
+        results = []
+        correct_execution = self.checkpointfailplan_set.filter(error_code=1)
+        for failure in correct_execution:
+            sequence = failure.last_current_checkpoint.sequence if failure.last_current_checkpoint != None else "Starting"
+            found = False
+            for result in results:
+                if result['sequence'] == sequence:
+                    result['tag'].append(failure.tag_r.tag_string)
+                    found = True
+                    break
+            if not found:
+                results.append({
+                    'sequence': sequence,
+                    'tag': [failure.tag_r.tag_string]
+                })
+        return results
 
 class Connection(models.Model):
     plan = models.ForeignKey(Plan)

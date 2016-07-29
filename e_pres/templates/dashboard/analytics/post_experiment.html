@@ -134,7 +134,13 @@ td {
        <td><a href="{% url 'plan_detail' pk_experiment=object.pk pk=plan.pk %}">{{plan.name}}</a></td>
        <td>{% for connection in plan.connection_set.all %} {{connection.checkpoint.sequence}}--> {% endfor%}X</td>
        <td>{% if 100 >= plan.max_evacuation_time %} <i class="fa fa-check"></i> {% else %} <i class="fa fa-times"></i>{% endif %}100sec <small> /{{plan.max_evacuation_time}}sec</small></td>
-       <td><i class="fa fa-times"></i>42</td>
+       <td>
+         {% with plan.get_correct_execution_failures as failuresTable %}
+          {% for fail in failuresTable %}
+            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="{{fail|get_item:'tag'|join:", " }}">{{fail|get_item:'sequence'}}</button>
+          {% endfor %}
+         {% endwith %}
+       </td>
        <td> <i class="fa fa-check"></i></td>
        <td> <i class="fa fa-check"></i></td>
      </tr>
@@ -149,6 +155,9 @@ td {
 <script src="{% static 'js/leaflet.js' %}"></script>
 <script src="{% static 'js/leaf_custom.js' %}"></script>
 <script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 var plan = [];
 {% for floor in object.building.floor_set.all %}
   var map{{floor.pk}} = defineMap('image-map-{{floor.pk}}');

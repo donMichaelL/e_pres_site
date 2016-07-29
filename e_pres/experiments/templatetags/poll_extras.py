@@ -6,3 +6,8 @@ register = template.Library()
 def in_category(things, experiment):
     if things:
         return things.filter(experiment=experiment)
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
