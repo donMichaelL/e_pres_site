@@ -17,5 +17,6 @@ admin.site.register(CheckpointReport, CheckpointReportAdmin)
 
 class CheckpointFailPlanAdmin(admin.ModelAdmin):
     model = CheckpointFailPlan
+    list_display = ['__unicode__', 'tag_r', 'plan', 'last_current_checkpoint', 'error_code']
 
 admin.site.register(CheckpointFailPlan, CheckpointFailPlanAdmin)

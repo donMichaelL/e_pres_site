@@ -36,7 +36,6 @@ class Plan(models.Model):
     def returnFailureResults(self, error_code):
         results = []
         correct_execution = self.checkpointfailplan_set.filter(error_code=error_code)
-        print correct_execution
         for failure in correct_execution:
             sequence = failure.last_current_checkpoint.sequence if failure.last_current_checkpoint != None else "Starting"
             found = False
