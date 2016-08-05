@@ -101,6 +101,9 @@ function translateErrorCode(errorCode, lastCorrectCheckpoint="starting", planNam
     case 2:
         return 'Not Path After Path checkpoint '+ lastCorrectCheckpoint + ' in path '+ planName ;
         break;
+    case 3:
+        return 'Teacher '+ lastCorrectCheckpoint + ' in path '+ planName ;
+        break;
   };
 };
 
