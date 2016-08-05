@@ -47,7 +47,8 @@ class Plan(models.Model):
             if not found:
                 results.append({
                     'sequence': sequence,
-                    'tag': [failure.tag_r.tag_string]
+                    'tag': [failure.tag_r.tag_string],
+                    'number_of_students_teacher_error': [failure.number_of_students_teacher_error]
                 })
         return results
 
