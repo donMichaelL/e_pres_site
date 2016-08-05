@@ -28,6 +28,7 @@ class CheckpointFailPlan(models.Model):
     last_current_checkpoint = models.ForeignKey(Checkpoint, null=True, blank=True)
     error_code = models.CharField(max_length=2, choices=ERROR_CODE)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+    number_of_students_teacher_error = models.IntegerField(null=True, blank=True)
 
     def __unicode__(self):
         return self.experiment.name
