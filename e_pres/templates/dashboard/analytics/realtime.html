@@ -168,7 +168,7 @@
         csrfmiddlewaretoken:  getCookie('csrftoken')
       },
     success: function(){
-      message = new Paho.MQTT.Message('{"service": "stop"');
+      message = new Paho.MQTT.Message('{"service": "stop"}');
       message.destinationName = "Storm/Control";
       client.send(message);
       $('#stop').addClass('hidden');
