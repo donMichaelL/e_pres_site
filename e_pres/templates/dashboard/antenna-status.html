@@ -37,12 +37,17 @@ $(document).ready(function() {
   function onMessageArrived(message) {
     var jsonMessage = JSON.parse(message.payloadString);
     detectedAntenna = jsonMessage.antenna;
+    statusAntenna = jsonMessage.status;
     if(antennasDict[detectedAntenna] != undefined){
-      console.log('Antenna '+ detectedAntenna + ' already found.');
+      id = '#'+ detectedAntenna + ' p';
+      $(id).html('Antenna Status: ' + statusAntenna);
     }
     else {
       antennasDict[detectedAntenna] = 'ok';
-      data = '<h3> Antenna '+ detectedAntenna +' <i class="fa fa-check" aria-hidden="true"></i></h3>';
+      data = '<div id="'+ detectedAntenna  + '">'
+      data += '<h3> Antenna '+ detectedAntenna +' <i class="fa fa-check" aria-hidden="true"></i></h3>';
+      data += '<p class="help-block">Antenna Status: ' + statusAntenna + '</p>';
+      data += '</div>'
       $("#antennas").append(data);
 
     }
