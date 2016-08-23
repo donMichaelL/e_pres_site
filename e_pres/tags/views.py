@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 from .models import Tag
 
 from django.core import serializers
 import json
+
+class AntennaStatusView(TemplateView):
+    template_name = 'dashboard/antenna-status.html'
 
 class InitTagsView(View):
     def get(self, request, *args, **kwargs):

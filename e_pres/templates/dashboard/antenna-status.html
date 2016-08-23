@@ -1,0 +1,60 @@
+{% extends 'dashboard/base_logged.html' %}
+{% load staticfiles %}
+
+{% block title %}Tag Antenna Status {% endblock %}
+{% block main_header %}Tag Antenna Status{% endblock %}
+
+
+
+{% block main_content %}
+<div id="antennas">
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'js/mqttws31.js' %}"></script>
+<script src="{% static 'js/config.js' %}"></script>
+<script>
+
+$(document).ready(function() {
+  var antennasDict = {};
+  client = new Paho.MQTT.Client(host, Number(port), "web_" + parseInt(Math.random() * 100));
+  client.onConnectionLost = onConnectionLost;
+  client.onMessageArrived = onMessageArrived;
+  client.connect({onSuccess:onConnect});
+
+  function onConnect() {
+    console.log("onConnect");
+    client.subscribe('status');
+  }
+  function onConnectionLost(responseObject) {
+    if (responseObject.errorCode !== 0) {
+      console.log("onConnectionLost:"+responseObject.errorMessage + " "+ responseObject.errorCode);
+    }
+  }
+  function onMessageArrived(message) {
+    var jsonMessage = JSON.parse(message.payloadString);
+    detectedAntenna = jsonMessage.antenna;
+    if(antennasDict[detectedAntenna] != undefined){
+      console.log('Antenna '+ detectedAntenna + ' already found.');
+    }
+    else {
+      antennasDict[detectedAntenna] = 'ok';
+      data = '<h3> Antenna '+ detectedAntenna +' <i class="fa fa-check" aria-hidden="true"></i></h3>';
+      $("#antennas").append(data);
+
+    }
+  }
+
+
+
+
+
+});
+
+</script>
+
+
+{% endblock %}
