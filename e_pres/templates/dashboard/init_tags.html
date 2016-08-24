@@ -96,7 +96,7 @@ $(document).ready(function() {
     if(tagTable.indexOf(detectedTag) == -1){
       tagTable.push(detectedTag);
       data = '<form class="tag_form">'
-      data += '<input type="text" readonly value="'+ detectedTag +'">'
+      data += '<input type="text" size="60" readonly value="'+ detectedTag +'">'
       data += '<input type="checkbox" class="isTeacher" name="teacher">'
       data += '<button type="submit">Save</button>'
       data += '</form>'
