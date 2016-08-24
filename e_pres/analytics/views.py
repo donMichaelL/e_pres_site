@@ -20,6 +20,7 @@ class PostExperiment(LoginRequiredMixin, ContentUserOnlyMixin, DetailView):
         context['plans'] = self.object.plan_set.all()
         context['checkpoints'] = Checkpoint.objects.filter(experiment=self.object)
         context['total_student'] = total_building_students(self.object)
+        context['total_evacuation_time'] = self.object.evacuation_time / 60
         return context
 
 

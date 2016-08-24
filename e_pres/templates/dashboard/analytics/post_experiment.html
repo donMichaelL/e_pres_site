@@ -92,10 +92,18 @@ td {
         </div>
       </div>
       <div class="col-xs-6">
-        <div class="panel panel-{% if object.building.max_evacuation_time  and object.building.max_evacuation_time > 100 %}danger{% else %}success {% endif %}">
-          <div class="panel-heading">Total Evacuation Time</div>
+        <div class="panel panel-default">
+          <div class="panel-heading">Expected Evacuation Time</div>
           <div class="panel-body align-center">
-            <h2 class="text-center">{{object.evacuation_time|default_if_none:'0'}} <small>sec</small></h2>
+            <h2 class="text-center">{{object.expected_evacuation_time|default_if_none:'0'}} <small>min</small></h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="panel panel-{% if object.expected_evacuation_time  and object.expected_evacuation_time < total_evacuation_time %}danger{% else %}success {% endif %}">
+          <div class="panel-heading"><strong>Total Evacuation Time</strong></div>
+          <div class="panel-body align-center">
+            <h2 class="text-center">{{total_evacuation_time|default_if_none:'0'}} <small>min</small></h2>
           </div>
         </div>
       </div>
@@ -139,21 +147,21 @@ td {
        <td>
          {% with plan.get_path_after_path_failures as failuresTable %}
            {% for fail in failuresTable %}
-             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="{{fail|get_item:'tag'|join:", " }}">{{fail|get_item:'sequence'}}</button>
+             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" data-html="true" title="{{fail|get_item:'tag'|join:", " }}">{{fail|get_item:'sequence'}}</button>
            {% endfor %}
          {% endwith %}
        </td>
        <td>
          {% with plan.get_correct_execution_failures as failuresTable %}
            {% for fail in failuresTable %}
-             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="{{fail|get_item:'tag'|join:", " }}">{{fail|get_item:'sequence'}}</button>
+             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" data-html="true"  title="{{fail|get_item:'tag'|join:"<br>----<br> " }}">{{fail|get_item:'sequence'}}</button>
            {% endfor %}
          {% endwith %}
         </td>
        <td>
          {% with plan.get_teacher_failures as failuresTable %}
            {% for fail in failuresTable %}
-             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="{{fail.number_of_students_teacher_error}}">{{fail|get_item:'sequence'}}</button>
+             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Number of Students {{fail.number_of_students_teacher_error}}">{{fail|get_item:'sequence'}}</button>
            {% endfor %}
          {% endwith %}
        </td>
