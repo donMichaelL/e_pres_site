@@ -44,6 +44,7 @@ td {
     <h4>Total Students <span id="totalstudents">0</span></h4>
   </div>
 </div>
+<a type="button"  href="{% url 'post_experiment_delete' pk=object.pk  %}" class="btn btn-outline btn-danger btn-lg pull-right">Delete All Analytics</a>
 
 <div class="row">
   <div class="col-md-8">
@@ -147,7 +148,7 @@ td {
        <td>
          {% with plan.get_path_after_path_failures as failuresTable %}
            {% for fail in failuresTable %}
-             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" data-html="true" title="{{fail|get_item:'tag'|join:", " }}">{{fail|get_item:'sequence'}}</button>
+             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" data-html="true" title="{{fail|get_item:'tag'|join:"<br>----<br>" }}">{{fail|get_item:'sequence'}}</button>
            {% endfor %}
          {% endwith %}
        </td>

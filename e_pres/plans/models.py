@@ -9,7 +9,7 @@ class Plan(models.Model):
     experiment = models.ForeignKey(Experiment)
     name = models.CharField(max_length=60)
     before = models.ForeignKey('self',verbose_name="Execute after plath", null=True, blank=True)
-    max_evacuation_time = models.PositiveIntegerField(verbose_name="Maximum Evacuation Time in Sec",null=True, blank=True, default=0)
+    max_evacuation_time = models.PositiveIntegerField(verbose_name="Maximum Evacuation Time in Min",null=True, blank=True, default=0)
     tag_leader = models.ForeignKey(Tag, null=True, blank=True)
 
     class Meta:
