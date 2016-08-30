@@ -3,7 +3,7 @@ from django.conf import settings
 from django.db import models
 
 class Tag(models.Model):
-    tag_string = models.CharField(max_length=200, unique=True)
+    tag_string = models.TextField(unique=True)
     teacher = models.ForeignKey('Tag', related_name='leader', null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
