@@ -95,14 +95,18 @@ $(document).ready(function() {
     detectedTag = jsonMessage.tag;
     if(tagTable.indexOf(detectedTag) == -1){
       tagTable.push(detectedTag);
-      data = '<form class="tag_form">'
+      data = '<form class="tag_form" id="'+ detectedTag.replace(/\s+/, "")  +'">'
       data += '<input type="text" size="60" readonly value="'+ detectedTag +'">'
+      data += '<label>1</label>'
       data += '<input type="checkbox" class="isTeacher" name="teacher">'
       data += '<button type="submit">Save</button>'
       data += '</form>'
       $("#tags").append(data);
     }
     else{
+      var tagId = '#' + detectedTag + ' label';
+      var number = parseInt($(tagId).html()) + 1;
+      $(tagId).html(number);
     }
   }
 
