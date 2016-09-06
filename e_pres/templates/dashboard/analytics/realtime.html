@@ -6,7 +6,7 @@
 
 {% block css_styles %}
 <link href="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<link rel="stylesheet" href="{% static "css/morris.css" %}">
 <link href="{% static "css/leaflet.css" %}" rel="stylesheet" type="text/css">
 <style>
   .leaflet-div-icon {
@@ -261,7 +261,7 @@ function onMapClick(e) {};
 <script src="{% static 'bower_components/jquery-animateNumber/jquery.animateNumber.min.js' %}"></script>
 <script src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
 <script src="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
-<script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="{% static 'js/canvasjs.min.js' %}"></script>
 <script>
   $('#plans').animateNumber({ number: {{plans | length}}});
   $('#checkpoints').animateNumber({ number: {{checkpoints | length}} });
