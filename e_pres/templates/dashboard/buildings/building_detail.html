@@ -83,7 +83,7 @@
             {% if test.finished	 %}
             <a href="{% url 'post_experiment' pk=test.pk %}" style="color:blue;font-size:smaller;text-decoration:none;">Results</a>
             {% else %}
-            <a href="{% url 'realtime' pk=test.pk %}" style="color:red;font-size:smaller;text-decoration:none;">Real Time Demo</a>
+            <a href="{% url 'realtime' pk=test.pk %}" style="color:red;font-size:smaller;text-decoration:none;">Real Time</a>
             {% endif %}
 
 
