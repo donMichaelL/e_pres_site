@@ -32,7 +32,7 @@ td {
 
 <div class="row" style="background-color:lightblue;">
   <div class="col-xs-3 text-center extra-margin">
-    <h4>Evacuation Paths <span id="plans">0</span> </h4>
+    <h4>ion Paths <span id="plans">0</span> </h4>
   </div>
   <div class="col-xs-3 text-center extra-margin">
     <h4>Checkpoints <span id="checkpoints">0</span></h4>
@@ -132,7 +132,7 @@ td {
        <th>Path</th>
        <th>Details</th>
        <th>Teacher Tag</th>
-       <th>Evacuation Time/ Expected Time</th>
+       <!-- <th>Evacuation Time/ Expected Time</th> -->
        <th>Path Before Path</th>
        <th>Correct Execution</th>
        <th>Teacher</th>
@@ -144,7 +144,9 @@ td {
        <td><a href="{% url 'plan_detail' pk_experiment=object.pk pk=plan.pk %}">{{plan.name}}</a></td>
        <td>{% for connection in plan.connection_set.all %} {{connection.checkpoint.sequence}}--> {% endfor%}X</td>
        <td>{{plan.tag_leader}}
-       <td>{% if 100 >= plan.max_evacuation_time %} <i class="fa fa-check"></i> {% else %} <i class="fa fa-times"></i>{% endif %}100sec <small> /{{plan.max_evacuation_time}}sec</small></td>
+
+       <!-- <td>{% if 100 >= plan.max_evacuation_time %} <i class="fa fa-check"></i> {% else %} <i class="fa fa-times"></i>{% endif %}100sec <small> /{{plan.max_evacuation_time}}sec</small></td> -->
+
        <td>
          {% with plan.get_path_after_path_failures as failuresTable %}
            {% for fail in failuresTable %}
