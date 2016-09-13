@@ -97,16 +97,19 @@ $(document).ready(function() {
       tagTable.push(detectedTag);
       data = '<form class="tag_form" id="'+ detectedTag+'">'
       data += '<input type="text" size="60" readonly value="'+ detectedTag +'">'
-      data += '<label>1</label>'
+      data += '<label>1 </label>'
+      data += '<label>  </label>'
       data += '<input type="checkbox" class="isTeacher" name="teacher">'
       data += '<button type="submit">Save</button>'
       data += '</form>'
       $("#tags").append(data);
     }
     else{
-      var tagId = '#' + detectedTag + ' label';
+      var tagId = '#' + detectedTag + ' label:first';
       var number = parseInt($(tagId).html()) + 1;
       $(tagId).html(number);
+      var tagId = '#' + detectedTag + ' label:last';
+      $(tagId).html('Antenna '+ jsonMessage.antenna);
     }
   }
 
