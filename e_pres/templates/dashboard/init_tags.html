@@ -9,12 +9,16 @@
 {% block main_content %}
 <table class="table">
 <tr>
+  <td>Sequence<td/>
   <td>Teacher<td/>
+  <td>Students Number<td/>
   <td>Students<td/>
 </tr>
 {% for teacher in teachers %}
 <tr>
+  <td>Sequence {{teacher.sequence}}<td/>
   <td>{{teacher}}</td>
+  <td>{{teacher.leader.count}}<td/>
   {% for tag in  teacher.leader.all %}
     <td>{{tag}}</td>
   {% endfor %}
@@ -108,9 +112,9 @@ $(document).ready(function() {
       var tagId = '#' + detectedTag + ' label:first';
       var number = parseInt($(tagId).html()) + 1;
       $(tagId).html(number);
-      var tagId = '#' + detectedTag + ' label:last';
-      $(tagId).html('Antenna '+ jsonMessage.antenna);
     }
+    var tagId = '#' + detectedTag + ' label:last';
+    $(tagId).html('Antenna '+ jsonMessage.antenna);
   }
 
   $('#deleteTeacherTags').submit(function(e){
