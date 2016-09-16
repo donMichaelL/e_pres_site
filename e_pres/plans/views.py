@@ -67,6 +67,7 @@ class PlanDetailView(LoginRequiredMixin, ContentUserOnlyMixin, UpdateView, Detai
         experiment = get_object_or_404(Experiment, pk=self.kwargs['pk_experiment'])
         form.fields['before'].choices = [("", "---------"),] + [(plan.pk, plan.name) for plan in experiment.plan_set.exclude(pk=self.get_object().pk)]
         form.fields['tag_leader'].queryset = Tag.objects.filter(teacher__isnull=True, user=self.request.user)
+        form.fields['tag_leader'].label_from_instance = lambda obj: "Sequence %s" % obj.sequence
         return form
 
     def form_valid(self, form):

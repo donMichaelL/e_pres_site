@@ -27,7 +27,16 @@ class InitTagsView(View):
                 teacher_tag = Tag.objects.get(tag_string=teacher)
                 Tag.objects.get_or_create(tag_string=tag, teacher=teacher_tag, user=user)
             else:
-                Tag.objects.get_or_create(tag_string=tag, user=user)
+                teacher_list = Tag.objects.filter(user=user, teacher=None).values_list('sequence', flat=True)
+                if  len(teacher_list) == 0:
+                    teacher_list = [0]
+                next_seq = 0
+                for item in range(0, max(teacher_list)+2):
+                    if item not in teacher_list:
+                        print item, teacher_list
+                        next_seq = item
+                        break
+                Tag.objects.get_or_create(tag_string=tag, sequence=next_seq, user=user)
             return JsonResponse('ok', status=201, safe=False)
         return JsonResponse('PermissionDenied',status=403, safe=False)
 
