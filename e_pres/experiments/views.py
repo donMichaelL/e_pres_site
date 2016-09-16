@@ -114,7 +114,7 @@ class CheckpointInsertView(LoginRequiredMixin, View):
         form = CheckpointForm(request.POST)
         experiment = get_object_or_404(Experiment, pk=kwargs['pk'])
         order_list =  experiment.checkpoint_set.values_list('sequence', flat=True)
-        next_order = [item for item in range(1, 11) if item not in order_list][0]
+        next_order = [item for item in range(1, 12) if item not in order_list][0]
         if experiment.building.user != request.user:
             if not request.user.is_superuser:
              return PermissionDenied()
@@ -130,7 +130,7 @@ class CheckpointInsertView(LoginRequiredMixin, View):
                 checkpoint.save()
                 messages.success(self.request, 'Checkpoint: %s was updated.'% checkpoint.pk )
             else:
-                if next_order < 10:
+                if next_order <= 10:
                     checkpoint = form.save()
                     checkpoint.sequence = next_order
                     checkpoint.save()
